@@ -1,0 +1,16 @@
+<ul class="image-grid image-grid-5">
+<?php 
+foreach ($photo as $photo_company) {
+$logo_img     = $photo_company["nama_gambar"];
+$username     = $photo_company['username'];
+$path_img     = img_url("company/photo/$username/ship/$logo_img");
+$path_ls      = img_url("company/default/not_active.png");
+?>
+  <li>
+    <a href="<?=$path_img;?>" data-toggle="lightbox" data-gallery="imagesizes" >
+        <img src="<?=$path_img;?>">
+    </a>
+  </li>
+<?php } ?>
+
+</ul>

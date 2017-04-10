@@ -1,0 +1,34 @@
+<?php // dropdown menu timeline ?>
+<?php
+	$arrdata['url']  	  = "timeline/delete_timeline"; // dari modal alert, kemana ... 
+	$arrdata['title']  	= "Delete Timeline";
+	$arrdata["description"] = "are you sure want to delete this post ? ";
+	
+	$str_url = "";
+	for($i = 0; $i <= count($arrdata)-1; $i++)
+	{
+		$key = array_keys($arrdata);
+		$str_url .= $key[$i]."=".$arrdata[$key[$i]]."&"; 	
+	}
+	$str_url .= "x=1";
+?>
+
+ <div class="dropdown" style="float:right">
+ <!-- <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button> -->
+  <a href="#" id="dropdownMenu1" class="glyphicon glyphicon-pencil dropdown-toggle btn btn-default" data-toggle="dropdown" aria-expanded="false" style="float:right; text-decoration:none">
+  </a>
+<ul class="dropdown-menu" role="menu" style="float:right">
+  <li role="presentation"><a role="menuitem" tabindex="-1" onclick="javascript:update_timeline(<?php echo $id_timeline ?>)">Update</a></li>
+  <li role="presentation"><a role="menuitem" tabindex="-1" onclick="del_tml('<?php echo $id_timeline ?>','<?php echo $str_url ?>','<?php echo base_url("timeline/modal_alert"); ?>')" >Delete</a></li>
+</ul>
+</div>
+
+<script>
+
+	
+</script>
+
+

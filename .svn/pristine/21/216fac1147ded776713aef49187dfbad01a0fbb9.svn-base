@@ -1,0 +1,78 @@
+<?php
+/*
+ *
+ * Created by PhpStorm.
+ * User: a
+ * Date: 12/06/2015
+ * Time: 20:38
+ */
+
+
+?>
+<div class="col-md-9 contactpage seatizen-list-container center-block">
+    <br>
+    <br>
+    <div class="container">
+        <h3> Contact Us </h3>
+        <hr>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-7">
+        <form role="form" action="<?php echo base_url("about_infr/contact/send_mail")?>" method="post">
+            
+            <div class="form-group"> 
+                <label for="">Name: </label>
+                <input type="text" class="form-control" id="name" name="nama" placeholder="" required="required">
+            
+            </div>
+            
+            <div class="form-group"> 
+                <label for="">Email:
+                <span style="font:10px;font-weight:lighter;color:#CCC">(Your email address will not be published) </span>
+                </label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="" required="required">
+            
+            </div>
+            
+            <div class="form-group"> 
+                <label for="">Subject: </label>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="" required="required">
+            
+            </div>
+            
+            <div class="form-group"> 
+                <label for="">Message: </label>
+                <textarea class="form-control" id="password" name="message" cols="10" rows="5" style="resize:none;" required="required"> </textarea>
+            
+            </div>
+            
+            
+            <div class="form-group">
+            
+                <button type="submit" name="" class="btn btn-lg btn-primary"> Send </button>
+                
+            </div>
+            
+        <br><br><br><br><br>
+        </form>
+
+
+
+    </div>
+    <div class="col-md-5 col-xs-12 tentang">
+
+        <h3> Contact Informasea </h3>
+        <br>
+        <p> <span style="padding-left:20%; font-size:14px;">  Jl. K.H Hasyim Ashari Gg. H Masykur No 29 RT 2/2 Kel. Pinang Kec. Pinang Tangerang 
+            Tangerang, Indonesia </span></p>
+        
+
+    </div>
+
+
+   </div>
+</div>
+
+<?php //$this->load->view("js_under") ?>
+

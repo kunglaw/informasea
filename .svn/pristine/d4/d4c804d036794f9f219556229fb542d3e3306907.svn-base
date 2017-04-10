@@ -1,0 +1,42 @@
+<?php // template module users ?>
+<style>
+	#container-content{
+		
+		background-color:#FFF;
+		
+			
+		
+	}
+	
+	#container-relative{
+		
+	
+	}
+	
+	#content-user /*content left */
+	{
+		margin-top:10px;
+	}
+		
+		
+	#right-bar-user /*content left */
+	{
+		margin-top:10px;	
+		
+	
+	}
+
+</style>
+
+  <div class="container" id="container-content" style="margin-top:-10px;"> 
+        <?php
+          
+          // center content 
+          $this->load->view('content');
+          
+          // right content
+          $this->load->view('right_content.php');
+          
+        ?>
+
+  </div>

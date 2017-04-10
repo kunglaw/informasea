@@ -1,0 +1,150 @@
+<div class="tmp_modal"> <?php // for ajax ?> 
+
+</div>
+
+
+<?php 
+  $username = $this->session->userdata('username');
+  $username_perusahaan = $this->session->userdata('username_company'); 
+  if($this->uri->segment(2) != $username){
+    header('location:'.base_url('profile/'.$this->uri->segment(2).'/resume'));
+  }
+
+$jmlh_applied = $this->vacantsea_model->jml_applied($this->session->userdata('id_user'));
+?>
+<div class="box">
+  <div class="box-header">
+      <h4 class="box-heading header-text"> Applied Vacantsea (<?php echo $jmlh_applied; ?>) </h4>
+      <span class="clearfix"></span>
+  </div>
+  
+ <!--  <div class="box-content">
+    <div class="jajamama"></div> -->
+    <?php
+
+$this->load->model('nation_model');
+$this->load->model('company/company_model');
+      if(!empty($vacantsea)){
+        foreach($vacantsea as $vac){
+          $vacantsea = $this->vacantsea_model->get_vacantsea_id($vac['id_vacantsea']);
+
+           $vacantsea_id   = $vacantsea['vacantsea_id'];
+    $vacantsea_title      = $vacantsea['vacantsea'];
+    $perusahaan     = $vacantsea['perusahaan'];
+    $description    = $vacantsea['description'];
+    $departement_id = $vacantsea['departement'];
+    $rank_id        = $vacantsea['rank_id'];
+    $ship_id        = $vacantsea['ship_type'];
+    $navigation_area    = $vacantsea['navigation_area'];
+    $annual_sallary     = $vacantsea['annual_sallary'];
+    $contract_type      = $vacantsea['contract_type'];
+    $contract_dinamic   = $vacantsea['contract_dinamic'];
+    $ship               = $vacantsea['ship'];
+    $requested_certificates   = $vacantsea['requested_certificates'];
+    $requested_coc      = $vacantsea['requested_coc'];
+    $nationality_id     = $vacantsea['id_nationality'];
+    $create_date        = $vacantsea['create_date'];
+    $expired_date       = $vacantsea['expired_date'];
+    $benefits           = $vacantsea['benefits'];
+    $sallary_range      = $vacantsea['sallary_range'];
+    $sallary_curr       = $vacantsea['sallary_curr'];
+    $experience         = $vacantsea['experience'];
+    //$logo               = img_url("company/default/maersk_logo.jpg");
+
+    $placement          = $this->nation_model->get_detail_nationality($nationality_id);
+    $company = $this->company_model->get_detail_company($vacantsea['id_perusahaan']);
+    $logo_img = $company['logo_image'];
+    $rank = $this->rank_model->get_rank_detail($vacantsea['rank_id']);
+    $username_comp = $company['username'];
+    $logo_company = img_url("company/photo/$username_comp/profil_pic/$logo_img");
+
+    $flag_placement     = $placement['flag'];
+          ?>
+   <div class="list-group-item">
+    <div class="media">
+        <div class="media-left text-center">
+            <img src="<?=$logo_company;?>" alt="company logo"
+            class="logo-container thumbnail block " width="115" height="115">
+        <?php// echo $vac['id_aplicant']; ?>
+            <button class="btn btn-danger pull-left btn-custom-font" onclick="javascript:cancel_apply(<?php echo $vac['id_aplicant']; ?>)"> <i class="fa fa-minus"> </i> 
+              Cancel Apply </button>
+
+            <?php
+                // $d1     = strtotime($expired_date);
+                // $end    = ceil(($d1-time())/60/60/24);
+                // if ($end > 0) {
+                //     echo $btn_applicant;
+                // }    
+            ?>
+        </div>
+
+        <div class="media-body">
+            <a href="<?=base_url("vacantsea/detail/".$vacantsea_id);?>" class="subtitle text-link" target="_blank"><h4 class="custom-h4"><?=$vacantsea_title;?></h4></a>
+            <div class="float-left media-heading medium">
+                <a href="#" class="text-link"><small><?=$perusahaan;?></small></a></div>
+            <div class="float:right">
+                <?php
+              ?>
+            </div>
+
+            <div style="clear: both"></div>
+            <div class="subtitle text-gray">Placement : <img src="<?=asset_url("flags/".$flag_placement);?>"> <?=$placement["name"] ?></div>
+            <div class="subtitle custom-h4">Rank : <?=$rank['rank'];?></div>
+            <?php
+                if (!empty($annual_sallary)) {
+                   echo "<div class='subtitle text-gray'>Annual Salary:</div>";
+                   echo "<h4 class='text-link custom-h4'>".$sallary_curr." ".number_format($annual_sallary)."</h4>"; 
+                }
+            ?>
+            <div class="subtitle text-gray">Descripton:</div>
+            <div style="float:left; width:80%"><p><?=$description;?></p></div>
+            <div class="float-right subtitle" style="float:right"> 
+               <div class="text-muted"> Posted: <?php echo date('F d, Y', strtotime($create_date));?></div> 
+                    <?php
+                    
+                    if ($end > "3") {
+                        if ($end > 1 && $end <=7) {
+                            $expired    = $end;
+                           echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$expired." days left</b> </div>";
+                        }elseif ($end > 7 && $end <= 31) {
+                            $expired    = $end/7;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$expired." Week left</b> </div>";
+                        }elseif ($end > 31 && $end <=365 ) {
+                            $expired    = $end/31;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$expired." Month left</b> </div>";
+                        }elseif ($end > 365 ) {
+                            $expired    = $end/365;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$expired." Year left</b> </div>";
+
+                        }
+                        
+                    }elseif($end >= "0"){
+                        echo "<div class='text-danger' title='".$expired_date."'>End : <b>".$end." days left </b> </div>";
+                    }else{
+                        echo "<div class='text-danger' title='".$expired_date."'>End : <b>Expired </b> </div>";
+                    }?>    
+            </div>
+        </div>
+
+    </div>
+</div>
+
+   <?php 
+      }
+?>
+  <div class="pagination" style="float:right; margin-top:3%">
+<ul>
+   <?php echo $this->pagination->create_links(); ?>
+</ul>
+</div>
+<?php
+      } else{
+       echo "No Vacantsea applied ";
+      }
+      ?>
+  <!--  <span class="clearfix"></span> -->
+	<!-- </div> -->
+</div>

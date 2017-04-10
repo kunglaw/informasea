@@ -1,0 +1,61 @@
+
+<?php //experience, page experience, profile, module user ?>
+<div class="box">
+  <div class="box-header">
+      <h4 class="box-heading header-text">Resume Upload 
+      <button class="btn btn-filled btn-sm pull-right" id="resume-upload-btn" modal="form-upload-resume"> 
+          <span class="glyphicon glyphicon-plus"></span> Add 
+      </button>
+      </h4>
+      
+      <span class="clearfix"></span>
+  </div>
+  
+  <div class="box-content">
+    <div class="hasilupload"></div>
+    <span class="clearfix"></span>
+    <table class="table table-bordered" id="data-table-resume-upload" style="font-size:12px">
+        <thead style="font-weight:bold;" class="bg-primary">
+        <tr>
+          <td width="">No </td>
+          <td width="">Title </td>
+          <td>Upload date </td>
+          <td>Action </td>
+        </tr>
+        </thead>
+       <tbody>
+        <?php
+            $this->load->model("vessel_model");
+        
+            $vessel_model = $this->vessel_model;
+            $no =1;
+            foreach($file_resume as $row)
+            {
+                //$vessel_name = $vessel_model->get_ship_detail($row['ship_id']);
+             $title  = $row['title'];
+            $uploadtime = $row['datetime'];
+        ?>
+        <tr>
+          <td ><?php echo $no++; ?> </td>
+          <td ><?php echo $title; ?> </td>
+          <td ><?php echo $uploadtime  ?></td>
+          
+          <td>  <a class="btn btn-default btn-xs experience-update-btn" href="<?php echo base_url("seaman/resume/download_resume/$row[id_resume_file]") ?>">
+                <span class="glyphicon glyphicon-download"></span> 
+            </a>
+            
+            <button class="btn btn-default btn-xs experience-delete-btn" modal="modal-delete-resume-upload" 
+            onclick="javascript:delete_resume(<?php echo $row['id_resume_file']?>)" title="Delete">
+                <span class="glyphicon glyphicon-remove"></span> 
+            </button>
+             </td>
+          
+          
+        </tr>
+        <?php
+            }
+        ?>
+       </tbody>
+    </table>
+  </div>
+</div>

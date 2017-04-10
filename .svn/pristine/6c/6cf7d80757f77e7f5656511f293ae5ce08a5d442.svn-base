@@ -1,0 +1,123 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed');
+
+class Search extends MX_Controller{
+	
+	
+	function __construct()
+	{
+		parent::__construct();
+		//$this->authentification_model->close_access();
+		$this->load->model("search_model");
+		$this->session->keep_flashdata('keyword');
+		
+	}
+	
+	function filter()
+	{
+		$keyword = $this->input->post("keyword");
+		$page    = $this->input->post("page");
+		
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		$this->load->library("form_validation");
+		
+		$this->form_validation->set_rules("keyword","Keyword","xss_clean");
+		$this->form_validation->set_rules("page","Page","xss_clean");
+	
+		if($this->form_validation->run() == true)
+		{
+			$this->search_model->insert_keyword();
+			
+			//cek apakah keyword mempunyai lebih dari satu kata
+			$check_spasi = explode(" ",$keyword);
+			if(count($check_spasi) > 1)
+			{
+				$keyword = str_replace(" ","-",$keyword);
+			}
+		}
+		else
+		{
+			
+		}
+		
+		$keyword = strtolower($keyword);
+		redirect(base_url("search/$keyword"),"location");	
+		
+		
+		
+	}
+	
+	function index($keyword = '')
+	{
+		$this->load->library("table");
+		echo "<hr>";
+		
+		//jika string memiliki "-" strip, maka di ubah lagi jadi spasi
+		$check_strip = explode("-",$keyword);
+		if(count($check_strip) > 1)
+		{
+			$keyword = str_replace("-"," ",$keyword);
+		}
+		
+		$data['search'] = $this->search_model->search();
+		$data['template'] = "template"; 
+		
+		echo "<h2>Search $keyword </h2>";
+		
+		$this->table->set_heading(array('Id', 'Title', 'Description', 'Country', 'Category'));
+		
+		$tmpl = array (
+			  'table_open'          => '<table border="1" cellpadding="4" cellspacing="0" >',
+
+			  'heading_row_start'   => '<tr>',
+			  'heading_row_end'     => '</tr>',
+			  'heading_cell_start'  => '<th>',
+			  'heading_cell_end'    => '</th>',
+
+			  'row_start'           => '<tr>',
+			  'row_end'             => '</tr>',
+			  'cell_start'          => '<td>',
+			  'cell_end'            => '</td>',
+
+			  'row_alt_start'       => '<tr>',
+			  'row_alt_end'         => '</tr>',
+			  'cell_alt_start'      => '<td>',
+			  'cell_alt_end'        => '</td>',
+
+			  'table_close'         => '</table>'
+		);
+
+		$this->table->set_template($tmpl); 
+		
+		echo $this->table->generate($data['search']);
+		
+		/*
+		Jangan dihapus, ini fitur utamanya 
+		
+		print "<hr> <div> Proficiency </div>";
+		print_r($this->search_model->search_proficiency($keyword));
+		print "<hr> <div> Experience </div>";
+		print_r($this->search_model->search_experience($keyword));
+		print "<hr> <div> Document </div> ";
+		print_r($this->search_model->search_document($keyword));
+		print "<hr> <div> Seaman </div> ";
+		print_r($this->search_model->search_seaman($keyword));
+		print "<hr> <div> Vacantsea </div> ";
+		print_r($this->search_model->search_vacantsea($keyword));*/
+		
+		echo "<p><a href='".base_url("seaman/resume")."'> << Back </a> </p> ";
+		//$this->load->view("index",$data);
+	}
+	
+	function __destruct()
+	{
+		
+			
+	}
+	
+	
+	
+}

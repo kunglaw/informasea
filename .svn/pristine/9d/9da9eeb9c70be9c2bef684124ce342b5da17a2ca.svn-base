@@ -1,0 +1,88 @@
+<?php // header module seaman, view detail ?>
+
+<?php
+	//$username = $this->session->userdata("username");
+	$cover = $this->photo_mdl->get_photo_cover($username);
+	
+	$ss = explode(".",$cover['nama_gambar']);
+	$url_cover = img_url("photo/$username/cover/$ss[0]"."_thumb.".$ss[1]);
+	
+	if(empty($cover) || !is_file(pathup("photo/$username/cover/$ss[0]"."_thumb.".$ss[1])))
+	{
+		$url_cover = base_url("assets/img/pattern-cover.png");
+	}
+	
+?>
+
+<!-- header -->
+    <div class="col-md-12">
+        
+        <div class="panel panel-default" style="padding-bottom:-20px"> 
+            <div class="panel-body" style="background-image:url(<?php echo $url_cover ?>); height:315px;  background-repeat:no-repeat; background-size:cover">
+               <?php // GAMBAR COVER ?>
+                
+        	</div>
+        </div>
+       <nav class="navbar bg-primary" style="margin-top:-20px; color:#000 !important" >
+                  <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header" style="width:262px">
+                    	
+                      <a class="navbar-brand" style="color:#FFF" href="#"><?php echo $nama; ?></a>
+                    </div>
+                	<style>
+						#bs-example-navbar-collapse-1 ul li {
+							font-weight:bold;
+							border-left:#CCC solid 1px;
+								
+						}
+					</style>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                      <ul class="nav navbar-nav">
+                        <li class="active"><a href="<?php echo base_url("profile/$username") ?>">Timeline</a></li>
+                        <li><a href="<?php echo base_url("profile/$username/about")?>">About</a></li>
+                        <li><a href="<?php echo base_url("profile/photo/$username")?>">Photo</a></li>
+                        <li><a href="<?php echo base_url("profile/$username/friends")?>">Friends</a></li>
+                         <li >
+                            <a href="#" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false">
+                            My Job <i class="caret"></i></a>
+                         	
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                              <li><a href="<?php echo base_url("profile/$username/experiences")?>">Experiences</a></li>
+                            </ul>   
+                            
+                            
+                         </li>
+                          
+                        
+                        <li  ><a href="#" style="border-right:#CCC solid 1px" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">More &nbsp;<i class="caret"></i></a>
+  
+                        </li>
+                        
+                       
+                      </ul>
+                      
+                      <!-- <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Link</a></li>
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                          </ul> -->
+                        </li>
+                      </ul>
+                    </div><!-- /.navbar-collapse -->
+                  </div><!-- /.container-fluid -->
+                </nav>
+        
+        
+    </div>
+<script>
+	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+</script>
+<!-- end -->

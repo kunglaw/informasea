@@ -1,0 +1,51 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed');
+
+class Search extends CI_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();
+		//$this->authentification_model->close_access();
+		$this->load->model("search_model");
+		
+	}
+	
+	function index()
+	{
+		$this->load->library("form_validation");
+		
+		$this->form_validation->set_rules("keyword","Keyword","xss_clean");
+		$this->form_validation->set_rules("page","Page","xss_clean");
+		
+		if($this->form_validation->run() == true)
+		{
+			$data['search'] = $this->search_model->search();
+			
+			$data['title'] 		= "Search";
+			$data['css'] 		  = "css";
+			$data['js_top'] 	   = "js_top";
+			$data['js_under'] 	 = "js_under";
+			$data['template']	 = "template";
+		
+			$this->load->view("index",$data);
+			
+		}
+		else
+		{
+			
+		}
+		
+		
+		
+		
+	}
+	
+	function __destruct()
+	{
+		
+			
+	}
+	
+	
+	
+}

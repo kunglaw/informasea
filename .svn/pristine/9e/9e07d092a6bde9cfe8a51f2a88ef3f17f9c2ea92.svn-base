@@ -1,0 +1,33 @@
+<?php  if(!defined('BASEPATH')) exit('No direct script access allowed');
+
+	class Notifications extends MX_Controller {
+
+		function __construct(){
+			parent::__construct();
+			$this->load->model('notifications_model');
+			$this->load->model('users/user_model');
+		}
+
+		function index(){
+
+		
+
+		$data['head']	 = "head";
+		$data['title']	= "Notifications";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		//include
+		//$data['navbar']   = "";
+		$data['template'] = "template";
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+			
+			$data['notif'] =  $this->notifications_model->get_notif_all();
+
+			$this->load->view('index',$data);
+		}
+
+
+	}

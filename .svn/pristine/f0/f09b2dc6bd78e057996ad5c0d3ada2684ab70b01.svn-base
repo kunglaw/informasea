@@ -1,0 +1,6 @@
+<?php // js_top, profile, module seaman ?>
+
+<!-- load js_top profile  -->
+
+<script type="text/javascript" src="<?=base_url("assets/js/script.js")?>" ></script>
+<script type="text/javascript" src="<?=base_url("plugins/slick/slick.min.js")?>" ></script>

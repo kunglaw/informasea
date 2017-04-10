@@ -1,0 +1,1179 @@
+<?php if(!defined('BASEPATH')) exit ("No Direct Script access allowed ");
+
+class Company_process extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();	
+		//$this->load->model('company/company_model');
+		$this->load->model("company_model");
+		$this->load->model("users/user_model");
+		$this->load->helper("user_cookie_helper");
+	}
+	
+	private function index()
+	{
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$user = $this->uri->segment(3);
+		
+		$data['head']	 = "head";
+		$data['title']	= "Register as Seaman";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		//include
+		//$data['navbar']   = "";		
+		$data['rwnation'] = $this->nation_model->get_nationality();
+		$data['rwuser'] = $this->user_model->get_pelaut();
+		
+		//$check = $this->check_username();
+		//$data['info'] = $check['info'];
+		
+		if($user == "agentsea")
+		{
+			$data['template'] = "register-agentsea";
+		}
+		else
+		{
+			$data['template'] = "template";
+		}
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		
+		$this->load->view('register',$data);	
+		
+	}
+	function login_process()
+	{
+		
+		$this->load->helper('cookie');
+		
+		clear_cookie_company();
+		
+		$this->load->library('form_validation');
+		$this->load->helper('list_error_users_helper');
+		
+		$username = $this->input->post("username_lg",TRUE);
+		$password = md5($this->input->post("password_lg"));
+		
+		// remember_me value antara 1=TRUE / 0=FALSE
+		$remember_me = $this->input->post('remember_me');
+		
+		//$page 	 = $this->input->post("page",TRUE);
+		
+		//print_r($this->input->post()); exit;
+ 		
+		$login_attemp = $this->input->post("login_attemp",true); // int
+		$new_login_attemp = $login_attemp + 1;
+		
+		//$this->form_validation->set_error_delimiters('<li >', '</li> ');
+		
+		$this->form_validation->set_rules('username_lg','Username','required|xss_clean');
+		$this->form_validation->set_rules('password_lg','Password','required|xss_clean');
+		$this->form_validation->set_rules('remember_me','Remember Me','xss_clean');
+		
+		$taw = "<p>";
+		$tak = "</p>";
+		
+		// TAMPILAN 	
+		$data['title']    = "Registration";
+		$data['template'] = "template";
+		$data['js']	   = "js";
+		$data['css']	  = "css";
+		$data['meta']	 = "meta";
+		
+		//$data['rwnation'] = $this->nation_model->get_nationality();
+		//$data['rwuser'] = $this->user_model->get_pelaut();
+		/* end TAMPILAN */
+		
+		/* kondisi klo username ada tp pass salah */
+		$str_cu = "select * from perusahaan where username = '$username'";
+		$q_cu   = $this->db->query($str_cu);
+		$f_cu 	  = $q_cu->row_array();
+		
+		/* kondisi klo username ada and pass bener */
+		$str_ca = "select * from perusahaan where username = '$username' and password = '$password'";
+		$q_ca   = $this->db->query($str_ca);
+		$f_ca   = $q_ca->row_array(); 
+		
+		$str_ag = "select * from agent_ms where username = '$username' ";
+		$q_ag = $this->db->query($str_ag);
+		$f_ag = $q_ag->row_array();
+		
+		//$data['show_modal'] 	 = 1;
+		//$data['err'] 			= md5(1);
+		$data['u']			  = !empty($f_cu) ? "t" : "f";
+		$data['a']			  = !empty($f_ca) ? "t" : "f";
+		
+		
+		if($this->form_validation->run() == TRUE)
+		{
+			
+			$check 		 = $this->company_model->login($username,$password);    // check username active dan password dan password benar			
+			$check_user 	= $this->company_model->check_company($username); 	   // check user active 			
+			$check_nauser  = $this->company_model->check_nacompany($username); 	 // check user tidak active
+			
+			// KONDISI USERNAME DAN PASSWORD BENAR
+			if(!empty($check[0]))
+			{ 
+			
+				if($check['user'] == "company")
+				{									
+					$dt = array('id_perusahaan' => $check[0]['id_perusahaan'],
+					'username_company' => $check[0]['username'], 
+					'email_perusahaan' => $check[0]['email'], 
+					'user_company'     => $check['user'], 
+					'nama_perusahaan'  => $check[0]['nama_perusahaan'], 
+					'contact_person'   => $check[0]['contact_person'],
+					'type_user'        => "company");
+					
+					if ($remember_me) {
+                        // Set remember me value in session
+                        $this->session->set_userdata('remember_me', TRUE);
+                    }
+					
+					$this->session->set_userdata($dt);
+					
+				
+					//echo "masuk dimarih ...";exit;
+					//header("location:".base_url("dashboard"));
+					
+					// locationnya harus beda 
+					/*
+						kalau local
+						http://localhost/company.informasea/home
+						
+						kalau hosting
+						informasea.com/company.informasea/home
+					*/
+					
+					//header("location:http://localhost/company.informasea/home");
+					
+					//header("location:http://informasea.com/company.informasea/home");
+					
+					header("location:".base_url("agentsea/$dt[username_company]/home"));
+					
+				}
+				/* else if($check['user'] == "agent")
+				{
+					
+					$dt = array('id_user' => $check[0]['agent_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check['nama']);
+					$this->session->set_userdata($dt);
+					ob_start();
+					header("location:".base_url("agent"));
+				}
+				else if($check['user'] == "company")
+				{
+					$dt = array('id_user' => $check[0]['id_perusahaan'],'username' => $check[1]['username'], 'email' => $check[1]['email'], 'user' => $check['user'], 'nama' => $check['perusahaan']);
+					$this->session->set_userdata($dt);	
+					
+					header("location:".base_url("agentsea"));
+					
+				}*/
+				else
+				{
+					// username and password are invalid
+					$err = "$taw Username or password are invalid $tak ";
+					
+					//$data['show_modal'] = 1;
+					$data['err']		= md5(1);
+					header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+				
+			}
+
+			// KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH v
+			else if(!empty($check_user))
+			{ 				
+				//echo "KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH v"; exit;
+				
+				/* COOKIES COMPANIE				
+				$cookie = $_COOKIE;
+				$uag_cookie = $cookie['username_agent'];
+				$cp_cookie = $cookie['contact_person']
+				$u_cookie = $cookie['username_company']; 
+				
+				$n_cookie = $cookie['company_name'];
+				$p_cookie = $cookie['photo_company'];
+				$c_cookie = $cookie['cover_company'];
+				$s_cookie = $cookie['success_company']; */
+				
+				$data['err'] = md5(1);
+
+				$this->load->model('photo/photo_mdl');
+				
+				// photo perusahaan ---> buat di module photo get_photo for perusahaan maupun agent
+				$photo = $this->photo_mdl->get_profile_perusahaan($username);
+				$cover = $this->photo_mdl->get_company_cover($username);				
+				
+				echo $url = img_url("company/photo/$username/profil_pic/$photo[nama_gambar]");
+				
+				if(empty($photo) || !file_exists(pathup("company/photo/$username/profil_pic/$photo[nama_gambar]")))
+				{
+					
+					$url = asset_url("img/img_default.png");
+				}
+				
+				$url_cover = img_url("company/photo/$username/cover/".$cover['nama_gambar']);
+				
+				if(empty($cover) || !file_exists(pathup("company/photo/$username/cover/".$cover['nama_gambar'])))
+				{
+					
+					$url_cover = asset_url("img/blur-background09.jpg");
+				}
+				//echo "<div> </div> <p>".var_dump(file_exists(pathup("photo/$username/cover/".$cover['nama_gambar'])))."</p>";
+				//exit;
+				
+				$data_cookie = array(
+					
+					"company_name"     => $check_user['nama_perusahaan'],
+					"contact_person"   => $check_user['contact_person'],
+					"photo_company"    => $url,
+					"username_company" => $check_user['username'],
+					"cover_company"    => $url_cover
+				
+				);
+				
+				define_cookie_company($data_cookie);
+				
+				// HARUSS REDIRECTTT !!!				
+				header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				
+			}
+			
+			// KONDISI USERNAME belom ACTIVE dan PASSWORD benar
+			else if(!empty($check_nauser))
+			{
+				
+				$data['err'] = md5(2);
+				
+				//echo "check_nauser"; exit;
+				$url = base_url("assets/img/img_default.png");
+				$url_cover = base_url("assets/img/blur-background09.jpg");
+				
+				$data_cookie = array(
+					
+					"company_name"     => $check_user['nama_perusahaan'],
+					"contact_person"   => $check_user["contact_person"],
+					"photo_company"    => $url,
+					"username_company" => $check_user['username'],
+					"cover_company"    => $url_cover
+				
+				);
+				define_cookie_company($data_cookie);
+				
+				// HARUSS REDIRECTTT !!!				
+				header("location:".base_url("users/formactivation_agent/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+			}
+			
+			//AGENT
+			else if(!empty($f_ag))
+			{
+				// DAFTAR COOKIE untuk agent  
+				/* $cookie = $_COOKIE;
+				$uag_cookie = $cookie['username_agent'];
+				$cp_cookie = $cookie['agent_name'];
+				$u_cookie = $cookie['username_company']; 
+				$n_cookie = $cookie['company_name'];
+				$p_cookie = $cookie['photo_company'];
+				$c_cookie = $cookie['cover_company'];
+				$s_cookie = $cookie['success_company'];*/
+				
+				//$this->load->model("company/company_model");
+				$login_agent = $this->company_model->login($username,$password);
+				$check_agent = $this->company_model->check_agent($username);
+				
+				// Login agent benar	
+				if(!empty($login_agent[0]))
+				{
+					//print_r($login_agent);
+					//echo "<div>Perusahaan_id = $login_agent[0][perusahaan_id]</div>";
+					$ccompany = $this->company_model->get_detail_company_byid($login_agent[0]['perusahaan_id']);
+					//print_r($ccompany);
+					
+					$dt = array(
+					'id_perusahaan' 			 => $login_agent[0]['perusahaan_id'],
+					'username_agent' 		    => $login_agent[0]['username'], 
+					'email_agent' 		  	   => $login_agent[0]['email'], 
+					'user_company' 			  => $login_agent['user'], 
+					'nama_perusahaan' 		   => $login_agent[0]['nama_perusahaan'], 
+					'contact_person' 			=> $login_agent[0]['nama'],
+					'type_user'			     => "agent"); // nama agent
+					
+					
+					if ($remember_me) {
+						// Set remember me value in session
+						$this->session->set_userdata('remember_me', TRUE);
+					}
+					
+					$this->session->set_userdata($dt);
+					
+					// locationnya harus beda 
+					/*
+						kalau local
+						http://localhost/company.informasea/home
+						
+						kalau hosting
+						informasea.com/company.informasea/home
+					*/
+					header("location:".base_url("agentsea/$ccompany[username]/home"));
+				}
+				// username agent benar tapi password salah 
+				else if(!empty($check_agent))
+				{
+					$check_a   = $this->company_model->get_detail_company_byid($check_agent['perusahaan_id']); // check company active	
+						
+					$data['err'] = md5(1);
+	
+					$this->load->model('photo/photo_mdl');
+					
+					// photo perusahaan ---> buat di module photo get_photo for perusahaan maupun agent
+					$photo = $this->photo_mdl->get_profile_perusahaan($username);
+					$cover = $this->photo_mdl->get_company_cover($username);				
+					
+					$url = img_url("company/photo/$username/profil_pic/$photo[nama_gambar]");
+					
+					if(empty($photo) || !file_exists(pathup("company/photo/$username/profil_pic/$photo[nama_gambar]")))
+					{
+						
+						$url = asset_url("img/img_default.png");
+					}
+					
+					$url_cover = img_url("company/photo/$username/cover/".$cover['nama_gambar']);
+					
+					if(empty($cover) || !file_exists(pathup("company/photo/$username/cover/".$cover['nama_gambar'])))
+					{
+						
+						$url_cover = asset_url("img/blur-background09.jpg");
+					}
+					//echo "<div> </div> <p>".var_dump(file_exists(pathup("photo/$username/cover/".$cover['nama_gambar'])))."</p>";
+					//exit;
+					
+					$data_cookie = array(
+						
+						"company_name"     => $check_user['nama_perusahaan'],
+						"contact_person"   => $check_a['contact_person'],
+						"photo_company"    => $url,
+						"username_agent"   => $check_a['username'],
+						"cover_company"    => $url_cover
+					
+					);
+
+					define_cookie_agent($data_cookie);
+					
+					// HARUSS REDIRECTTT !!!				
+					header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+				else
+				{					
+					// KONDISI ISIAN SALAH
+					// username and password are invalid
+					$data['err']		= md5(1);
+					if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+					else header("location:".base_url("users/login_univ/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+			}
+			
+			else
+			{
+				// LOGIN AGENTSEA FORM	
+				// KONDISI ISIAN SALAH
+				 // username and password are invalid
+
+				$data['err']		= md5(1);
+				if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+				else header("location:".base_url("users/login/agentsea/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+			}
+		}
+		else
+		{
+			//exit(print_r($check) /*print_r($check_user) print_r($check_nauser)*/);
+			
+			$data['err'] = md5(1);
+			
+			$user = $this->uri->segment(3);
+		
+			$data['head']	 = "head";
+			$data['title']	= "Login as Seaman";	
+			$data['css']	  = "css"; //css tambahan, di head
+			$data['meta']	 = "login/meta"; // meta tambahan, di head
+			$data['js_top']   = "js_top"; // js tambahan, di head
+			
+			$data['navbar']   = "navbar-login";
+			$data['template'] = "login/login.php";
+			
+			$data['footer']   = "footer";
+			$data['js_under'] = "js_under";
+			
+			$data['desc']     = validation_errors(); 
+			
+			$this->load->view('register',$data);
+			
+		}
+	}
+	
+	function change_role()
+	{
+		$role = $this->input->post("role");
+		
+		if($role == "manager")
+		{
+			echo "<input type='text' class='form-control' id='nama_perusahaan' name='nama_perusahaan' placeholder='Company Name' 
+                      value='".set_value('nama_perusahaan')."'>";
+		}
+		else
+		{
+			//$this->load->model("");
+			$company = $this->company_model->get_company();
+			
+			echo "<select class='form-control' id='nama_perusahaan_select' name='nama_perusahaan' >";
+			foreach($company as $row)
+			{
+				echo "<option value='$row[id_perusahaan]'>$row[nama_perusahaan]</option>";
+			}
+			echo "</select>";
+		}
+	}
+	
+	public function cajax_username_agent()
+	{
+		// CEK VALIDASI USERNAME
+		$username = $this->input->post("username");
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '<span>');
+		$info['value'] = "true";
+		
+		//$info and $value
+		
+		$this->form_validation->set_rules('username',"Username","alpha_dash|xss_clean|min_length[6]");
+		$cajax_username = $this->company_model->cajax_username_agent($username); // table agent_ms
+		
+		if($this->form_validation->run() == false)
+		{
+			$info['username'] = validation_errors();	
+			$info['value'] = "false";
+		}
+		else if($cajax_username > 0)
+		{
+			$info['username'] = " Agent's Username has been used ";
+			$info['value'] = "false";
+		}
+		else
+		{
+			$info['username'] = " Agent's Username available ";
+			$info['value'] = "true";
+		}	
+		
+		//return JSON
+		$a = array("info" =>  $info['username'],"value" => $info['value']);
+		
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+			echo json_encode($a);
+		}else
+		{
+			return json_encode($a);
+		}
+	}
+	
+	public function cajax_username()
+	{
+		// CEK VALIDASI USERNAME
+		$username = $this->input->post("username");
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span>');
+		$info['value'] = "true";
+		
+		//$info and $value
+		
+		$this->form_validation->set_rules('username',"Username","alpha_dash|xss_clean|min_length[6]");
+		$cajax_username = $this->company_model->cajax_username($username);
+		
+		if($this->form_validation->run() == false)
+		{
+			$info['username'] = validation_errors();	
+			$info['value'] = "false";
+		}
+		else if($cajax_username > 0)
+		{
+			$info['username'] = " Username has been used ";
+			$info['value'] = "false";
+		}
+		else
+		{
+			$info['username'] = " Username available ";
+			$info['value'] = "true";
+		}	
+		
+		//return JSON
+		$a = array("info" =>  $info['username'],"value" => $info['value']);
+		
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+			echo json_encode($a);
+		}else
+		{
+			return json_encode($a);
+		}
+		
+	}
+	
+	/*  agak sulit
+		public function cajax_nama_perusahaan()
+	{
+		$nama_perusahaan = $this->input->post("nama_perusahaan",true);
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span>');
+		$info['value'] = "true";
+		
+		$this->form_validation->set_rules("nama_perusahaan","Company Name","xss_clean|min_length[6]|");
+		
+		
+		
+	} */
+	
+	public function cajax_email_agent()
+	{
+		// CEK VALIDASI EMAIL
+		$email = $this->input->post("email");
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span>');
+		$info['value'] = "true";
+		
+		//$info and $value
+		
+		$this->form_validation->set_rules('email',"Email","valid_email|xss_clean|min_length[6]");
+		$cajax_email = $this->company_model->cajax_email_agent($email); // agent
+		$cajax_genemail = $this->company_model->cajax_genemail($email); // generic - table generic email
+		
+		if($this->form_validation->run() == false)
+		{
+			$info['email'] = validation_errors();	
+			$info['value'] = "false";
+		}
+		else if($cajax_username > 0)
+		{
+			$info['email'] = " Agent's Email already exists ";
+			$info['value'] = "false";
+		}
+		else if(!empty($cajax_genemail))
+		{
+			$info['email'] = " Please use your company email address ";
+			$info['value'] = "false";
+			
+		}
+		else
+		{
+			$info['email'] = " Agent's Email available ";
+			$info['value'] = "true";
+		}
+		
+		// return JSON
+		$a = array("info" =>  $info['email'],"value" => $info['value']);
+		
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+			echo json_encode($a);
+		}else
+		{
+			return json_encode($a);
+		}
+	}
+	
+	public function cajax_email()
+	{
+		// CEK VALIDASI EMAIL
+		$email = $this->input->post("email");
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<span>', '</span>');
+		$info['value'] = "true";
+		
+		//$info and $value
+		
+		$this->form_validation->set_rules('email',"Email","valid_email|xss_clean|min_length[6]");
+		$cajax_email = $this->company_model->cajax_email($email);
+		$cajax_genemail = $this->company_model->cajax_genemail($email); // generic
+		
+		if($this->form_validation->run() == false)
+		{
+			$info['email'] = validation_errors();	
+			$info['value'] = "false";
+		}
+		else if($cajax_username > 0)
+		{
+			$info['email'] = " Email already exists ";
+			$info['value'] = "false";
+		}
+		else if(!empty($cajax_genemail))
+		{
+			$info['email'] = " Please use your company email address ";
+			$info['value'] = "false";
+			
+		}
+		else
+		{
+			$info['email'] = " Email available ";
+			$info['value'] = "true";
+		}
+		
+		// return JSON
+		$a = array("info" =>  $info['email'],"value" => $info['value']);
+		
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+			echo json_encode($a);
+		}else
+		{
+			return json_encode($a);
+		}
+		
+	}
+	
+	function check_username_company()
+	{
+		
+		$taw = "<li>";
+		$tak = "</li>";
+		
+		$name_post	  = $this->input->post('username_reg');
+		$username 	   = $this->company_model->check_company($name_post);
+		
+		$email_post	 = $this->input->post('email');
+		$email 		  = $this->company_model->check_email($email_post);
+		//print_r($username);
+		//var_dump($username);			
+		
+		if($name_post == "" && $email_post == "") {
+			$info['username'] = "$taw username can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$info['email'] 	= "$taw email can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$nilai['email']    = "false";
+			$nilai['username'] = "false";
+		} else {
+			if (empty($username)) {
+				$info['username']  = "";
+				$nilai['username'] = "true"; 
+			} else {
+				$info['username']  = "$taw this username has been used $tak ";
+				$nilai['username'] = "false";
+			}
+			
+			if (empty($email)) {
+				$info['email']  = "";
+				$nilai['email'] = "true"; 
+			} else {
+				$info['email']  = "$taw this email has been used $tak";
+				$nilai['email'] = "false";
+			}
+			
+			
+		}
+		
+		$arr = array('info'=>array('email'=>$info['email'],'username'=>$info['username']),
+					 'nilai'=>array('email'=>$nilai['email'],'username'=>$nilai['username']));
+	
+					 
+		return $arr;
+		
+	}
+	
+	// delete cookie 
+	public function change_cusername()
+	{
+		clear_cookie_company();
+		
+		$this->load->helper('list_error_users_helper');
+		
+		
+		$login_attemp = $this->input->get("login_attemp",true); // int
+		$new_login_attemp = $login_attemp + 1;
+		
+		//$data['show_modal'] 	 = 1;
+		$data['err'] 			= md5(1);
+		$data['u']			  = !empty($f_cu) ? "t" : "f";
+		$data['a']			  = !empty($f_ca) ? "t" : "f";
+		
+		header("location:".base_url("users/login/agentsea?login_attemp=$new_login_attemp"));
+		
+	}
+	
+	function send_activation_code()
+	{
+		
+		$username = $this->input->post('username_lg');
+		
+		/* kondisi klo username ada tp pass salah */
+		$str_cu = "select * from perusahaan where username = '$username'";
+		$q_cu   = $this->db->query($str_cu);
+		$f_cu   = $q_cu->row_array();
+		
+		$data_user = array(
+			  "username"	 		=> $f_cu['username'],
+			  "nama_perusahaan"     => $f_cu['nama_perusahaan'],
+			  "contact_person"      => $f_cu['contact_person'],
+			  "email"			   => $f_cu['email'],
+			  "password"	 		=> $f_cu['password'],
+			  "activation"   		  => $f_cu['activation'],
+			);
+		
+		$this->send_email($data_user);
+		//$this->clear_cookies(); // sesudah kirim email, hapus dahulu cookie nya 
+		
+		// harus diganti gambarnya dengan yg real dari database
+		$url = base_url("assets/img/img_default.png");
+		$url_cover = base_url("assets/img/blur-background09.jpg");
+		
+		$data_cookie = array(
+					
+			"company_name"     => $data_user['nama_perusahaan'],
+			"photo_company"    => $url,
+			"username_company" => $data_user['username'],
+			"cover_company"    => $url_cover,
+			"success_company"  => "<div class='alert alert-success'> The Activation Code has been send to your email,  <a href='#'>$email</a>. please confirm the activation code to your email to complete registration </div>"
+		
+		);
+		define_cookie_company($data_cookie);
+		
+		header("location:".base_url("users/login/agentsea"));
+		
+	}
+	
+	function send_email($user)
+	{
+		
+		/*
+			$data_user = array(
+			  "username"	 		=> $username,
+			  "nama_perusahaan"     => $nama_perusahaan,
+			  "contact_person"      => $contact_person,
+			  "email"			   => $email,
+			  "password"	 		=> md5($password),
+			  "activation"   		  => $f_user['activation']
+			);
+		*/
+		
+		if(empty($user))
+		{
+			// sesuatu dari login
+			$username = $this->input->post("username_lg"); // ? kenapa ini ada 
+	
+			$user = $this->user_model->check_nauser($username);
+			
+			
+			$data['nama_perusahaan'] = $user['nama_perusahaan'];
+			$data['contact_person']  = $user['contact_person'];
+			$data['username']		= $user['username'];
+			$data['password']		= $user['password'];
+			$data['email']	   	   = $user['email'];
+			$data['activation']	  = $user['activation'];
+			$data['str_url'] 	 = 
+			base_url("users/company_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+			
+		}
+		else
+		{
+			$data['nama_perusahaan'] = $user['nama_perusahaan'];
+			$data['contact_person']  = $user['contact_person'];
+			$data['username']		= $user['username'];
+			$data['password']		= $user['password'];
+			$data['email']	   	   = $user['email'];
+			$data['activation']	  = $user['activation'];
+			$data['str_url'] 	 = 
+			base_url("users/company_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+		}
+		
+		// buat email 
+		$this->load->library('email');
+		
+		// set email config
+		// set email config
+		$config = array();
+		$config['protocol'] = 'smtp';
+		$config['mailtype'] = 'html';
+		$config['priority'] = '1';
+		$config['wordwrap'] = FALSE;
+        $config['smtp_host'] = 'ssl://mail.informasea.com';
+        $config['smtp_port'] = 465;
+        $config['smtp_user'] = 'info@informasea.com';
+        $config['smtp_pass'] = 'uA8Q_MOh%%Ol';
+		// $config_email['smtp_user'] = 'dummybadr@yahoo.co.id';
+        // $config_email['smtp_pass'] = 'gantengganteng';
+		$config['charset'] = 'utf-8';
+		$config['mailtype'] = "html";
+		$this->email->initialize($config);
+		//exit('email_jalan');
+		
+		$this->email->from($config['smtp_user'], 'informasea.com');
+		$this->email->to($user['email']); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('informasea.com Confirmation Account');
+		
+		$content = $this->load->view('users/email2',$data,true);
+		$this->email->message($content);
+		
+		$contenti = $this->load->view('users/email',$data,true);
+		$this->email->set_alt_message($contenti);	
+	
+		$this->email->send();
+		
+		
+		//echo $this->email->print_debugger();
+		
+	}
+	
+	function forgotpass()
+	{
+		$g_captcha_response = $_POST['g-recaptcha-response'];
+		
+		$json=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6LcFQgkTAAAAALuuCpbziR8xjiFvaCuY2sg9jTol&response=".$g_captcha_response."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		
+		$response = json_decode($json, true);
+		   
+		$this->load->library('form_validation');
+		
+		$email = $this->input->post('email',true);
+		$this->form_validation->set_rules('email',"Email","valid_email|required");
+		
+		if($this->form_validation->run() == true && $response['success'] == true)
+		{
+		  // email harus active 
+		  $check_activation = $this->company_model->check_activation_code($email);
+		  
+		  if(!empty($check_activation))
+		  {
+			  
+			  // create new password
+			  $new_pass = mt_rand(100000,999999);
+			  
+			  // set new pass
+			  $forgot_pass = $this->company_model->forgot_pass($new_pass,$email);
+			  
+			  //send_email
+			  $data_user = array(
+				"username"	 => $check_activation['username'],
+				"first_name"   => $check_activation['nama_depan'],
+				"last_name"	=> $check_activation['nama_belakang'],
+				"email"		=> $check_activation['email'],
+				"password"	 => $new_pass
+				
+			  );
+			  
+			  //print_r($data_user); exit;
+			  
+			  // send email
+			  $this->send_email_pass($data_user);
+			  
+			  $data_cookie = array(
+					  
+					  "success"  => "<div class='alert alert-success'> Congratulation! we are sending your new password to your email </div>"
+			  );
+			  
+			  $this->session->set_flashdata("success",$data_cookie['success']);
+			  
+			  
+		  }
+		  else
+		  {
+			  $data_cookie['error'] = "<div class='alert alert-warning'> your email has not valid, please input a valid email </div>"; 
+			  $this->session->set_flashdata("error",$data_cookie['error']);	
+		  }
+			  
+		  // halaman login dengan header pengguna
+		  header("location:".base_url("users/forgotpass/agentsea")); 	  
+		}
+		else
+		{
+		  $data_cookie['error'] = "<div class='alert alert-warning'> Data Validation Error </div>";
+		  $this->session->set_flashdata("error",$data_cookie['error']);
+		  // output
+		  header("location:".base_url("users/forgotpass/agentsea"));
+		}
+	}
+	
+	private function send_email_pass($user)
+	{
+		/*
+			$data_user = array(
+			  "username"	 		=> $username,
+			  "nama_perusahaan"     => $nama_perusahaan,
+			  "contact_person"      => $contact_person,
+			  "email"			   => $email,
+			  "password"	 		=> md5($password),
+			  "activation"   		  => $f_user['activation']
+			);
+		*/
+		
+		if(empty($user))
+		{
+			// sesuatu dari login
+			$username = $this->input->post("username_lg"); // ? kenapa ini ada 
+	
+			$user = $this->user_model->check_nauser($username);
+			
+			
+			$data['nama_perusahaan'] = $user['nama_perusahaan'];
+			$data['contact_person']  = $user['contact_person'];
+			$data['username']		= $user['username'];
+			$data['password']		= $user['password'];
+			$data['email']	   	   = $user['email'];
+			
+			
+		}
+		else
+		{
+			$data['nama_perusahaan'] = $user['nama_perusahaan'];
+			$data['contact_person']  = $user['contact_person'];
+			$data['username']		= $user['username'];
+			$data['password']		= $user['password'];
+			$data['email']	   	   = $user['email'];
+			
+		}
+		
+		// buat email 
+		$this->load->library('email');
+		
+		// set email config
+		// set email config
+		$config = array();
+		$config['protocol'] = 'smtp';
+		$config['mailtype'] = 'html';
+		$config['priority'] = '1';
+		$config['wordwrap'] = FALSE;
+        $config['smtp_host'] = 'ssl://mail.informasea.com';
+        $config['smtp_port'] = 465;
+        $config['smtp_user'] = 'info@informasea.com';
+        $config['smtp_pass'] = 'uA8Q_MOh%%Ol';
+		// $config_email['smtp_user'] = 'dummybadr@yahoo.co.id';
+        // $config_email['smtp_pass'] = 'gantengganteng';
+		$config['charset'] = 'utf-8';
+		$config['mailtype'] = "html";
+		$this->email->initialize($config);
+		//exit('email_jalan');
+		
+		$this->email->from($config['smtp_user'], 'informasea.com');
+		$this->email->to($user['email']); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('informasea.com New Password');
+		
+		$content = $this->load->view('users/forgotpass-company/email/forgotpassmail',$data,true);
+		$this->email->message($content);
+		
+		$contenti = $this->load->view('users/forgotpass-company/email/forgotpassmail2',$data,true);
+		$this->email->set_alt_message($contenti);	
+	
+		$this->email->send();
+		
+		
+		//echo $this->email->print_debugger();
+		
+	}
+	
+	function activate()
+	{
+		//di proses di halaman email
+		
+		//authentification
+		$this->authentification->open_access();
+		
+		$a = $this->input->get('a',true);
+		$e = $this->input->get('email',true);
+		$x = $this->input->get('x',true);
+		$u = $this->input->get('u',true);
+		$p = $this->input->get('p',true);
+		
+		// check di database
+		$f = $this->user_model->check_activation();
+		 
+		if(!empty($f))
+		{
+			$this->user_model->update_activation($e);
+			
+			// halaman login dengan header pengguna
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	function register()
+	{
+		$g_captcha_response = $_POST['g-recaptcha-response'];
+		
+		$json=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6LcFQgkTAAAAALuuCpbziR8xjiFvaCuY2sg9jTol&response=".$g_captcha_response."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		
+		$response = json_decode($json, true);
+		//var_dump($response);
+		
+		$this->load->library("form_validation");
+		$this->load->model('nation_model');
+		
+		$this->form_validation->set_error_delimiters('<div>', '</div>');
+		
+		$username 		= $this->input->post("username"		   ,true);
+		$nama_perusahaan = $this->input->post("nama_perusahaan"	,true);
+		$contact_person  = $this->input->post("contact_person"	 ,true);
+		
+		$ext_num		 = $this->input->post("ext_num"			,true);
+		$phone_number    = $this->input->post("phone_number"	   ,true);
+		$a	 		   = explode("&",$ext_num);
+		$nationality 	 = $this->nation_model->get_detail_nationality($a[1]); 
+		
+		$role			= $this->input->post("role"			   ,true);
+		
+		//$nationality 	 = $this->input->post("nationality"		,true);
+		
+		$email 		   = $this->input->post("email"			  ,true);
+		$reemail		 = $this->input->post("reemail"			,true);
+		
+		$password		= $this->input->post("password"		   ,true);
+		$repassword	  = $this->input->post("repassword"		 ,true);
+		
+		$this->form_validation->set_rules("username",		"Username","required|xss_clean|min_length[6]|alpha_dash");
+		//$this->form_validation->set_rules("ext_num",		 "Extention Number", "required|xss_clean");
+		$this->form_validation->set_rules("phone_number",	"Phone Number","required|numeric|xss_clean");
+		$this->form_validation->set_rules("role"		, 	"Role","required|xss_clean");
+		$this->form_validation->set_rules("nama_perusahaan","Company Name","required|xss_clean"); 
+		$this->form_validation->set_rules("contact_person", "Contact Person","required|xss_clean");
+		
+		$this->form_validation->set_rules('email',		   'Email','required|valid_email|xss_clean|min_length[6]');
+		$this->form_validation->set_rules('password',		'Password','required|matches[repassword]|xss_clean|min_length[6]');
+		
+		$check = $this->check_username_company();
+		$cajax_email = json_decode($this->cajax_email(),true);
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST' && $response['success'] == true)
+		{  
+		  if($this->form_validation->run() == false || $check['nilai']['username'] == "false" || $check['nilai']['email'] == "false" || $cajax_email['value'] == "false")
+		  {			  
+			  $session_set_value = $this->session->all_userdata();
+		  
+			  if($session_set_value['remember_me'] == 1){
+				  header("location:".base_url("dashboard"));
+			  }
+			  
+			  $user = $this->uri->segment(3);
+			  
+			  $data['head']	 = "head";
+			  $data['title']	= "Register as Agentsea";	
+			  $data['css']	  = "css"; //css tambahan, di head
+			  $data['meta']	 = "meta"; // meta tambahan, di head
+			  $data['js_top']   = "js_top"; // js tambahan, di head
+			  
+			  //include
+			  //$data['navbar']   = "";		
+			  //$data['rwnation'] = $this->nation_model->get_nationality();
+			  //$check = $this->check_username();
+			  
+			  $data['template'] = "register-agentsea";
+			  $data['info'] 	 = $check['info']."<li>$cajax_email[info]<li>";
+			  $data['ve']       = validation_errors(); 
+			  $data['footer']   = "footer";
+			  $data['js_under'] = "js_under"; 
+			  
+			  
+			  $this->load->view('register',$data);
+		  
+		  }
+		  // KONDISI ISIAN BENAR
+		  else 
+		  {
+			  $this->company_model->register_company(); // tidak boleh dalam keadaan comment
+			  
+			  /*if($role == "manager")
+			  {
+			 	 $this->company_model->register_company(); // tidak boleh dalam keadaan comment
+			  }
+			  else if($role == "agent")
+			  {
+				 $this->company_model->register_agent(); // tidak boleh dalam keadaan comment
+			  }*/
+			  
+			  /*
+			  // ambil data yang ada di database
+			  $str_user = "select * from perusahaan where username = '$username' ";
+			  $q_user   = $this->db->query($str_user);
+			  $f_user   = $q_user->row_array(); 
+			  
+			  $data_user = array(
+				"username"	 		=> $username,
+				"nama_perusahaan"     => $nama_perusahaan,
+				"contact_person"      => $contact_person,
+				"email"			   => $email,
+				"password"	 		=> md5($password),
+				"activation"   		  => $f_user['activation']
+			  );
+			  
+			  
+			  // kirim email, activation code
+			  $this->send_email($data_user);
+			  
+			  $check_nauser = $this->company_model->check_nacompany($username); // check user tidak active
+			  //exit(print_r($check_nauser));
+			  
+			  $url = base_url("assets/img/img_default.png");
+			  $url_cover = base_url("assets/img/blur-background09.jpg");
+			  
+			  $data_cookie = array(
+					
+				"company_name"     => $data_user['nama_perusahaan'],
+				"photo_company"    => $url,
+				"username_company" => $data_user['username'],
+				"cover_company"    => $url_cover,
+				"success_company"  => "<div class='alert alert-success'> The Activation Code has been send to your email,  <a href='#'>$email</a>. please confirm the activation code to your email to complete registration </div>"
+		
+			  );
+			  define_cookie_company($data_cookie);
+			  */
+
+			  // HARUSS REDIRECTTT !!!				
+			  header("location:".base_url("users/verified_page"));
+			  
+			  /*$data['success']  = "<div class='alert alert-success'> Congratulations, you already registered at informasea.com. we're already send confirmation data to your email at <a href='#'>$email</a>. please confirm the activation code to your email to complete registration </div>";
+			  
+			  $this->load->view('register',$data);*/
+		  }
+		}
+		else
+		{
+			$data['title'] 	= "Registration";
+			$data['template'] = "register-agentsea";
+			$data['css']   	  = "css";
+			$data['meta']  	 = "meta";
+			$data['js_top']   = "js_top"; // js tambahan, di head
+			  
+			//include
+			//$data['navbar']   = "";		
+			//$data['rwnation'] = $this->nation_model->get_nationality();
+			//$check = $this->check_username();
+			$data['ve'] 			= "you must click the recaptha checklist to complete the registration";
+			  
+			$data['template'] = "register-agentsea";
+			
+			$data['footer']   = "footer";
+			$data['js_under'] = "js_under"; 
+		
+			
+			$this->load->view('register',$data);
+		}
+	}
+		
+		
+	
+	
+}

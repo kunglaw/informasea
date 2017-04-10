@@ -1,0 +1,64 @@
+$(document).ready(function(){
+	$(window).resize(function(){
+   console.log('resize called');
+   var width = $(window).width();
+   
+
+   if(width <= 375) {
+   	   $('#gallery').removeClass('image-grid-5 image-grid-4').addClass('image-grid-3');
+       $('#testimonial .media img').removeClass('medium-img-container').addClass('small-img-container');
+       $('.slick-prev').css('left', '-8px');
+       $('.slick-next').css('right', '-8px');
+   }
+   else if(width >= 375 && width <= 768){
+       $('#gallery').removeClass('image-grid-5 image-grid-3').addClass('image-grid-4');
+   }
+   else{
+       $('#gallery').removeClass('image-grid-3 image-grid-4').addClass('image-grid-5');
+       $('#testimonial .media img').removeClass('small-img-container').addClass('medium-img-container');
+       $('.slick-prev').css('left', '-36px');
+       $('.slick-next').css('right', '-36px');
+   }
+})
+.resize();//trigger the resize event on page load.
+});
+
+function sticky_relocate() {
+    var navbar_height = 54;
+    var window_top = $(window).scrollTop();
+    var div_top = ($('#sticky-anchor').offset().top) - navbar_height;
+    console.log(window_top + "  " + div_top);
+    if (window_top > div_top) {
+        $('#sticky').addClass('stick');
+    } else {
+        $('#sticky').removeClass('stick');
+    }
+}
+
+$(document).on('DOMMouseScroll mousewheel', '.Scrollable', function(ev) {
+    var $this = $(this),
+        scrollTop = this.scrollTop,
+        scrollHeight = this.scrollHeight,
+        height = $this.height(),
+        delta = (ev.type == 'DOMMouseScroll' ?
+            ev.originalEvent.detail * -40 :
+            ev.originalEvent.wheelDelta),
+        up = delta > 0;
+
+    var prevent = function() {
+        ev.stopPropagation();
+        ev.preventDefault();
+        ev.returnValue = false;
+        return false;
+    }
+
+    if (!up && -delta > scrollHeight - height - scrollTop) {
+        // Scrolling down, but this will take us past the bottom.
+        $this.scrollTop(scrollHeight);
+        return prevent();
+    } else if (up && delta > scrollTop) {
+        // Scrolling up, but this will take us past the top.
+        $this.scrollTop(0);
+        return prevent();
+    }
+});

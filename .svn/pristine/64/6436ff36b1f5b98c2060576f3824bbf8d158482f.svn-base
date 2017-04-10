@@ -1,0 +1,125 @@
+<?php
+	$username 			= $company[0]['username'];
+	$type_user 			= $this->session->userdata("type_user");
+	
+	//cek type server
+	if($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR']){
+        $url = "localhost/agent.informasea";    
+    }else{
+        $url = "agent.informasea.com";   
+    }
+
+	//cek profil pic company
+	if ($cek_profile->num_rows() > 0 ) {
+		foreach ($cek_profile->result() as $row) {
+			$nama_gambar 	= $row->nama_gambar;
+			$path_exists  	= is_file("../infrasset/company/photo/$username/profil_pic/$nama_gambar");
+
+			if ($path_exists == "1") {
+				$profil_pic     = img_url("company/photo/$username/profil_pic/$nama_gambar");		
+			}else{
+				$profil_pic  	= img_url("company/default/ic_landing_company.svg");
+			}
+		}
+	}else{
+		$profil_pic  	 = img_url("company/default/ic_landing_company_blue.svg");
+	}
+
+	//cek cover company
+	if ($cek_cover->num_rows() > 0) {
+		foreach ($cek_cover->result() as $row) {
+			$nama_gambar 	= $row->nama_gambar;
+			$path_exists  	= is_file("../infrasset/company/photo/$username/cover/$nama_gambar");
+
+			if ($path_exists == "1") {
+				$cover  	= img_url("company/photo/$username/cover/$nama_gambar");
+			}else{
+				$cover  	= img_url("company/default/img_ship.png");
+			}
+
+		}
+	}else{
+		$cover  	= img_url("company/default/img_ship.png");
+	}
+	
+	//cek type_user
+	if ($type_user == "company") {
+		$id_perusahaan 		= $this->session->userdata("id_perusahaan");
+		$username 			= $this->session->userdata("username_company");
+		$account_type 		= "Premium"; // simpan disini account_type
+		$btn_new_vacant 	= "| <a href='http://$url/new_vacant/$id_perusahaan&$username&$account_type' target='_blank'>
+		<i class='glyphicon glyphicon-plus' ></i> Create new vacantsea</a>";
+	}else{
+		$btn_new_vacant 	= "";
+	}
+?>
+<div id="container_modal"> 
+<!-- this container modal -->
+</div>
+
+<div class="col-md-9">
+	<?php
+		$data['cover'] 		   = $cover;
+		$data['profile_pic']	 = $profil_pic;
+		$data['company_name']	= $company[0]['nama_perusahaan'];
+		$data['nationality']= $company[0]['nationality'];
+		$data['website'] 		= $company[0]['website'];
+		$data['btn_dashboard']   = $btn_dashboard;
+
+		$this->load->view("header",$data); 
+	?>	
+	<div role="tabpanel">
+	  <!-- Nav tabs -->
+	  <div id="sticky-anchor"></div>
+	  <div class="widget-box" id="sticky">
+	  
+		<?php $this->load->view("menu"); ?>
+              
+	  </div>
+	  <!-- Tab content -->
+	  <div class="tab-content">
+	    <div role="tabpanel" class="tab-pane active box" id="home">
+	    	
+	    	<div class="about">
+	    		<h4 class="text-gray">About Company</h4>
+	    		<p><?php echo $company[0]['description'];?></p>
+	    	</div>
+	    	<div class="agentsea-photos">
+	    		<h4 class="text-gray pull-left">Photos</h4>
+	    		<a class="pull-right a-block" href="<?=base_url("agentsea/$username/photos");?>">See all</a>
+	    		<span class="clearfix"></span>
+	    		<?php $this->load->view('include/gallery-list-item');?>
+	    	</div>
+			
+	    	<div class="agentsea-vacantsea">
+	            <h4 class="text-gray pull-left">Vacantsea <?=$btn_new_vacant;?></h4> 
+	            <a class="pull-right a-block" href="<?=base_url("agentsea/$username/vacantsea");?>" >See all</a>
+	            <span class="clearfix"></span>
+		    	<?php 
+		    		include('include/vacantsea-list-item.php'); 
+		    	?>
+		    </div>
+
+	    </div>
+	  </div>
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+$("#new_vacantsea").click(function(){
+	$.ajax({
+		type 	: "POST",
+		url 	: "<?=base_url('company/modal_company');?>",
+		data 	: "modal_type=vacant_add",
+		success:function(data){
+			$("#container_modal").html(data);
+		}
+	});
+});
+
+</script>
+
+
+<?php //$this->load->view("js_under");?>

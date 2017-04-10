@@ -1,0 +1,43 @@
+<?php //center content module : users ?>
+
+<style>
+	#content-user .jumbotron p{
+	 
+	 font-size:14px;
+
+ }
+
+</style>
+
+<div id="content-user" class="col-md-6 panel panel-default" style="background-color:#FFF;">
+	<div class="panel-body">
+  
+  		<div class="jumbotron">
+        	<h2> Welcome to Informasea </h2>
+            
+            <p style=""> <b>Informasea</b> is a place for you as a seaman to search Information for Vacantsea and networking. For Shipping Company, this is the place where you can manage and search the best competent seaman to hire  </p>
+       		<!-- Informasea adalah tempat untuk anda sebagai pelaut untuk mencari informasea tentang lowongan pekerjaan dan networking. untuk perusahaan pelayaran, ini adalah tempat dimana anda dapat me - manage dan mencari pelaut terbaik-->
+            
+            <h3> Service </h3>
+            
+            <ul class="">
+            	<li>
+                	<h4> Search Vacantsea </h4>
+                    <p> You can use these galleries to insert tables, headers, footers, lists, cover pages, and other document building blocks. When you create pictures, charts, or diagrams, they also coordinate with your current document look.  </p>
+                </li>
+                <li>
+                	<h4> Social Network </h4>
+                    <p>Most controls offer a choice of using the look from the current theme or using a format that you specify directly. To change the overall look of your document, choose new Theme elements on the Page Layout tab.  </p>
+                </li>
+                <li>
+                	<h4> Managing Schedule </h4>
+                    <p>Most controls offer a choice of using the look from the current theme or using a format that you specify directly.   </p>
+                </li>
+            
+            </ul>
+  
+        </div>
+  
+  	</div>
+</div>
+

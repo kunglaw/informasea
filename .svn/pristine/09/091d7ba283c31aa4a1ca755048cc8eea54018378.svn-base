@@ -1,0 +1,55 @@
+<?php // seatizen panel , general, right panel ?>
+<?php
+$username = $this->session->userdata("username");
+$this->load->model("seatizen/seatizen_model");
+$this->load->model("photo/photo_mdl");
+$this->load->model('nation_model');
+$dtseatizen = $this->seatizen_model->list_seatizen_notfriend($username);
+
+
+?>
+<?php if(!empty($dtseatizen)){ ?>
+<div class="widget-box">
+	<div class="text-gray widget-box-title">New Seatizen</div>
+      <a href="<?php echo base_url("seatizen"); ?>" class="text-link widget-box-seemore">See All</a>
+	<?php foreach($dtseatizen as $row){ ?>
+      <?php
+	  	$b = $this->photo_mdl->get_photo_pp($row['username']);
+		$ss = explode(".",$b['nama_gambar']);
+		$url_gambar = img_url("photo/$row[username]/profile_pic/$ss[0]"."_small.".$ss[1]);
+		
+		if($b['nama_gambar'] == "" || !file_exists("../infrasset/photo/$row[username]/profile_pic/$ss[0]"."_small.".$ss[1]))
+		{
+			 //$url_gambar = asset_url("img/ic_landing_seaman.svg");
+      $url_gambar = asset_url("img/ic_landing_seaman_blue.svg");
+		}
+	  ?>
+      
+      <div style="clear: both"></div>
+      <div class="media">
+          <a class="pull-left small-img-container" href="<?php echo base_url("profile/$row[username]/resume");?>">
+              <img class="media-object img-responsive img-thumbnail" src='<?=$url_gambar ?>' alt="user-image">
+          </a>
+          <span class="pull-right" >
+              <a href="<?php echo base_url("profile/$row[username]/resume");?>" ><i class="fa fa-plus-square-o fa-2x text-link container-fa"></i></a>
+          </span>
+          <div class="media-body"> 
+              <div class="text-grey">
+              <?php $nation = $this->nation_model->get_detail_nationality($row['kebangsaan'])?>
+                <a href="<?php echo base_url("profile/$row[username]/resume");?>" >  
+               	 <?php echo ucfirst($row['nama_depan']." ".$row["nama_belakang"]); ?> 
+                </a>
+              </div>
+              <?php if(!empty($nation)){ ?>
+              <div class="subtitle">
+              	<a href="<?=strtolower(base_url("seatizen/search/$row[kebangsaan]"));?>">
+                	<img src="<?=asset_url("flags/".strtolower($nation['flag']));?>"> 
+                	<?php echo $row['kebangsaan']; ?>
+                </a>
+              </div>
+              <?php } ?>
+          </div>
+      </div>
+    <?php } ?>
+</div>
+<?php } ?>

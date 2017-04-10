@@ -1,0 +1,23 @@
+<?php // page resume, js.php ?>
+
+<script>
+	<!-- tooltip bro -->
+	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	<!-- popover bro -->
+	$('#data-update[data-toggle="popover"]').popover({
+		
+		trigger: 'hover',
+		'placement': 'top',
+		animation:true,
+		container:false,
+		content:'',
+		delay:1, // { "show": 500, "hide": 100 }
+		html:true,
+		//placement:'right',
+		//'selector':'false',
+		template:'<div class="popover col-md-4" style="border:1px solid #CCC" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+		//title:'',
+		//viewport:{ selector: 'body', padding: 0 }
+		
+	});
+</script>

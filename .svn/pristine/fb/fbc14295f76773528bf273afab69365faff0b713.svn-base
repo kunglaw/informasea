@@ -1,0 +1,41 @@
+<?php  //navbar-profile, modules seaman, page account, username = $this->uri->segment(2);
+if(empty($username))
+{
+	$username = $this->session->userdata("username");
+	
+	if(empty($username))
+	{
+		$username = $this->uri->segment(2);	
+	}
+}	
+?>
+<div id="sticky-anchor"></div>
+                
+<div class="widget-box col-md-12" id="sticky">
+    <ul class="nav nav-custom" role="tablist">
+        <li role="presentation" class="<?=$tml_active?>">
+            <a href="<?=base_url("profile/$username")?>">Timeline</a>
+        </li>
+        <li role="presentation">
+            <a href="<?=base_url("profile/$username/photo")?>" class="<?=$pt_active?>" >Photos</a>
+        </li>
+        <li role="presentation">
+            <a href="<?=base_url("profile/$username/friends")?>" class="<?=$fr_active?>" >Friends</a>
+        </li>
+        
+        	<?php
+				$username_company_sess = $this->session->userdata("username_company"); 
+				if(!empty($username_company_sess)){ 
+			?>
+            	<li id="resume-tab" role="presentation">
+            		<a href="<?=base_url("profile/$username/resume")?>" class="<?=$r_active?>">Resume</a>
+                </li>
+                
+            <?php }else{  ?>
+            	<li>
+            		<a href="<?=base_url("profile/$username/experience")?>" class="<?=$exp_active?>">Experience</a>
+                </li>
+                
+            <?php } ?>
+    </ul>
+</div>

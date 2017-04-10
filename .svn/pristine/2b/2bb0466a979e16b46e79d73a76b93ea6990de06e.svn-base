@@ -1,0 +1,27 @@
+<?php // panel-content/panel-status, module timeline  ?>
+<?php
+	
+	// di include ke list-timeline dan list-timeline-plus
+$this->load->module("timeline");
+?>
+
+<p>
+	<?php
+	if($row['photo'] != "" ){
+		$ss = explode(".",$row['photo']);
+		$dimension = getimagesize(pathup("timeline/$row[username]/big/$row[photo]"));
+		$new_dimension = $this->timeline->resize_dimension($dimension[0],$dimension[1]);
+		$url_photo = img_url("timeline/$row[username]/big/$row[photo]");
+		$respon_type = "responsive_img($new_dimension[width],$new_dimension[height],$row[id_timeline]);";
+	?>
+	 <img src="<?php echo $url_photo ?>" />
+    <?php
+	}
+	?>
+    <br />
+	 <?php echo $row['content']; // content , komentar , status ?>
+</p>
+
+ <script>
+		<?php echo $respon_type; ?>
+	</script>

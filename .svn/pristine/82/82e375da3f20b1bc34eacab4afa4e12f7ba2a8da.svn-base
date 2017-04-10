@@ -1,0 +1,219 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed');
+
+class photo_crop extends MX_Controller{
+	
+	function __construct()
+	{
+			
+		parent::__construct();
+		$this->load->model("photo_mdl");
+		$this->load->helper("image_thumb_helper");
+	}
+	
+	function crop_modal()
+	{
+		$x = 1;
+		$type = $this->input->post("type",true);
+		$user = $this->input->post("user",true);
+		
+		if($x == 1)
+		{
+			
+			//$this->load->view("list-photo/content");
+			//$this->load->view("include/content"); bisa
+			//$this->load->view("cropper-master/crop_modal");
+			//$this->load->view("include/crop_modal");
+			
+			if($user == "seaman")
+			{
+			  if($type == "resume")
+			  {
+				  $this->load->view("include/crop_resume_modal");
+			  }
+			  else if($type == "profile_pic")
+			  {
+				  $this->load->view("include/crop_profile_modal");
+			  }
+			  else if($type == "header")
+			  {
+				  
+			  }
+			}
+			else if($type == "company") // agentsea
+			{
+			  if($type == "resume")
+			  {
+				  
+			  }
+			  else if($type == "profile_pic") // meanager atau 
+			  {
+				  
+			  }
+			  else if($type == "logo")
+			  {
+				  
+			  }
+			  else if($type == "header")
+			  {
+				  
+			  }
+			}
+		}
+		
+	}
+	
+	// proses AJAX
+	function cropping()
+	{
+		$username 		 = $this->session->userdata("username");
+		$username_company = $this->session->userdata("username_company");
+		$username_agent   = $this->session->userdata("username_agent");
+		$user_type 		= $this->session->userdata("user"); 
+		/* CONTOH LAMA 
+			$crop = new CropAvatar($_POST['avatar_src'], $_POST['avatar_data'], $_FILES['avatar_file']);
+
+			$response = array(
+			  'state'  => 200,
+			  'message' => $crop -> getMsg(),
+			  'result' => $crop -> getResult()
+			);
+		  
+			echo json_encode($response);
+		
+		*/
+		
+		// pelaut = (resume, profile, header) , 
+		// agentsea = (logo,manager_profile,agent_profile)
+		$photo_type = $this->input->post("photo_type",true); 
+		
+		$img_src 		= $this->input->post("img_src",true);
+		$img_data 	   = $this->input->post("img_data",true);
+		$img_file 	   = $_FILES['img_input'];
+		$nama_gambar	= $this->input->post("nama_gambar"); // jika gambar sudah ada
+		
+		echo "<pre>";
+		print_r($_POST);
+		print_r($_FILES);
+		echo "</pre>";
+		exit;
+		
+		$this->load->library("cropper_master");
+		//$crop = $this->cropper_master;
+		$crop = $this->cropper_master; // proses cropping dilakukan
+		// OUTPUT dalam bentuk JSON
+		$response = array(
+			  'state'  => 200,
+			  'message' => $crop -> getMsg(),
+			  'result' => $crop -> getResult(),
+			  "error" => $crop -> getErr()
+			);
+			
+		// data yang diperlukan dari hasil upload 
+		$data_image = $crop->image_data();	
+		
+		// versi mini
+		if($photo_type == "profile")
+		{
+		  if($nama_gambar == "")
+		  {
+			$nama_gambar =$data_image['nama_gambar'];
+		  }
+		  $ss = explode(".",$nama_gambar);
+		  $file_name = $ss[0]."_thumb".".".$ss[1];
+		  $mini = image_small_cropp($file_name,"profile_pic");
+		}	
+		
+		if($response["error"] != "error"){ 
+		  // masukkan gambar ke database disini 
+		  if($user_type == "pelaut")
+		  {
+			  $dt_tml = array("nama_gambar"=>$data_image['nama_gambar'],
+			  "size_gambar"=>$data_image['size_gambar'], 
+			  "type_gambar"=>$data_image['type_gambar'], 
+			  "title"=>$data_image['title'],
+			  "id_pelaut"=>$this->session->userdata("id_user"),
+			  "username"=>$this->session->userdata("username") 
+			  );
+			  
+			  $str 				 = "SELECT * from photo_pelaut_tr where nama_gambar = '$nama_gambar' ";
+			  $q   				   = $this->db->query($str);
+			  $check_nama_gambar   = $q->row_array(); 
+			  
+			  //print_r($check_nama_gambar); exit; 
+			  
+			  // update data cropping baru  
+			  if($photo_type == "resume")
+			  {
+				  // jika nama_gambar kosong maka lakukan insert data
+				  if(empty($check_nama_gambar))
+				  {
+					// get dahulu data photo lama
+					$gpr = $this->photo_mdl->get_photo_resume($username);
+		
+					// deselect data lama
+					// JANGAN DIHAPUS  
+					//$dselect = $this->photo_mdl->update_resume_deselect($gpr['id_pptr']);
+					
+					// hapus gambar di database
+					$this->photo_mdl->delete_resume($gpr['id_pptr']);
+					
+					// insert data cropping baru
+					$insert = $this->photo_mdl->insert_photo($dt_tml);
+					
+					//update 
+					$this->photo_mdl->update_resume_pic($insert);
+				  }
+			  }
+			  else if($photo_type == "profile")
+			  {
+				  if(empty($check_nama_gambar))
+				  {
+					// versi mini
+					// walaupun di library ada disini juga harus ada
+					/* $ss = explode(".",$data_image['nama_gambar']);
+					$file_name = $ss[0]."_thumb".".".$ss[1];
+					$mini = image_small_cropp($file_name,"profile_pic");*/
+					
+					// get dahulu data photo lama
+					$gpr = $this->photo_mdl->get_photo_pp($username);
+		
+					// deselect data lama 
+					// JANGAN DIHAPUS
+					//$dselect = $this->photo_mdl->update_pp_deselect($gpr['id_pptr']);
+					
+					// hapus gambar di database
+					$this->photo_mdl->delete_profilepic($gpr['id_pptr']);
+					
+					
+					// insert data cropping baru
+					$insert = $this->photo_mdl->insert_photo($dt_tml);
+					
+					// update 
+					$this->photo_mdl->update_profile_pic($insert);
+				  }
+			  }
+		  }
+		  else if($user_type == "company")
+		  {
+			  
+		  }
+		  else if($user_type == "agent")
+		  {
+			  
+		  }
+		  // end database
+		}
+			
+		echo json_encode($response);
+		
+	} //end
+	
+	function __destruct()
+	{
+		
+		
+	}
+	
+	
+	
+}

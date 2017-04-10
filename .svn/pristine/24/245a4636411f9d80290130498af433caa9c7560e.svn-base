@@ -1,0 +1,155 @@
+<?php // content center , menu photo, module photo ?>
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<style>
+.subpic{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */ 
+}
+div.description{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:15px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content{
+	padding:10px;
+	margin:0px;
+	font-weight:bold;
+	opacity:0.9;
+}
+
+.list-pic{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	right:0px;
+}
+
+
+</style>
+<div id="" class="col-md-12">
+    <div class="panel panel-default"> 
+        <div class="panel-body">
+           <h2 class=""> Photos </h2>
+            
+            
+           <span class="clearfix" ></span>
+            
+            <script>
+                // LOAD PHOTO
+                $(document).ready(function(e) {
+                    get_photo_timeline(); 
+                    get_photo(); // get list photo
+                     
+                    
+                    
+                });
+                
+                function get_photo()
+                {
+                    
+                    $.ajax({
+                        
+                        url:"<?php echo base_url("photo/get_photo_person")?>",
+                        type:"POST",
+                        data:"x=1&username=<?php echo $this->uri->segment(3); ?>",
+                        error: function(){
+                            
+                            
+                            alert("terjadi kesalahan pada function get_photo");
+                            
+                        },
+                        success: function(data){
+                            
+                            $(".tab-content #photos div").html(data);
+                            //alert(data);
+                        }
+                        
+                        
+                    });	
+                }
+                
+                function get_photo_timeline()
+                {
+                    
+                    $.ajax({
+                        
+                        url:"<?php echo base_url("photo/get_photo_persontml")?>",
+                        type:"POST",
+                        data:"x=1&username=<?php echo $this->uri->segment(3); ?>",
+                        error: function(){
+                        
+                            alert("terjadi kesalahan pada get_photo_timeline");
+                            
+                        },
+                        success: function(data){
+                            
+                            $(" #photo_timeline div").html(data);
+                            //alert(data);
+                        }
+                        
+                        
+                    });	
+                }
+                
+                
+            
+            </script>
+            
+            <div role="tabpanel">
+              <ul class="nav nav-tabs" role="tablist">
+                
+                 <li role="presentation" class="active" id="pt-tab">
+                   <a href="#photo_timeline" aria-controls="albums" role="tab" data-toggle="tab">Timeline</a>
+                </li>
+                <li role="presentation" id="photo-tab">
+                   <a href="#photos" aria-controls="photos" role="tab" data-toggle="tab">Photos</a>
+                </li>
+                <li role="presentation" id="albums-tab">
+                   <a href="#albums" aria-controls="albums" role="tab" data-toggle="tab">Albums</a>
+                </li>
+                 
+                
+  
+              </ul>
+              <br />
+              
+              <div class="tab-content">
+                 
+                  <div role="tabpanel" class="tab-pane" id="photos">
+                      <span id="info_photo"></span>
+                      <div>
+                       
+                      
+                      </div>
+                  </div>
+                  
+                  <div role="tabpanel" class="tab-pane" id="albums">
+                     <span id=""></span>
+                      <div>
+                       
+                          sadfasdasdasdasdasdasd
+                      </div>
+                  </div>
+                  
+                   <div role="tabpanel" class="tab-pane active" id="photo_timeline">
+                     <span id=""></span>
+                      <div>
+                       
+                          
+                      </div>
+                  </div>
+                  
+                  
+                </div>
+            </div>
+            
+        </div>
+    </div>  
+</div><!-- col-md-8 -->

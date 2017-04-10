@@ -1,0 +1,14 @@
+<?php // menu
+
+$username 			= $this->uri->segment(2);
+?>
+
+<ul class="nav nav-custom" role="tablist">
+  <li role="presentation"><a href="<?=base_url("agentsea/$username");?>">Home</a></li>
+  <li role="presentation"><a href="<?=base_url("agentsea/$username/profile");?>">Profile</a></li>
+  <li role="presentation"><a href="<?=base_url("agentsea/$username/vacantsea");?>" >Vacantsea</a></li>
+  <!-- <li role="presentation" class="active"><a href="<?=base_url("agentsea/$username/information");?>" >Information</a></li> -->
+  <li role="presentation"><a href="<?=base_url("agentsea/$username/photos");?>" >Photos</a></li>
+  <!-- <li role="presentation"><a href="<?=base_url("agentsea/$username/ships");?>" >Ships</a></li> -->
+  <!-- <li role="presentation"><a href="<?=base_url("agentsea/$username/more");?>" >More</a></li> -->
+</ul>

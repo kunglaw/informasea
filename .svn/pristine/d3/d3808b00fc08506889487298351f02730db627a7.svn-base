@@ -1,0 +1,261 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed');
+
+class resume_ajax extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();	
+		$this->load->model('seaman/resume_model');
+	}
+	
+	function modal()
+	{
+		
+		//echo "<script>alert('berada disini')</script>";
+
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+		  // untuk tanggalan "year_range" 
+		  $data['sign_in'] 		= "-50:+0";
+		  $data['sign_off'] 	   = "-50:+0";
+		  $data['date_issued']	= "-50:+0"; // maxDate:0
+		  $data['date_expired']   = "-5:+15"; // minDate:0
+		  
+		  // untuk label 
+		  $data['date_issued_lbl']  = "Date of Issue";
+		  $data['date_expired_lbl'] = "Date of Expiry";
+		  $data['sign_on_lbl']	  = "Sign On";
+		  $data['sign_off_lbl']	 = "Sign Off"; 	
+		  
+		  $modal_type = $this->input->post("modal");
+		  /*echo "<script>alert('$modal_type')</script>";*/
+		  $id_update = $this->input->post("id_update");
+		  if($modal_type == "form-profile")
+		  {
+			  $this->load->model('vacantsea/vacantsea_model');
+			  $this->load->model('vessel_model');
+			  $this->load->model('nation_model');
+			 
+			  
+			  $data['nation']		= $this->nation_model->get_nationality();
+			  $data['resume'] 		= $this->resume_model->get_resume();
+			  
+			  
+			  $this->load->view("resume/form-profile",$data);	
+		  }
+		  else if($modal_type == "form-kepelautan")
+		  {
+			 
+			  $this->load->model('vessel_model'); 
+			  $this->load->model('vacantsea/vacantsea_model');
+			  //echo "test"; exit;
+			  $data['vessel_type']   = $this->vessel_model->get_ship_type();
+			  $data['coc_class'] 	 = $this->resume_model->get_coc_class();
+			  $data['department'] 	= $this->vacantsea_model->call_department();
+			  $data['rank'] 	      = $this->resume_model->get_rank();
+			  $data['resume'] 		= $this->resume_model->get_resume();
+			  
+			  $this->load->view("resume/form-kepelautan",$data);
+		  }
+		  else if($modal_type == "form-add-proficiency") // proficiency
+		  {
+			  
+			  //$data['resume'] = $this->resume_modal->get_resume();
+			  $this->load->view("resume/form-add-proficiency"); 
+		  }
+		  else if($modal_type == "form-add-competency") //competency
+		  {
+			  $data['profile_resume'] = $this->resume_model->get_resume();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else if($modal_type == "form-add-document") //competency
+		  {
+			  $this->load->model("document_model");
+//              echo "hallo";
+			  $data['myDocument'] = $this->document_model->get_all_table_ms("document");
+			  $data['id_pelaut'] = $this->session->userdata("id_user");
+			  //$data['resume'] = $this->resume_modal->get_resume();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else if($modal_type == "form-add-visa"){
+		  	$this->load->model('document_model');
+			
+			$this->load->view("resume/".$modal_type,$data);
+		  }
+
+		  else if($modal_type == "form-add-medical") //competency
+		  {
+			 
+			  $this->load->model("document_model");
+			  
+			  $data['myDocument'] = $this->document_model->get_all_table_ms("medical");
+			  $data['id_pelaut'] = $this->session->userdata("id_user");
+			  
+			  //$data['resume'] = $this->resume_modal->get_resume();
+			  $this->load->view("resume/".$modal_type, $data);
+		  }
+		  else if($modal_type == "form-add-experience")
+		  {
+			  
+			  $this->load->model('resume_model');
+			 
+			  $this->load->model('vessel_model');
+			   
+			   
+			  //$data['department'] 	= $this->vacantsea_model->call_department();
+			  
+			  $data['vessel'] 	    = $this->vessel_model->get_ship();			 
+			  $data['ship_type']	 = $this->vessel_model->get_ship_type();
+			  
+			  $data['rank'] 	  	  = $this->resume_model->get_rank();
+			  $data['resume'] 		= $this->resume_model->get_resume();
+			  //$data['coc_class']     = $this->resume_model->get_coc_class();
+			  
+			  $this->load->view("resume/".$modal_type,$data);
+		  } else if($modal_type == "form-update-visa"){
+		  	$this->load->model('document_model');
+		  
+		  	$data['visa'] = $this->document_model->get_detail_visa();
+
+		  $this->load->view("resume/".$modal_type,$data);
+		  }
+
+
+		  else if($modal_type == "form-upload-resume")
+		  {
+			  //echo "why ..? ";
+			  $this->load->view("resume-upload/".$modal_type);
+			  
+		  }
+		  else  if($modal_type == "form-update-proficiency")
+		  {
+			  $this->load->model('proficiency_model');
+			  $data['proficiency'] = $this->proficiency_model->get_proficiency_tr();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else  if($modal_type == "form-update-competency")
+		  {
+			  $this->load->model('competency_model');
+			  $data['profile_resume'] = $this->resume_model->get_resume();
+			  $data['competency'] = $this->competency_model->get_competency_tr();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else  if($modal_type == "form-update-experience")
+		  {
+			  $this->load->model("experience_model");
+			  
+			  $data['resume'] 		= $this->resume_model->get_resume();
+			  $data['experience'] = $this->experience_model->get_experience_detail();
+			  
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else if($modal_type == "form-update-document")
+		  {
+			  $this->load->model("document_model");
+			  $data['document'] = $this->document_model->get_document_tr();
+			  
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  else if($modal_type == "form-update-medical"){
+		  	$this->load->model("document_model");
+		  	$data['document'] = $this->document_model->get_document_tr();
+		  	//echo "<script>alert('masih disini')</script>";
+		  	$this->load->view("resume/".$modal_type,$data);
+
+		  }
+
+		  else if($modal_type == "delete-competency-modal")
+		  {
+			  $this->load->model('competency_model');
+			  $data['competency'] = $this->competency_model->get_competency_tr();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  
+		  else if($modal_type == "delete-proficiency-modal")
+		  {
+			  $this->load->model('proficiency_model');
+			  $data['proficiency'] = $this->proficiency_model->get_proficiency_tr();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }
+		  
+		  else if($modal_type == "delete-experience-modal")
+		  {
+			  $this->load->model('experience_model');
+			  $data['experience'] = $this->experience_model->get_experience_detail();
+			  $this->load->view("resume/".$modal_type,$data);
+		  }else if($modal_type == "delete-visa-modal"){
+		  	$this->load->model('document_model');
+		  	$data['visa'] = $this->document_model->get_detail_visa();
+		  	$this->load->view("resume/".$modal_type,$data);
+		  }
+
+
+		   else if($modal_type == "delete-document-modal")
+		  {
+			  $this->load->model('document_model');
+			  $data['document'] = $this->document_model->get_document_tr();
+			  $this->load->view("resume/".$modal_type,$data);
+		  } else if($modal_type == "delete-friend-modal"){
+		  	//echo "<script>alert('tes');</script>";
+		  	$this->load->model('seatizen/seatizen_model');
+		 
+		  		$data['seatizen'] = $this->seatizen_model->get_detail_pelaut_by_id($id_update);
+		  	$this->load->view("friends/".$modal_type,$data);
+
+		  } else if($modal_type == "delete-friend-modal-2"){
+		  	//echo "<script>alert('oii');</script>";
+		  	$this->load->model('seatizen/seatizen_model');
+		  
+		  	$data['seatizen'] = $this->seatizen_model->get_detail_pelaut_by_id($id_update);
+		  	$this->load->view("friends/".$modal_type,$data);
+		  } else if($modal_type == "cancel-apply-modal") {
+
+		  	$this->load->model('vacantsea/vacantsea_model');
+		  	$data['applicant'] = $this->vacantsea_model->get_detail_applicant($id_update);
+		  	//echo "<script>alert('id update :$id_update')</script>";
+		  	$data['vacantsea'] = $this->vacantsea_model->detail_vacantsea($data['applicant']['id_vacantsea']);
+		  	
+
+			//print_r($data['vacantsea']);
+		   	//print_r($data['applicant']); echo "<br>";
+		  	//print_r($data['vacantsea']);
+		 	//echo $id_update;
+		 // echo "<script>alert(\'$id_update\')</scirpt>";
+		  	$this->load->view("applied/cancel-apply-modal",$data);
+		  }else if($modal_type = "modal-delete-resume-upload"){
+
+
+		  		$data['resume_upload'] = $this->resume_model->detail_upload_resume($id_update);
+		  		echo "<script>alert('$id_update');</script>";
+		  		$this->load->view("resume-upload/".$modal_type,$data);
+		  }
+		  
+		}
+		else
+		{
+			header("location:".base_url("custom404"));
+		}
+		
+		
+		//$data['resume'] =  $this->resume_model->get_resume();
+		//$this->load->view('resume/form-profile',$data);
+		//echo "lalala";
+	}
+	
+	function hover_sertifikat()
+	{
+		$data['kode_pelaut'] = $this->input->post("kode_pelaut");
+		$data['no_license']  = $this->input->post("no_license");
+		$this->load->view("resume/hover-sertifikat",$data);	
+	}
+	
+	function __destruct()
+	{
+		
+		
+	}
+	
+	
+	
+}

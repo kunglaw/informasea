@@ -1,0 +1,42 @@
+<?php // login form nav , module: users ?>
+<div class="navbar-collapse collapse" id="navbar-main">
+ <div class="col-md-10">
+ 	
+    <div id="login_form" class=""> 
+    	
+        <form action="<?php echo base_url("users/users/login") ?>" id="lgn_frm" role="form" method="post">
+        	
+            <input type="hidden" value="<?=!empty($_GET['login_attemp']) ? $_GET['login_attemp'] : 0 ?>" name="login_attemp"  />
+            <ul class="navbar-nav nav navbar-right">
+            	<li>
+				  <?php if($show_modal == 1 || $_GET['sm'] == 1){ ?>
+                  <span id="error-tip" class="glyphicon glyphicon-exclamation-sign" data-container="body" 
+                  data-toggle="popover" data-placement="left" data-content="<?=$description?>" style="cursor:pointer" >
+				  </span><span><?=$description?></span>                  
+                  <?php } ?>
+                </li>
+                <li><input type="text" name="usernamepl" id="username" placeholder="username" class="form-control" required="required"></li>
+                <li><input type="password" name="password" id="password" placeholder="password" class="form-control" required="required"></li>
+                <li> <input type="submit" value="Submit" class="btn btn-default"></li>
+            
+            </ul>
+        
+        </form>
+    
+    </div>
+    
+    
+ </div>
+</div>
+
+<script>
+	$('#error-tip').popover({
+		trigger: 'hover',
+		'placement': 'left',
+		html:true,
+		animation:true,
+		
+	});
+
+</script>
+

@@ -1,0 +1,16 @@
+<div class="panel panel-default" id="timeline" >
+     
+      <div class="panel-body">
+          
+          <div class="clearfix"></div>
+          
+          <?php $this->load->view("dummy/dummy-text-new"); ?>
+     
+      
+       
+      </div><!-- panel body -->
+      <div id="list_comment_timeline_<?php //echo $row['id_timeline']; ?>" class="row">
+      
+        <!-- disini list comment -->
+      </div>    
+</div>

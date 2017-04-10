@@ -1,0 +1,10 @@
+<?php // css users ?>
+
+<style>
+      body {
+          background-image: url('<?=base_url("assets/img/img_bg_register.png")?>');
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-attachment: fixed;
+      }
+</style>

@@ -1,0 +1,41 @@
+<?php /* ini adalah sample page. dimana sebelum membuat view harus diperhatikan langkah - langkah berikut. 
+	
+			<!doctype html>
+  <?php
+   	  
+	  $dt_head['css'] = $css;
+	  $dt_head['meta'] = $meta;
+      $this->load->view('head',$dt_head); // include general head
+	  
+  ?>
+  <body>
+      <div id="wrapper">
+          <header id="header">
+              <?php 
+                  if(empty($navbar))
+                  {
+                    $this->load->view('include/navbar.php',$dt_navbar);          
+                    $this->load->view('include/navbar-mobile.php',$dt_navbar); 
+                  }
+                  else
+                  {
+					 
+                    $this->load->view($navbar,$dt_navbar);     
+                  }
+              ?>
+          </header>
+      </div>
+      
+      <?php
+          $this->load->view($template,$dt_template);
+     	  $this->load->view("footer",$dt_footer);  
+	  ?>
+  
+  </body>
+</html>
+	  <?php $this->load->view($js_under,$dt_js); ?>
+
+	
+
+	*/
+?>

@@ -1,0 +1,20 @@
+<?php // right content, menu vacantsea, module default ?>
+
+<div id="banner" class="panel panel-default col-md-3 hidden-xs pull-left">
+          
+  <div class="panel-body ">
+    <?php $this->load->view('dummy/dummy_ad')?>
+  </div>
+ 
+</div>
+
+<style>
+	#banner{
+		
+		margin:0px 0px 0px 20px;
+			
+	}
+	
+
+</style>
+

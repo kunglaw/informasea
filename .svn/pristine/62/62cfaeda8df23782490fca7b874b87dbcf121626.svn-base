@@ -1,0 +1,106 @@
+
+<?php // js_top, profile, module seaman ?>
+<?php // INGA2 !! FUNCTION ITU HARUSNYA ADA DIATAS ?>
+<!-- load js_top profile  -->
+
+<script type="text/javascript" src="<?=base_url("assets/js/script.js")?>" ></script>
+<script type="text/javascript" src="<?=base_url("plugins/slick/slick.min.js")?>" ></script>
+
+<!-- resume -->
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<link href="<?php echo base_url("assets/css/jquery.dataTables.css") ?>" type="text/css" rel="stylesheet" />
+
+<script>
+
+	function beforeResume()
+	{
+		$("#sticky.sticky").removeAttr("z-index");
+		$("#sticky.sticky").css("z-index","0 !important");
+		//$(".modal-backdrop").css("z-index","0 !important");
+	}
+</script>
+
+<!-- document function -->
+<script type="text/javascript">
+  function update_document(id_document){
+	  
+	  //alert("id_document:"+id_document)
+	  beforeResume();
+	  var type_modal = "form-update-document";
+	  get_modal(type_modal,id_document);
+	  
+  }
+  
+  function delete_document(id_document){
+	  //alert("id_document"+id_document);
+	  beforeResume();
+	  var type_modal = "delete-document-modal";
+	  get_modal(type_modal,id_document);
+	  
+  }
+
+  function update_medical(id_document){
+
+  	beforeResume();
+  	//alert(id_document);
+  	//alert('aku disini');
+  	var type_modal = "form-update-medical";
+  	get_modal(type_modal,id_document);
+  }
+</script>
+
+<!-- coc endorsement -->
+<script>
+  function edit_cocend(id_coc){
+	
+	beforeResume();
+	type_modal = "form-update-competency";
+	get_modal(type_modal,id_coc);
+	//e.preventDefault();
+  }
+ 
+  
+  function delete_cocend(id_coc){
+	beforeResume();
+	var type_modal = "delete-competency-modal";
+	get_modal(type_modal,id_coc);
+	//e.preventDefault();
+  }
+  
+</script>
+
+<!-- function proficiency-->
+<script>
+	function update_proficiency(id_proficiency){
+
+		beforeResume();
+		var type_modal = "form-update-proficiency";
+		get_modal(type_modal,id_proficiency);
+		
+	};
+	function delete_proficiency(id_proficiency){
+		
+		//alert("id_proficiency:"+id_proficiency)
+		beforeResume();
+		var type_modal = "delete-proficiency-modal";
+		get_modal(type_modal,id_proficiency);
+		
+	};
+</script>
+
+<script>
+	function update_experience(experience_id){
+		
+		beforeResume();
+		var type_modal = "form-update-experience";
+		get_modal(type_modal,experience_id);
+		
+	}
+	function delete_experience(experience_id){
+		
+		beforeResume();
+		var type_modal = "delete-experience-modal";
+		get_modal(type_modal,experience_id);
+		
+	}
+</script>

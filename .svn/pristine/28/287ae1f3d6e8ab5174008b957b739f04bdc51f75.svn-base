@@ -1,0 +1,37 @@
+<?php // list coment , module seaman ?>
+
+<?php
+	
+	foreach($comment as $row)
+	{
+		
+	  $profile_pic = $this->user_model->get_profile_pic($row['username']); 
+	  $nama_gambar = explode(".",$profile_pic);
+	  $url = img_url("photo/$row[username]/profile_pic/$nama_gambar[0]"."_small.".$nama_gambar[1]);
+	  
+	  if(empty($profile_pic))
+	  {
+		  
+		  $url = base_url("assets/user_img/noprofilepic_small.png");
+	  }
+?>
+<div class="" id="comment" style="background-color:#F7F7F7; ">
+     <div id="profile-pic-mini" class="" style="float:left">
+          <img src="<?php  echo $url; ?>" alt="" id="" class="img-rounded img-profile" />
+     </div>
+     <div class="col-md-9" style="float:left">
+     	<div><b><a href="<?php echo base_url("profile/".$row['username']); ?>"><?php echo $name = $this->timeline_model->get_realname($row['username']);  ?></a></b>
+        <?php echo $row['content']?>
+        </div>
+        <div> <small style="color:#999"><?php echo date_format_db($row['datetime']) ?></small> </div>
+        
+           
+        
+     </div>
+     <div class="clearfix"></div>
+      
+        
+</div> 
+<?php
+	}
+?>

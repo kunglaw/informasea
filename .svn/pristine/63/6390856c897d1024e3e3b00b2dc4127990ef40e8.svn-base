@@ -1,0 +1,17 @@
+<div id="profile-header">
+
+    <img src="<?=$cover;?>" alt="" class="img-responsive" width="100%">
+    <div class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object" src="<?=$profile_pic;?>" alt="Image">
+        </a>
+        <div class="media-body text-white">
+            <h3 class="media-heading "><?=$company_name?></h3>
+            <br>
+            <p class="sub-header-left">Shipping Expedition<br><b><?=$company_location?></b></p>
+            <p class="sub-header-right"><?=$btn_dasboard;?></p>
+        </div>
+    </div>
+    <div class="profile-text-container">
+    </div>
+</div>

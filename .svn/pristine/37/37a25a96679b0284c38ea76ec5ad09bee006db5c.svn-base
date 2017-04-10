@@ -1,0 +1,184 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/**
+ * Model for tracking purposes
+ *
+ * @property CI_Loader $load
+ * @property CI_DB_active_record $db
+ * @property CI_DB_active_record $_current_db
+ *
+ * @copyright PT. Badr Interactive (c) 2015
+ * @author pulung
+ */
+class Tracker_model extends CI_Model {
+
+    // current database object used
+    private $_current_db = NULL;
+    private $_seatizen_table = "log_seatizen";
+    private $_agentsea_table = "log_agentsea";
+    private $_vacantsea_table = "log_vacantsea";
+    private $_login_seatizen_table = "log_login_seatizen";
+    private $_login_agentsea_table = "log_login_agentsea";
+
+    /**
+     * Load database with database name options
+     * @param string $database_name
+     */
+    public function __construct($database_name = "") {
+
+        $this->_current_db = $this->load->database($database_name, TRUE);
+
+        // set timezone for further db query.
+        $this->_current_db->query("SET time_zone = '+7:00'");
+/*<<<<<<< .mine
+=======*/
+          $this->load->library("user_agent");
+//>>>>>>> .r31
+		
+    }
+
+    /**
+     * Save seatizen action in text
+     *
+     * @param $seatizen_id
+     * @param $action
+     */
+    public function save_seatizen_action($seatizen_id, $action) {
+/*<<<<<<< .mine
+
+=======*/
+        $seatizen_id    = $this->session->userdata("id_user");
+//>>>>>>> .r31
+        $log = array(
+//<<<<<<< .mine
+            "seatizen_id" => $seatizen_id,
+            "action" => $action,
+			"url"=>current_url(),
+			"username"=>$this->session->userdata("username"),
+			"nama"=>$this->session->userdata("nama"),
+			"ip_address"=>$this->session->userdata("ip_address"),
+			"user_agent"=>$this->agent->agent_string(),
+			"session_id"=>$this->session->userdata("session_id"),
+//=======
+            "seatizen_id" => $seatizen_id,
+            "action" => $action,
+			"url"=>current_url(),
+            "username"  => $this->session->userdata("username"),
+            "nama"      => $this->session->userdata("nama"),
+            "ip_address"    => $_SERVER['REMOTE_ADDR'],
+            "user_agent"    => $this->agent->agent_string(),
+            "session_id"    => $this->session->userdata("session_id")
+//>>>>>>> .r31
+        );
+        $this->db->insert($this->_seatizen_table, $log);
+    }
+
+    /**
+     * Save agentsea action in text
+     *
+     * @param $agentsea_id
+     * @param $action
+     */
+	//  private $_agentsea_table = "log_agentsea";
+    public function save_agentsea_action($agentsea_id, $action) {
+
+        $log = array(
+            "agentsea_id" => $agentsea_id,
+            "action" => $action,
+			"username" => $this->session->userdata("username_company"),
+			"url"=>current_url(),
+			"nama" => $this->session->userdata("nama_perusahaan"),
+			"ip_address" => $_SERVER['REMOTE_ADDR'],
+			"user_agent" => $this->agent->agent_string(),
+			"session_id" => $this->session->userdata("session_id")
+        );
+
+        $this->db->insert($this->_agentsea_table, $log);
+
+    }
+
+    /**
+     * Save vacantsea visitor
+     *
+     * @param $seatizen_id
+     * @param $vacantsea_id
+     */  
+	 //private $_vacantsea_table = "log_vacantsea";
+    public function save_vacantsea_visitor($seatizen_id, $vacantsea_id) {
+        $log = array(
+            "seatizen_id" => $seatizen_id,
+            "vacantsea_id" => $vacantsea_id,
+			"username" => $this->session->userdata("username"),
+			"url"=>current_url(),
+			"nama" => $this->session->userdata("nama"),
+			"ip_address" => $_SERVER['REMOTE_ADDR'],
+			"user_agent" => $this->agent->agent_string(),
+			"session_id" => $this->session->userdata("session_id")
+        );
+
+        $query = $this->db->get_where($this->_vacantsea_table, $log);
+        $result = $query->row_array();
+
+        if (empty($result)) {
+            $this->db->insert($this->_vacantsea_table, $log);
+        }
+
+    }
+
+    /**
+     * Save login action
+     *
+     * @param $seatizen_id
+     */
+	// private $_login_seatizen_table = "log_login_seatizen";
+    public function save_login_seatizen_action($seatizen_id) {
+
+        $log = array(
+            "seatizen_id" => $seatizen_id,
+			
+			"url"=>current_url(),
+			"nama" => $this->session->userdata("nama"),
+			"username" => $this->session->userdata("username"),
+			"ip_address" => $_SERVER['REMOTE_ADDR'],
+			"user_agent" => $this->agent->agent_string(),
+			"session_id" => $this->session->userdata("session_id")
+        );
+
+        $this->db->insert($this->_login_seatizen_table, $log);
+    }
+	
+	public function delete_login_seatizen($seatizen_id)
+	{
+		
+		$this->db->delete($this->_login_seatizen_table,array("seatizen_id"=>$seatizen_id));
+	}
+
+    /**
+     * Save login action
+     *
+     * @param $agentsea_id
+     */
+	//private $_login_agentsea_table = "log_login_agentsea";
+    public function save_login_agentsea_action($agentsea_id) {
+
+        $log = array(
+            "agentsea_id" => $agentsea_id,
+			
+			"url"=>current_url(),
+			"nama" => $this->session->userdata("nama_perusahaan"),
+			"username" => $this->session->userdata("username_company"),
+			"ip_address" => $_SERVER['REMOTE_ADDR'],
+			"user_agent" => $this->agent->agent_string(),
+			"session_id" => $this->session->userdata("session_id")
+        );
+
+        $this->db->insert($this->_login_agentsea_table, $log);
+
+    }
+	
+	public function delete_login_agentsea($agentsea_id)
+	{
+        $this->db->delete($this->_login_agentsea_table,array("agentsea_id"=>$agentsea_id));
+		
+	}
+}

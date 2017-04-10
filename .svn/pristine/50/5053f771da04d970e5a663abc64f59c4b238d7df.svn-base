@@ -1,0 +1,28 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+
+class About extends MX_Controller{
+	
+	function index()
+	{
+		
+		// halaman utama untuk melakukan testing
+		
+		$data['title'] = "About";
+		$data['header'] = "About Informasea";
+		$data['template'] = "template";
+		$data['css'] = "";
+		$data['halaman_detail'] = "view_about";
+		$this->load->view('index',$data);
+		
+		
+	}
+	
+	function __destruct()
+	{
+		
+			
+	}
+	
+	
+}
+	

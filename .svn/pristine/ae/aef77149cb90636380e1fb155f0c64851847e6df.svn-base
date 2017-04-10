@@ -1,0 +1,23 @@
+<div role="tabpanel" class="tab-pane active box" id="home">
+    <div class="vacantsea-photos">
+        <span class="clearfix"></span>
+        <ul class="image-grid image-grid-5">
+            <?php 
+                foreach ($get_ship->result_array() as $key) {
+                    /*$logo_img           = $photo_company["nama_gambar"];
+                    $username           = $photo_company['username'];*/
+                    $path_img           = img_url("company/default/ship_default.jpg");
+
+                    echo "<li><img src='".$path_img."'>";
+                    echo "<div class='subtitle text-gray' align='center'>".$key['ship_name']."</div>";
+                    echo "</li>";
+                }
+            ?>
+        </ul>
+    </div>
+</div>
+<div class="pagination" style="float:right; margin-top:3%">
+    <ul>
+    <?php echo $this->pagination->create_links(); ?>
+    </ul>
+</div>

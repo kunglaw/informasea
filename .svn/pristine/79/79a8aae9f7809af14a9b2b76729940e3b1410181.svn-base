@@ -1,0 +1,117 @@
+<?php // js_top , module users ?>
+
+<!-- load js_top -->
+<script language="Javascript">
+  function disable_form() {
+    var limit = document.forms[0].elements.length;
+    for (i=0;i<limit;i++) {
+      document.forms[0].elements[i].disabled = true;
+    }
+  }
+  
+  function enable_form()
+  {
+	var limit = document.forms[0].elements.length;
+    for (i=0;i<limit;i++) {
+      document.forms[0].elements[i].disabled = false;
+    }
+	  
+  }
+</script>
+
+<script>
+	function check_username(username)
+	{   
+		if(username == "")
+		{
+			$("#username_info").hide();
+		}
+		else
+		{
+			$.ajax({
+			
+				type:"POST",
+				url:"<?=base_url("users/users_process/cajax_username")?>",
+				data:"x=1&username="+username,
+				error: function(data)
+				{
+					alert(data.responseText);
+				},
+				success: function(data){
+					if(data == 0)
+					{
+						$("#username_info").show();
+						$("#username_info").html("<i class='glyphicon'></i> username avaiable");
+						$("#username_info").addClass("alert-success");
+						$("#username_info").removeClass("alert-danger");
+						$("#username_info i").addClass("glyphicon-ok");
+						$("#username_info").removeClass("glyphicon-remove");
+						
+						
+					}
+					else
+					{
+						$("#username_info").show();
+						$("#username_info").html("<i class='glyphicon'></i> username has been used");
+						$("#username_info").addClass("alert-danger");
+						$("#username_info").removeClass("alert-success");
+						$("#username_info i").addClass("glyphicon-remove");
+						$("#username_info").removeClass("glyphicon-ok");
+					}
+					
+				}
+				
+			});
+		}
+		
+	}
+	
+	function check_email(email)
+	{ 
+		if(email == "")
+		{
+			$("#email_info").hide();
+		}
+		else
+		{
+			$.ajax({
+			
+				type:"POST",
+				url:"<?=base_url("users/users_process/cajax_email")?>",
+				data:"x=1&email="+email,
+				error: function(data)
+				{
+					alert(data.responseText);
+				},
+				success: function(data){
+					if(data == 0)
+					{
+						$("#email_info").show();
+						$("#email_info").html("<i class='glyphicon'></i> email avaiable");
+						$("#email_info").addClass("alert-success");
+						$("#email_info").removeClass("alert-danger");
+						$("#email_info i").addClass("glyphicon-ok");
+						$("#email_info").removeClass("glyphicon-remove");
+						
+					}
+					else
+					{
+						$("#email_info").show();
+						$("#email_info").html("<i class='glyphicon'></i> email has been used");
+						$("#email_info").addClass("alert-danger");
+						$("#email_info").removeClass("alert-success");
+						$("#email_info i").addClass("glyphicon-remove");
+						$("#email_info").removeClass("glyphicon-ok");
+					}
+					
+				}
+				
+			});
+		}
+		
+		
+		
+		
+	}
+
+</script>

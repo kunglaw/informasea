@@ -1,0 +1,70 @@
+<?php 
+class uploadfile extends CI_Controller {
+ 
+ function __construct() {
+ 	parent::__construct();
+	$this->authentification_model->close_access();
+ }
+ 
+ function index()
+ {
+	$html = "<form action='".base_url('uploadfile/add')."' method='post' enctype='multipart/form-data'>
+		
+		<input type='file' name='userfile' id='userfile'>
+		<input type='submit' value='upload' >
+	
+	</form>";
+	
+	echo $html;	 
+	 
+ }
+ 
+ function add() {
+	 /* validasi dan pengecekan saya skip*/
+	
+	 //$this->load->library('image_lib');
+	
+	 $config['upload_path'] = $_SERVER['DOCUMENT_ROOT'].'/informasea/assets/app/image/';
+	 $config['allowed_types'] = 'gif|jpg|png|doc|pdf|ppt|jpeg';
+	 //$config['max_size']    = '500';
+	 //$config['max_width']  = '1024';
+	 //$config['max_height']  = '768';
+	 $this->load->library('upload', $config);
+	 
+	 if ( ! $this->upload->do_upload()) {
+	 	echo 'gagal upload';
+	 }
+	 else {
+	   /* apabila file yang diupload terlalu besar, kita resize ke ukuran yang diinginkan */
+	   $config['image_library'] = 'gd2';
+	   $config['source_image'] = $_SERVER['DOCUMENT_ROOT'].'/informasea/assets/app/image/'.$_FILES['userfile']['name'];
+	   $config['maintain_ratio'] = FALSE;
+	   $config['width'] = 320;
+	   $config['height'] = 288;
+	   
+	   $this->load->library('image_lib', $config);
+	   $this->image_lib->resize();
+	   
+	   /* setelah diresize kita buat thumbnailnya */
+	   $conf['image_library'] = 'gd2';
+	   $conf['source_image'] = $_SERVER['DOCUMENT_ROOT'].'/informasea/assets/app/image/'.$_FILES['userfile']['name'];
+	   $conf['new_image'] = $_SERVER['DOCUMENT_ROOT'].'/informasea/assets/app/thumb/'.$_FILES['userfile']['name'];
+	   $conf['create_thumb'] = TRUE;
+	   $conf['maintain_ratio'] = FALSE;
+	   $conf['width'] = 120;
+	   $conf['height'] = 108;
+	   
+	   $this->load->library('image_lib', $conf);
+	   $this->image_lib->initialize($conf);
+	   $this->image_lib->resize();
+ 	}
+ }
+ 
+  function __destruct()
+  {
+	  
+	  echo "<!-- end -->";	
+  }
+}
+
+?>

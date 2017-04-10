@@ -1,0 +1,130 @@
+<?php
+    $url = base_url();
+	$user = $this->session->userdata("user");
+    $root = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
+  	$this->load->helper('list_error_users_helper');
+  
+?>
+
+<nav class="navbar navbar-default navbar-fixed-top hidden-xs" role="navigation">
+    <div class="container-fluid">
+       <div class="block-home">   
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-menu">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="<?=base_url("home")?>">
+                  <img src="<?php echo base_url("assets/img/logo.png")?>" alt="logo">
+              </a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="mobile-menu">
+           
+              <ul class="nav navbar-nav main-menu text-white hidden-md hidden-sm">
+                  <li>
+                  	  <a href="<?= base_url("dashboard"); ?>" >
+                  		<span class="nav-sprite text-center" aria-hidden="true"></span>DASHBOARD
+                      </a>
+                  </li>
+                  <li>
+                  	  <a href="<?= base_url("vacantsea"); ?>">
+                      	<span class="nav-sprite text-center" aria-hidden="true"></span>VACANTSEA
+                      </a>
+                  </li>
+                  <li>
+                  	  <a href="<?= base_url("seatizen"); ?>">
+                      		<span class="nav-sprite text-center" aria-hidden="true"></span>SEATIZEN
+                      </a>
+                  </li>
+                  <li><a href="/informasea.v2/informasea_design/company-list.php"><span class="nav-sprite text-center" aria-hidden="true"></span>AGENTSEA</a></li>
+              </ul>
+              <form role="search" class="navbar-form navbar-search-form navbar-left" action="<?=base_url("search")?>">
+                  <div class="input-group">
+                      <input type="text" class=" search-query form-control" placeholder="Search Informasea"/>
+                      <span class="input-group-btn">
+                          <button class="btn btn-nav-search" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                      </span>
+                  </div>
+              </form>
+              
+              <ul class="nav navbar-nav navbar-right">
+                  <li>
+                      <div class="notif-badge">10</div>
+                      <a href="#" style="font-size: 1em;" ><i class="glyphicon glyphicon-envelope"></i></a>
+                  </li>
+                  <li class="dropdown">
+                      <div class="notif-badge">10</div>
+                      <a style="font-size: 1em;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-bell"></i></a>
+                      <ul class="dropdown-menu" id="dropdown-notification" role="menu">
+                      <?php $this->load->view("include/notifications-listing.php") //include("include/notifications-listing.php"); ?>
+                      </ul>        
+                  </li>
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                      aria-expanded="false"><span><i class="glyphicon glyphicon-menu-hamburger"></i></span></a>
+                      <ul class="dropdown-menu dropdown-menu-blue" role="menu">
+                          <li>
+                          		<a href="<?= base_url("profile"); ?>">
+                                	<img class="icon" src="assets/img/ic_profile.svg"> My Profile
+                                </a>
+                          </li>
+                          <li>
+                          		<a href="<?= base_url("dashboard"); ?>">
+                                	<img class="icon" src="assets/img/ic_home.svg"> Dashboard
+                                </a>
+                          </li>
+                          <li>
+                          		<a href="<?= base_url("seatizen"); ?>">
+                                	<img class="icon" src="assets/img/ic_seatizen.svg"> Seatizen
+                                </a>
+                          </li>
+                          <li>
+                          		<a href="<?= base_url("vacantsea"); ?>">
+                                	<img class="icon" src="assets/img/ic_vacantsea.svg"> Vacantsea</a></li>
+                          <li>
+                          		<a href="<?= base_url("company"); ?>">
+                          			<img class="icon" src="assets/img/ic_company.svg"> agentsea
+                                </a>
+                          </li>
+                          <li>
+                          		<a href="<?php echo base_url("users/users_process/logout")?>">
+                                	<img class="icon" src="assets/img/ic_logout.svg"> 
+                                	Log out
+                                </a>
+                          </li>
+                                
+                          <li class="divider"></li>
+                          <li><a href="#">Informasea</a></li>
+                          <li><a href="#">Career</a></li>
+                          <li><a href="#">News</a></li>
+                          <li><a href="#">Brand</a></li>
+                          <li><a href="#">Contact</a></li>
+                          <li><a href="#">Privacy</a></li>
+                          <li><a href="#">Term & Condition</a></li>
+                          <li><a href="#">Security</a></li>
+                      </ul>
+                  </li>
+              </ul>
+             
+          </div>
+          <!-- /.navbar-collapse -->
+       </div> 
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<script>
+	$('#error-tip').popover({
+		trigger: 'hover',
+		'placement': 'left',
+		html:true,
+		animation:true
+		
+	});
+
+</script>

@@ -1,0 +1,26 @@
+<?php  //navbar-profile, modules profile 
+$username = $this->session->userdata("username");
+?>
+<div id="sticky-anchor"></div>
+                
+<div class="widget-box col-md-12" id="sticky">
+    <ul class="nav nav-custom" role="tablist">
+        <li role="presentation" class="<?=$tml_active?>">
+            <a href="<?=base_url("profile")?>">Timeline</a></li>
+        <li role="presentation">
+            <a href="<?=base_url("profile/$username/account")?>" class="<?=$acc_active?>" >Account</a>
+        </li>
+        <li role="presentation">
+            <a href="<?=base_url("profile/$username/photo")?>" class="<?=$pt_active?>" >Photos</a>
+        </li>
+        <li role="presentation">
+            <a href="<?=base_url("profile/$username/friends")?>" class="<?=$fr_active?>" >Friends</a>
+        </li>
+        <li id="resume-tab" role="presentation">
+            <a href="<?=base_url("seaman/resume")?>" class="<?=$r_active?>">Resume</a>
+        </li>
+        <li>
+        	<a href="<?=base_url("profile/$username/experience")?>" class="<?=$r_active?>">Experience</a>
+        </li>
+    </ul>
+</div>

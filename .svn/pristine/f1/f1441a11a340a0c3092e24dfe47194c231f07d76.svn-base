@@ -1,0 +1,145 @@
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<?php 
+/*	write-post-block , module timeline 
+	
+	untuk halaman profile, artinya hanya untuk teman
+	
+*/
+?>
+
+<form action="<?php echo base_url("timeline/insert"); ?>" id="form_timeline" method="post" enctype="multipart/form-data">
+  <div class="write-status-block">
+      <div class="bullet-block">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 
+          <span> Write Something </span>
+          <span id="info" class="pull-right"></span>
+      </div>
+      <textarea name="timeline" class="effect_enter" id="timeline" cols="30" rows="3" placeholder="What's happening today?"></textarea>
+      <?php
+        
+        $ctrl = !empty($ctrl) ? $ctrl : "";
+        
+        if($ctrl == "" || $ctrl == "profile"){
+            
+            $to = "";
+            
+        }
+        else if($ctrl == "detail")
+        {
+            $to = $this->uri->segment(2);
+            
+        }
+        
+      ?>
+      <input type="hidden" value="<?php echo $to ?>" name="to" id="to" />
+      <!-- <input type="file" value="" name="picture" id="picture" style="display:none" /> -->
+      <input type="hidden" value="1" name="x" id="x"/>
+      <div class="bullet-block text-link pull-left">
+       
+       <!-- <div onclick="javascript:document.getElementById('picture').click()" class="pull-left">
+          <a style="text-decoration:none" href="#"> 
+          	<span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Upload &nbsp; &nbsp; </a>
+       </div> -->
+       <div class="pull-left">
+          <span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Location</span>
+       </div>
+      </div>
+      <button type="submit" class="btn btn-filled pull-right">Post</button>
+      <div class="clearfix"></div>
+  </div>
+</form>
+
+<script>
+	  $("#picture").change(function(){
+		  
+		  $("#pt-footer .clearfix").html($("#picture").val());
+		 	
+	  });
+</script>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		
+		 //$(".clearfix .progress").css({"display":"none"});
+		 //$(".clearfix .progress").attr("hidden","true");
+		 
+		
+		 /*$('#post_timeline').on('click', function () {
+		  
+		  // business logic...
+		  
+		  
+		 
+		})*/
+	   
+	   //var $btn = $("#post_timeline").button('loading');
+	   var options = {
+				
+			target : "#info",
+			//data:"timeline="+$("#timeline").val()+"&to="+$("#to").val(),//$("#form_timeline").serialize(),
+			beforeSubmit:showRequest,
+			uploadProgress:up,
+			success:showResponse
+  
+	   }
+	   
+	   $("#form_timeline").ajaxForm(options); 
+	   //$btn.button('reset');
+	 
+		
+	});
+	
+	function showRequest(formData, jqForm, options) { 
+		//$("#loader").slideToggle("slow",function(){ });
+		//$("#pt-footer .clearfix").html("posting .");
+		//$("#pt-footer .clearfix").html("posting ..");
+		//$("#pt-footer .clearfix").html("posting ...");	
+		
+		/*if($("#timeline").val() == "" && $("#picture").val() == "")
+		{ 
+		   return false;
+		}
+		else
+		{
+			return true;
+		}*/
+		return true;
+	} 
+	 
+	// post-submit callback 
+	function showResponse(responseText, statusText, xhr, $form)  { 
+		//alert(responseText);
+		
+		//$("#loader").slideToggle("slow",function(){ });
+		$("#pt-footer .clearfix").html("success");
+		$("#pt-footer .clearfix").html("",2000);
+		$("#timeline").val("");
+		
+		if(typeof get_list_timeline === 'function')
+		{
+			get_list_timeline();
+		}
+		else if(typeof get_self_timeline === 'function')
+		{
+			get_self_timeline();
+		}
+		/*alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+		'\n\nThe output div should have already been updated with the responseText.');*/
+	}
+	
+	function up(event, position, total, percentComplete) 
+	{   
+		$(".progress").removeAttr("hidden");
+		
+	    var bar = $('.progress-bar');
+		var percent = $('.sr-only');
+	    //var status = $('#status');
+		
+        var percentVal = percentComplete + '%';
+        bar.width(percentVal)
+        percent.html(percentVal);
+		//console.log(percentVal, position, total);
+    }
+
+</script>

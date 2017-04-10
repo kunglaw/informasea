@@ -1,0 +1,162 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: a
+ * Date: 29/06/2015
+ * Time: 12:00
+ */
+?>
+<script>
+  $(document).ready(function (){
+
+    $("#frm-search-seatizen").submit(function(e){
+      e.preventDefault();
+      var keyword = $("#keyseatizen").val();
+      var url = "<?php echo base_url("index.php/seatizen/search")?>";
+
+      //alert(url);
+
+      window.location = url+="/"+(keyword != undefined ? keyword: "")
+
+    });
+	
+	$('form').submit(function(){
+	  $.post('http://example.com/upload', function() {
+		window.location = 'http://google.com';
+	  });
+	  return false;
+	});
+	
+  });
+</script>
+<script>
+
+// $(document).ready(function () {
+   
+// 	getAllDepartmentList();
+// 		getAllShipList();
+// 		getAllNation();
+//         $("#get_department_vacant").change(function(){
+// 			var data  = "s=&id_department="+ $("#get_department_vacant").val();
+// 			getAllRankList(data);	
+// 			getAllCocList(data);
+//         });
+
+//     //     $("#frm-search-seatizen").submit(function (e) {
+    
+//     // var keyword = $("#keyseatizen").val();
+//     // var nation = $("#get_nation_seatizen").val();
+//     // var ship = $("#get_ship_vacant").val();
+//     // var department = $("#get_department_vacant").val();
+//     // var rank = $("#get_rank_vacant").val();
+//     // var coc = $("#get_coc_class").val();
+//     // var url = "<?php echo base_url("seatizen/coba_search") ?>";
+//     // var data= "keyword="+keyword+"&nation="+nation+"&ship="+ship+"&department="+department+"&rank="+rank+"&coc="+coc;
+        
+//     //     $.ajax({
+//     //             type:"POST",
+//     //             url:url,
+//     //             data:data,
+//     //             success:function(hasil){
+//     //                 window.location=hasilnya;
+//     //             }
+//     //     });
+
+//     // });
+	
+
+ 
+//         $("#frm-search-seatizen").submit(function (e) {
+// 			 	e.preventDefault();
+			
+//             var nation = $("#get_nation_seatizen").val(); 
+//             var ship = $("#get_ship_vacant").val();
+//             var dept = $("#get_department_vacant").val();
+//             var rank = $("#get_rank_vacant").val();
+//             var keyword = $("#keyseatizen").val();
+//             var coc = $("#get_coc_class").val();
+//             var url = "<?php echo base_url("index.php/seatizen/search")?>";
+//             // alert(nation);
+//              if((ship != "") || (dept != "") || (nation != 0)) {
+//                 $.ajax({
+//                     url: "<?php echo base_url("index.php/seatizen/getData") ?>",
+//                     type: "POST",
+//                     data: "id_nation="+ nation +"&id_ship="+ ship + "&id_dept="+ dept +"&id_rank= "+ rank +"&id_coc=" + coc,
+//                    success: function (res) {
+//                        var hasil = String(res);
+//                      // alert(hasil);
+//                         hasil = hasil.split("&");
+// 						hasil[0] = hasil[0].replace(/ /g,"-"); /* Nation */
+//                         hasil[1] = hasil[1].replace(/ /g,"-"); /* ship */
+//                         hasil[2] = hasil[2].replace(/ /g,"-"); //department
+//                         hasil[3] = hasil[3].replace(/ /g,"-"); //rank
+//                         hasil[4] = hasil[4].replace(/ /g,"-"); //coc class            
+//                         // var vv = hasil[0];
+//                         // alert(vv);
+//                         if((hasil[0] != 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] != "")) {
+//                             url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+//                           //  alert('nation ship department rank coc');
+//                       } else if((hasil[0] != 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] == "")){
+//                             url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3]
+//                             //alert('nation ship department rank');
+//                        } else if((hasil[0] != 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] == "") && (hasil[4] == "")) {
+//                             url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2];
+//                           //  alert('nation ship department')
+//                         }else if((hasil[0] != 0) && (hasil[1] != "") && (hasil[2] == "") && (hasil[3] == "") && (hasil[4] =="")){
+//                             url+="/"+hasil[0]+"/"+hasil[1];
+//                           //  alert('nation ship');
+//                        } else if((hasil[0] != "") && (hasil[1] == "") && (hasil[2] == "") && (hasil[3] == "") && (hasil[4] == "")){
+//                             url+="/"+hasil[0];
+//                             //alert('just nation');
+//                         }else if((hasil[0] == 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] != "")) {
+//                             url+="/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+//                             //alert('ship department rank coc');
+//                        } else if((hasil[0] == 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] == "")) {
+//                             url+="/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3];
+//                            // alert('ship department rank');
+//                         }else if((hasil[0] == 0) && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] == "") && (hasil[4] == "")){
+//                             url+="/"+hasil[1]+"/"+hasil[2];
+//                             //alert('ship department');
+//                        } else if((hasil[0] == 0) && (hasil[1] != "") && (hasil[2] =="") && (hasil[3] =="") && (hasil[4] == "")) {
+//                             url+="/"+hasil[1];
+//                             //alert('ship');
+//                        } else if((hasil[0] == 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] != "")) {
+//                             url+="/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+//                             //alert('department rank coc');
+//                        } else if((hasil[0] == 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] =="")) {
+//                             url+="/"+hasil[2]+"/"+hasil[3];
+//                             //alert('department rank');
+//                        } else if((hasil[0] == 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] == "") && (hasil[4] != "")) {
+//                             url+="/"+hasil[2]+"/"+hasil[4];
+//                            // alert('department coc');
+//                        } else if((hasil[0] == 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] =="") && (hasil[4] =="")) {
+//                             url+="/"+hasil[2];
+//                           //  alert('department');
+//                         }else if((hasil[0] != 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] != "")) {
+//                             url+="/"+hasil[0]+"/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+//                            // alert('nation department rank coc');
+//                        } else if((hasil[0] != 0) && (hasil[1] =="") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] =="")) {
+//                             url+="/"+hasil[0]+"/"+hasil[2]+"/"+hasil[3];
+//                           //  alert('nation department rank');
+//                        } else if((hasil[0] != 0) && (hasil[1] == "") && (hasil[2] != "") && (hasil[3] =="") && (hasil[4] =="")) {
+//                             url+="/"+hasil[0]+"/"+hasil[2];
+//                            // alert('nation department');
+//                        } else { 
+//                           //  alert('hello');
+//                             }
+
+//                         url+="/"+(keyword != undefined ? keyword: "");
+                    
+
+//                          //alert(url);
+//                         window.location = url;
+//                     }
+//                 });
+//             }  
+//             else {
+//               window.location = url+="/"+(keyword != undefined ? keyword: "")
+//             };
+// //        alert(url);
+//         });
+//     })
+</script>

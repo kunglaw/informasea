@@ -1,0 +1,49 @@
+<?php 
+$this->load->model('profile_resume_model');
+$cek_resume = $this->profile_resume_model->cek_lengkap_resume($this->session->userdata('id_user'));
+ //print_r($cek_resume);
+    if(!empty($cek_resume)){ 
+        $status = "Complete";
+
+    } else{
+        $status = "UnComplete";
+    
+        //insert notif
+        $from_user = "Admin Informasea";
+        $to_user = $this->session->userdata('username');
+        $title = "Your Resume is not complete. please complete your resume";
+        $description = "your resume is not complete";
+        $type = "resume";
+        $datetime = date('Y-m-d H:i:s');
+        $ip_address =  $_SERVER['REMOTE_ADDR'];
+        $url = base_url().'seaman/resume';
+
+        $q = $this->db->query("INSERT INTO notification_tr (title_notif,description,type,from_user,to_user,datetime,ip_address,url)
+            VALUES ('$title','$description','$type','$from_user','$to_user','$datetime','$ip_address','$url')");
+
+
+
+    }
+
+ ?>
+
+<div id="main-profile" class="col-md-12">
+	<?php $dt_header['username'] = $username; ?>
+    
+    <?php $this->load->view("header",$dt_header); ?>
+    
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <?php $navbar_profile = !empty($navbar_profile) ? $navbar_profile : "navbar-profile"?>
+        <?php $this->load->view($navbar_profile,$dt_navbar); ?>
+        <!-- Tab panes -->
+        
+        <div class="tab-content">
+             
+            <div role="tabpanel" class="tab-pane active" id="resume">
+                <?php $this->load->view("resume/resume"); ?>
+            </div>
+           
+        </div>
+    </div>
+</div>

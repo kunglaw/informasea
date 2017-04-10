@@ -1,0 +1,11 @@
+<?php // template friends, module seaman ?>
+
+<div class="container-fluid">
+    <div class="row">        
+        <?php $this->load->view("friends/content",$dt_content); ?>
+        
+        <?php $this->load->view("friends/right_content");?>
+    </div>
+</div>
+
+

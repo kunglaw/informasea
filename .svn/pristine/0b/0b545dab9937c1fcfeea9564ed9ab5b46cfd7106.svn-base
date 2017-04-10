@@ -1,0 +1,453 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+
+class Search_model extends CI_Model{
+	
+	function __construct()
+	{
+		
+		parent::__construct();
+		$this->load->model("users/user_model");
+	}
+	
+	function search()
+	{
+		$keyword = $this->uri->segment(2);
+		
+		/*$str_nation = "select * from nationality where name LIKE '%$keyword%' ";
+		$q_nation = $this->db->query($str_nation);
+		$f_nation = $q_nation->row_array();
+		
+		
+		$str  = "SELECT vacantsea, description, id_nationality, 'vacantsea' AS category FROM vacantsea WHERE vacantsea LIKE '%$keyword%' OR description LIKE '%$keyword%' OR id_nationality = '$f_nation[id]' OR category = '$keyword' "; // vacantsea 
+		$str .= "union ";
+		$str .= "SELECT CONCAT(first_name,' ',last_name) AS name, alamat, kebangsaan, 'seaman' AS category FROM pelaut_ms WHERE name LIKE '%$keyword%' OR alamat LIKE '%$keyword%' OR kebangsaan LIKE '%$keyword%' OR category = '$keyword' ";
+		$str .= "union ";
+		$str .= "SELECT nama_perusahaan,description,nationality,'company' AS category FROM company where nama_perusahaan LIKE '%$keyword%' OR description LIKE '%$keyword%' OR nationality LIKE '%$keyword%' OR category = '$keyword' ";
+
+		$q = $this->db->query();
+		$f = $q->result_array();*/
+		
+		return $f;
+	}
+	
+	function guest_keyword($keyword)
+	{
+		//department, rank , vessel_type, vessel, coc_class, nationality, search_tbl0
+	}
+	
+	function filter($data)
+	{
+		// check keberadaan array dahulu sebelum 
+		$hasil = array();
+		
+		foreach($data['pelaut'] as $row)
+		{
+			if(!in_array($row['username'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"username"=>$row["username"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		foreach($data['coc'] as $row)
+		{
+			if(!in_array($row['username'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"username"=>$row["username"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		
+		foreach($data['doc'] as $row)
+		{
+			if(!in_array($row['username'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"username"=>$row["username"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		
+		foreach($data['prof'] as $row)
+		{
+			if(!in_array($row['username'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"username"=>$row["username"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		
+		foreach($data['exp'] as $row)
+		{
+			if(!in_array($row['username'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"username"=>$row["username"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		
+		foreach($data['vacant'] as $row)
+		{
+			if(!in_array($row['id'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"perusahaan"=>$row["perusahaan"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		
+		foreach($data['comp'] as $row)
+		{
+			if(!in_array($row['id'],$hasil) && !in_array($row['category'],$hasil))
+			{
+				$hasil[] = array("id"=>$row['id'],
+				"perusahaan"=>$row["perusahaan"],
+				"category"=>$row["category"],
+				"point"=>0);
+			}
+		}
+		return $hasil;
+
+	}
+	
+	function view_data($data)
+	{
+		$this->load->model("users/user_model");
+		$this->load->model("vacantsea/vacantsea_model");
+		$this->load->model("company/company_model");
+		
+		foreach($data as $row)
+		{
+			if($row['category'] == "seaman")
+			{
+				$dt_pelaut = $this->user_model->get_detail_pelaut($row['username']);
+				//$hasil[] = array("id"=>$row["id"],"nama"=>$dt_pelaut['nama_depan']." ".$dt_pelaut['nama_belakang'],"category"=>$row['category']);
+				$hasil[] = $dt_pelaut;
+			}
+			else if($row['category'] == "vacantsea")
+			{
+				
+				$hasil[] = $this->vacantsea_model->detail_vacantsea($row['id']);
+				
+			}	
+			else if($row['category'] == "agentsea")
+			{
+				
+				$hasil[] = $this->company_model->get_detail_company($row['id']);
+				
+			}	
+		}
+		return $hasil;
+	}
+	
+	function s_pelaut($keyword = "")
+	{
+		$this->load->library('table');
+		$tmpl = array (
+			'table_open'          => '<table border="1" cellpadding="4" cellspacing="0">',
+  
+			'heading_row_start'   => '<tr>',
+			'heading_row_end'     => '</tr>',
+			'heading_cell_start'  => '<th>',
+			'heading_cell_end'    => '</th>',
+  
+			'row_start'           => '<tr>',
+			'row_end'             => '</tr>',
+			'cell_start'          => '<td>',
+			'cell_end'            => '</td>',
+  
+			'row_alt_start'       => '<tr>',
+			'row_alt_end'         => '</tr>',
+			'cell_alt_start'      => '<td>',
+			'cell_alt_end'        => '</td>',
+  
+			'table_close'         => '</table>'
+		);
+  
+	   $this->table->set_template($tmpl); 
+		
+		$this->load->model("department_model");
+		$this->load->model("coc_model");
+		$this->load->model("rank_model");
+		$this->load->model("vessel_model");
+			
+		$ccoc = $this->coc_model->get_coc_by_name($keyword);
+		$cdept = $this->department_model->get_detail_department_by_name($keyword);
+		$crank = $this->rank_model->get_rank_detail_by_rank($keyword); // 
+		$cvessel = $this->vessel_model->get_ship_type_detail_byname($keyword); // ship type
+		
+		$str  = "select *, 'seaman' AS category from pelaut_ms a LEFT OUTER JOIN profile_resume_tr b ON a.pelaut_id = b.pelaut_id WHERE ";
+		
+		$str .= "(activation	 = 'ACTIVE' OR activation = 'Testing') AND ";
+		
+		$str .= "( "; 
+		$str .= "a.nama_depan LIKE '%$keyword%'	    	    			OR ";
+		$str .= "a.nama_belakang LIKE '%$keyword%'					    OR "; 	
+		$str .= "a.kebangsaan LIKE '%$keyword%'							OR ";
+		$str .= "a.agama LIKE '%$keyword%'								OR ";
+		$str .= "a.gender = '$keyword'		 							OR ";
+		$str .= "a.tempat_lahir LIKE '%$keyword%'						OR ";
+		$str .= "a.alamat	LIKE '%$keyword%'							OR ";
+		
+		$str .= "a.status_perkawinan LIKE '%$keyword%'					OR ";
+		$str .= "a.city LIKE '%$keyword%'						   		OR ";
+		
+		if(!empty($ccoc))
+		{
+			$str .= "b.coc_class 			= '$ccoc[id_coc_class]'		OR ";
+		}
+		if(!empty($crank))
+		{
+			$str .= "b.rank					= '$crank[rank_id]'			OR ";	
+		}
+		$str .= "b.last_education		LIKE '%$keyword%'				OR ";
+		/* JANGAN DIGUNAKAN DAHULU */
+		/*
+			karena saat menggunakan string di type data integer, membuat default string yang kita masukkan menjadi otomatis 0
+		*/
+		// $str .= "b.expected_sallary		= '%$keyword%'				OR ";
+		$str .= "b.exp_sallary_curr		    = '%$keyword%'				OR ";
+		if(!empty($cvessel))
+		{
+			$str .= "b.vessel_type			= '$cvessel[type_id]'		OR ";
+		}
+		if(!empty($cdept))
+		{
+			$str .= "b.department			= '$cdept[department_id]'	OR ";
+		}
+		$str .= "b.sallary_range		    = '%$keyword%'				   ";
+		
+		$str .= ")";
+		
+		//echo $str;
+		//$str .= "category LIKE '%$keyword%'								   ";
+		
+		$j = $this->db->query($str);
+		$f = $j->result_array();
+		
+		//echo "<pre>";print_r($f);echo "</pre>";
+		
+		//echo "<pre>";echo $this->table->generate($f); exit( "</pre> <hr>");
+	
+		foreach($f as $row){
+			
+			$hasil[] = array("id" => $row["pelaut_id"],"username"=>$row['username'],"category" => "seaman");
+		
+		}
+		//print_r($hasil);
+		
+		return $hasil;
+	}
+	
+	function s_competency($keyword = "")
+	{
+	    $this->load->model("competency_model");
+		
+		$ccom = $this->competency_model->competency_byname($keyword);
+		
+		$str  = "SELECT *,'seaman' AS category FROM competency_tr WHERE ";
+		$str .= "grade_license LIKE '%$keyword%'					OR ";
+		$str .= "no_license	LIKE '%$keyword%'						OR ";
+		$str .= "place_issued LIKE '%$keyword%'						OR ";
+		$str .= "negara = '$keyword'							   	   "; 	
+		
+		$q = $this->db->query($str);
+		
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$dt_pelaut = $this->user_model->get_detail_pelaut_byid($row['pelaut_id']);
+			$hasil[] = array("id"=>$row['pelaut_id'],"username"=>$dt_pelaut['username'],"category"=>"seaman");	
+		}
+		
+		return $hasil;
+		
+	}
+	
+	function s_document($keyword)
+	{
+		
+		$str  = "select *,'seaman' AS category from document_tr WHERE ";
+		$str .= "type LIKE '%$keyword%'							   OR ";
+		$str .= "place LIKE '%$keyword%'						   OR ";
+		$str .= "country LIKE '%$keyword%'						      ";
+		
+		$q = $this->db->query($str);
+		
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$dt_pelaut = $this->user_model->get_detail_pelaut_byid($row['pelaut_id']);
+			$hasil[] = array("id"=>$row['pelaut_id'],"username"=>$dt_pelaut['username'],"category"=>"seaman");
+		}
+		
+		return $hasil;
+		
+	}
+	
+	function s_proficiency($keyword)
+	{
+		
+		$str  = "select *,'seaman' as category from proficiency_tr WHERE ";
+		$str .= "sertifikat_stwc 	LIKE '%$keyword%'				  OR ";
+		$str .= "place_issue		LIKE '%$keyword%'				     "; 
+		
+		$q = $this->db->query($str);
+		
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$dt_pelaut = $this->user_model->get_detail_pelaut_byid($row['pelaut_id']);
+			$hasil[] = array("id"=>$row['pelaut_id'],"username"=>$dt_pelaut['username'],"category"=>"seaman");
+		}
+		
+		return $hasil;
+	}
+	
+	function s_experience($keyword)
+	{
+		$this->load->model("rank_model");
+		$this->load->model("vessel_model");
+		
+		$rank = $this->rank_model->get_rank_detail_by_rank($keyword);
+		$cvessel = $this->vessel_model->get_ship_type_detail_byname($keyword); // ship type
+		
+		$str  = "select *,'seaman' as category from experiences WHERE  ";
+		$str .= "ship_name LIKE '%$keyword%'						OR ";
+		$str .= "rank_id = '$rank[rank_id]'							OR ";
+		$str .= "company LIKE '%$keyword%'							OR ";
+		$str .= "trade_area LIKE '%$keyword%'						   ";
+		
+		if(!empty($cvessel))
+		{
+			$str .= "OR ship_type_id = '$cvessel[type_id]'			   ";
+		}
+		
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$dt_pelaut = $this->user_model->get_detail_pelaut_byid($row['pelaut_id']);
+			$hasil[] = array("id"=>$row['pelaut_id'],"username"=>$dt_pelaut['username'],"category"=>"seaman");
+		}
+		
+		return $hasil;
+			
+	}
+	
+	function s_vacantsea($keyword)
+	{
+		$this->load->model("department_model");
+		$this->load->model("rank_model");
+		$this->load->model("vessel_model");
+		$this->load->model("nation_model");
+			
+		$cdept = $this->department_model->get_detail_department_by_name($keyword);
+		$crank = $this->rank_model->get_rank_detail_by_rank($keyword); // 
+		$cvessel = $this->vessel_model->get_ship_type_detail_byname($keyword); // ship type
+		$nat   = $this->nation_model->get_detail_nationality($keyword);
+
+		
+		$str  = "SELECT *,'vacantsea' as category FROM vacantsea WHERE ";
+		$str .= "vacantsea LIKE '%$keyword%'						OR ";
+		$str .= "perusahaan LIKE '%$keyword%'						OR ";
+		$str .= "description LIKE '%$keyword%'						OR ";
+		
+		if(!empty($cdept))
+		{
+			$str .= "department 	= '$cdept[department_id]'		OR ";
+		}
+		if(!empty($crank))
+		{
+			$str .= "rank_id		= '$crank[rank_id]'				OR ";	
+		}
+		if(!empty($cvessel))
+		{
+			$str .= "ship_type		= '$cvessel[type_id]'			OR ";
+			
+		}
+		
+		$str .= "navigation_area LIKE '%$keyword%'					OR ";
+		$str .= "contract_dynamic LIKE '%$keyword%'					OR ";
+		$str .= "requested_coc LIKE '%$keyword%'					OR ";
+		
+		if(!empty($nat))
+		{
+			$str .= "id_nationality	= '$nat[id]'					OR ";
+		}
+		
+		$str .= "vacantsea LIKE '%$keyword%'						   ";
+		
+		$q = $this->db->query($str);
+		
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id"=>$row['vacantsea_id'],"perusahaan"=>$row['perusahaan'],"category"=>"vacantsea");
+		}
+		
+		return $hasil;
+		
+		
+	}
+	
+	function s_company($keyword)
+	{
+		
+		$this->load->model("nation_model");
+		
+		$nat   = $this->nation_model->get_detail_nationality($keyword);
+		
+		$str  = "select *,'agentsea' as category from perusahaan where ";
+		$str .= "nama_perusahaan LIKE '%$keyword%'					OR ";
+		$str .= "id_nationality = '$nat[id]'						OR ";
+		$str .= "nationality = '$keyword'							OR ";
+		$str .= "description LIKE '%$keyword%'						OR ";
+		$str .= "website = '$keyword'								OR ";	
+		$str .= "address LIKE '%$keyword%'							OR ";
+		$str .= "visi LIKE '%$keyword%'								OR ";
+		$str .= "misi LIKE '%$keyword%'								   ";
+		
+		$q = $this->db->query($str);
+		
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id"=>$row['id_perusahaan'],"perusahaan"=>$row['nama_perusahaan'],"category"=>"agentsea");
+		}
+		
+		return $hasil;
+		
+	}
+	
+	
+	
+	function insert_keyword()
+	{
+
+		$keyword = $this->input->post("keyword");
+		$page    = $this->input->post("page");
+		
+		
+		
+		
+		
+			
+		
+	}
+}

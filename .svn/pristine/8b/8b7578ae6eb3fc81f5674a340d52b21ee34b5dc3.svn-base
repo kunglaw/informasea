@@ -1,0 +1,29 @@
+<?php
+
+class test_atom extends controller{
+
+  function __construct()
+  {
+    parent::__construct();
+
+  }
+
+  function index()
+  {
+    // ini adalah comment
+    #koment juga
+    /* koment juga */
+    echo "ini adalah pertama kali gue gunakan atom";
+  }
+
+  function __destruct()
+  {
+    echo "<p> bye ... </p>";
+  }
+
+
+
+}
+
+
+?>

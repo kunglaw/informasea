@@ -1,0 +1,1282 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed'); 
+
+	class Photo extends MX_Controller{
+		
+		function __construct()
+		{
+			parent::__construct();
+			
+			//$this->authentification_model->close_access();
+			
+			$this->load->model('photo/photo_mdl');
+
+		}
+		
+		function index()
+		{
+			$data['title']	= $this->session->userdata("nama");
+			$data['template'] = "photo/template";
+			$this->load->view('index',$data);
+		}
+		
+		// AJAX
+		function content_photo_person() // user lain
+		{
+			
+			$this->load->model("users/user_model");
+			$this->load->model("seatizen/seatizen_model");
+			$this->load->model("seaman/friendship_model");
+			$username_url = $this->uri->segment(3); // username dari url
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			
+			if(!empty($check_username))
+			{
+			 
+			  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+			  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+			  $data['title'] = $nama;
+			  $data['nama'] = $nama;
+			  $data['username'] = $username_url;
+			  $data['template'] = "photo/detail/template";
+			  //print_r($pelaut);
+			  $this->load->view('index',$data);
+			}
+			else
+			{
+				show_404();
+			}
+			
+		}
+		
+		// login
+		function rotate()
+		{
+			$this->authentification_model->close_access();
+			
+			// nama gambar 
+			$nama_gambar = $this->input->post("nama_gambar");
+			$username 	= $this->session->userdata("username");
+			
+			//rotate		
+			$this->load->helper("image_thumb_helper");
+			image_big_rotate($nama_gambar);
+			image_thumb_rotate($nama_gambar);
+			image_small_rotate($nama_gambar);
+		
+		}
+		
+		/*halaman detail photo 
+		PUBLIC 
+		*/
+		function detail()
+		{
+			// nanti dihilangkan
+			$this->authentification_model->close_access();
+			
+			$uri3 = $this->uri->segment(2);
+			$check_gambar = $this->photo_mdl->check_photo($uri3); // uri3 = nama photo 
+			
+			
+			if(!empty($check_gambar))
+			{
+			  // link contoh untuk 
+			  // http://localhost/informasea/photo/detail/94755B7057CB8C46993B24352C364FF620150123075951
+			  $this->load->model("users/user_model"); // dari module users
+			  $data['detail_pelaut'] = $this->user_model->get_detail_pelaut($check_gambar['username']);
+			  //print_r($data['detail_pelaut']);
+			  //echo "<br>";
+			  
+			  $this->load->model('timeline/timeline_model');
+			  $data['timeline']	= $this->timeline_model->get_timeline_byphoto($check_gambar['nama_gambar']);
+			  //print_r($data['timeline']);
+			  
+			  
+			  $title = $check_gambar['title'];
+			  if($check_gambar['title'] == "")
+			  {
+				  $title = $check_gambar['description'];
+				  if($check_gambar['description'] == "" )
+				  {
+					  $title = $data["detail_pelaut"]["nama_depan"]." ".$data["detail_pelaut"]["nama_belakang"];
+				  }
+			  }
+			  
+			  /* buat paging */
+			  $username = $check_gambar['username'];
+			 
+			  $data['curr'] = $check_gambar;
+			  $data['prev'] = $this->photo_mdl->prevp($username,$check_gambar['id_pptr']);
+			  $data['next'] = $this->photo_mdl->nextp($username,$check_gambar['id_pptr']);
+			  
+			  
+			  /*echo "Current: <hr>";
+			  print_r($data['curr']);
+			  echo "<hr> Previous: ";
+			  print_r($data['prev']);
+			  echo "<hr> Next : ";
+			  print_r($data['next']);*/
+			 
+			  
+			  $data['title'] = $title;
+			  $data['css'] = "seaman/detail/head";
+			  $data['ctrl'] = "detail";
+			  
+			  /* image */
+			  $data['detail_image'] = $check_gambar['nama_gambar'];
+			  $data['data_image'] = $check_gambar;
+			   
+			  $data['template'] = "detail-photo/template";
+			  
+			  //print_r($data['detail_image']);
+			  
+			  $this->load->view('index',$data);
+			}
+			else
+			{
+				show_404();	
+			}
+		}
+		
+		// AJAX
+		function company_photos()
+		{
+			$this->authentification_model->ajax_access();
+			
+			$id_perusahaan = $this->uri->segment(3);
+			$data['company_photo'] = $this->photo_mdl->get_company_photos($id_perusahaan);
+			return $data;
+		}
+		
+		// AJAX 
+		function get_album() // self album 
+		{
+			$this->authentification_model->ajax_access();
+			
+			$username = $this->session->userdata("username");
+			  
+			$data['title'] = "";
+			$data['album'] = $this->photo_mdl->album_photo($username);
+			$data['photo'] = $this->photo_mdl->select_last_photo($username);
+			$data['tml'] = $this->photo_mdl->select_last_phototml($username);
+			 	
+			$this->load->view("list_album",$data);	
+			
+				
+		}
+		
+		// AJAX
+		function get_photo()
+		{
+			$this->authentification_model->ajax_access();
+			
+			$username = $this->session->userdata("username");
+			  
+			$data['title'] = "";
+			$data['photo'] = $this->photo_mdl->get_photo($username);
+			$this->load->view("list_photo",$data);	
+			
+		}
+		
+		// AJAX
+		function get_photo_person() // user lain 
+		{
+			$this->authentification_model->ajax_access();
+			
+			$username = $this->input->post("username");
+			$this->load->model("seatizen/seatizen_model");
+			$check_username = $this->seatizen_model->check_seatizen($username);
+			
+			$data['username'] = $username;
+			$data['title'] = "";
+			$data['photo'] = $this->photo_mdl->get_photo($username); // asalkan ada username
+			$this->load->view("detail/list_photo",$data);
+			
+		}
+		
+		// AJAX
+		function get_photo_timeline()
+		{
+			$this->authentification_model->ajax_access();
+			
+			$data['photo'] = $this->photo_mdl->get_self_tml();
+			$this->load->view("list_photo_timeline",$data);			
+		}
+		
+		// AJAX
+		function get_photo_persontml() // user lain
+		{
+			$this->authentification_model->ajax_access();
+			
+			$username_url = $this->input->post('username');
+			$data['username'] = $username_url;
+			$data['photo'] = $this->photo_mdl->get_person_timeline($username_url);
+			$this->load->view("detail/list_photo_timeline",$data);
+			
+		}		
+		
+		// digunakan untuk keperluan upload photo resume dan profile pic secara langsung
+		// gak perlu pakek sok2an inform ke timeline
+		// PRIVATE
+		function just_insert($photo)
+		{
+			$this->authentification_model->close_access();
+			/*echo "Photo : ";
+			print_r($photo);
+			echo "<hr>";*/
+			
+			$this->load->library('form_validation');
+			
+			if(empty($photo))
+			{
+				echo "You must choose a Photo";
+			}
+			
+			else
+			{
+			  
+			  if($photo[0] == TRUE)
+			  {
+				  $dt_photo = array(
+				  'nama_gambar' 	=>	$photo["file_name"], // $photo = $photo[1] *MINDBLOWN*
+				  'size_gambar'	=>	$photo["file_size"], 
+				  'id_pelaut' 	  =>	$this->session->userdata('id_user'), 
+				  'type_gambar' 	=>	$photo["file_type"],
+				  "username"	   =>	$this->session->userdata('username'),
+				  "title"		  => 	$photo["file_title"],
+				  "description"	=> 	$photo["file_description"]
+				  );
+				  
+				  //print_r($this->session->all_userdata());
+				  
+				/*  echo "dt_photo: ";
+				  print_r($dt_tml); echo "<hr>";*/	
+				  
+				  $i = $this->photo_mdl->insert_photo($dt_photo);
+				 
+				  
+			  
+				  if(!$i)
+				  {
+					 echo "data tidak berhasil di input ... ";	
+					  
+				  }
+			  }		
+			  else
+			  {
+				  
+				  $photo = $photo[1];  // jika terjadi kesalahan upload gambar
+				  echo $photo;
+			  }
+
+			}
+		}
+		
+		// PRIVATE
+		function just_insert_tml($photo,$title = "",$type = "")
+		{
+			$this->authentification_model->close_access();
+			
+			$dt_tml = $photo;
+			
+			$this->load->model('timeline/timeline_model');
+			$this->timeline_model->insert_timeline($dt_tml);
+		}
+		
+		// Proses upload Photo Resume
+		// AJAX
+		function upload_resume_pic()
+		{
+	
+			$username = $this->session->userdata("username");
+			$this->load->library('image_lib');
+			$this->load->library('upload');
+			$this->load->helper('image_thumb_helper');
+			$this->load->helper("username_folder_helper");
+			
+			// description 
+			$description = $this->input->post("description");
+			$type = $this->input->post("type");  
+			
+			/*extention*/
+			$extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+			//print_r($_FILES);
+			$ext = $extt[1];
+			$a = $this->db->query("SHOW TABLE STATUS FROM `infr6975_informaseadb2014` LIKE 'photo_pelaut_tr' ");
+			$b = $a->row_array();
+			$b['Auto_increment'];
+			
+			$configupload['upload_path'] = pathup("photo/$username/$type");
+			
+			$configupload['file_name'] = strtoupper(md5($b['Auto_increment'].$_FILES['picture']['name'])).date('YmdHis').".".$ext;
+			$configupload['allowed_types'] = "gif|jpg|png|jpeg";
+			$configupload['max_size']	=  1024 * 1024 * 10; // 10MB;
+			//echo $_FILES['picture']['size']; exit;
+			//$configupload['max_width']  = '1024';
+			//$configupload['max_height']  = '1024';
+			
+			//print $configupload['upload_path']; 
+			
+			$photo = 'picture'; // name dari form file
+			$this->upload->initialize($configupload);
+			
+			// buat foldernya dahulu
+			// dari username_folder_helper
+			make_username_folder_pt($username);
+			/*check folder selesai */
+			
+			$this->upload->do_upload($photo);
+			$dataphoto = $this->upload->data();
+			//print_r($dataphoto); exit;
+			
+			$error_upload = $this->upload->display_errors('<p class="alert alert-danger"> Upload : ', '</p>');
+			// exit;
+			
+			if(empty($error_upload))
+			{
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = pathup("photo/$username/$type/$dataphoto[file_name]");
+				$config['maintain_ratio'] = TRUE;
+				
+				$hrd = resize_dimension($dataphoto['image_width'],$dataphoto['image_height']);
+				
+				$config['quality'] 	= $hrd['quality'];
+				$config['width'] 	  = $hrd['width'];
+				$config['height']	 = $hrd['height'];
+				
+				$this->image_lib->initialize($config);
+				
+				if ( ! $this->image_lib->resize())
+				{
+					$error_resize =  $this->image_lib->display_errors('<p> Image Lib : ','</p>');
+					return array(FALSE,$error_resize);
+				}
+				else
+				{
+					$this->image_lib->clear();
+					// dari image_thumb_helper
+					
+					image_small_fr($file_name = $dataphoto['file_name'],$destination = $type,$source = $type );
+					
+					/* Medium or Thumnail */
+					//image_thumb_fr($file_name = $dataphoto['file_name'],$destination = "resume",$source = "resume");
+					
+					$a = array(
+					0=>TRUE,
+					"file_name" => $dataphoto['file_name'],
+					"file_size" => $dataphoto['file_size'],
+					"file_type" => $dataphoto['file_type'],
+					"file_title" => $_FILES['picture']['name'],
+					"file_description" => $description,
+					"type" => "$type","jalur"=>"upload-btn"); // untuk info di timeline 
+					// output function
+					$this->image_crop_temp($a);
+					
+				}
+			}
+			else
+			{
+				return array(FALSE,$error_upload);
+			}
+		}
+		
+		// AJAX
+								 // $a , data2 photo yang diperlukan 
+		function image_crop_temp($a = "") // form 
+		{
+			$type = $this->input->post("type");
+			$file_name = $this->input->post("file_name");
+			
+			if(empty($file_name)) // dua inputan
+			{
+				$file_name = $a['file_name'];
+			}
+			
+			//var_dump($a);
+			
+			if(!empty($a)) // kalau dari upload_rpc_pic , upload button
+			{
+				
+				$data_a = array(
+				0=>TRUE,
+				"file_name" => $file_name,
+				"file_size" => $a['file_size'],
+				"file_type" => $a['file_type'],
+				"file_title" => $a["file_title"],
+				"file_description" => $a["file_description"],
+				"type" => $type,"jalur"=>"upload"); // untuk info di timeline
+				 
+				// output function
+				/*$a = array(
+				0=>TRUE,
+				"file_name" => $dataphoto['file_name'],
+				"file_size" => $dataphoto['file_size'],
+				"file_type" => $dataphoto['file_type'],
+				"file_title" => $_FILES['picture']['name'],
+				"type" => "resume"); // untuk info di timeline 
+				// output function */ 
+				
+			}
+			else if(empty($a))
+			{
+				$check_photo = $this->photo_mdl->check_photo($file_name);
+				$data_a = array(
+				0=>TRUE,
+				"file_name" => $file_name,
+				"file_size" => $check_photo['size_gambar'],
+				"file_type" => $check_photo['type_gambar'],
+				"file_title" => $check_photo["title"],
+				"file_description" => $check_photo["description"],
+				"type" => $type); // untuk info di timeline	
+				//print_r($check_photo); echo "<hr>";
+			}
+			
+			$data['a'] = $data_a;
+			$data['type'] = $type;
+			//print_r($data);
+			//$this->load->view("image-crop-temp",$data); //form untuk crop 
+			$this->load->view("image-cropic-temp",$data); //form untuk crop 
+			
+			
+		}
+		
+		// AJAX = proses dari form image-crop-temp
+		// function ini dimatikan untuk backup
+		//function crop_resume()
+//		{
+//			$x = $this->input->post("x");
+//			$this->load->helper('image_thumb_helper');
+//			
+//			if($x == 1)
+//			{
+//			  //$this->load->helper('image_thumb_helper');
+//			  $this->load->model('timeline/timeline_model');
+//			  
+//			  $file_name 		= $this->input->post("file_name");
+//			  $file_size 		= $this->input->post("file_size");
+//			  $file_type 		= $this->input->post("file_type");
+//			  $type 	  		 = $this->input->post("type");
+//			  $file_title	   = $this->input->post("file_title");
+//			  $file_description = $this->input->post("file_description");
+//			  
+//			  //print_r($this->input->post()); exit;
+//			  
+//			  if(empty($file_name))
+//			  {
+//				  $file_name = $this->input->get("file_name");
+//			  }
+//			  //echo "image telah di cropping .. ";
+//			  image_cropping($file_name,$destination = $type, $source = $type);
+//			  echo "the image has been cropping .. ";
+//			  			  
+//			  // cek photo berdasarkan file_name
+//			  $check_photo = $this->photo_mdl->check_photo($file_name);
+//			  
+//			 /* echo "check_photo : ";
+//			  print_r($check_photo); echo "<hr>";*/
+//			  
+//			  $a = array(
+//				0=>TRUE,
+//				"file_name" => $file_name,
+//				"file_size" => $file_size,
+//				"file_type" => $file_type,
+//				"file_title" => $file_title,
+//				"file_description" => $file_description,
+//				"type" => $type); // untuk info di timeline 
+//				// output function
+//			  
+//			  if(empty($check_photo))
+//			  {
+//			 	$this->just_insert($a); // belakangan bisa kali yaa
+//				//$this->just_insert_tml($a,"Update Photo Resume","Resume");
+//			  }
+
+//			  // masukkan script ini jika sudah melakukan proses cropping 
+//			  $id_pptr = mysql_insert_id();
+//			  $photo_dlr = $this->photo_mdl->get_photo_id($id_pptr);
+//			  if(!empty($photo_dlr))
+//			  {
+//				if($type == "resume")
+//				{  
+//				  //echo "yok kita nonton ondel2, nyok";
+//				  $resume_pic = $this->photo_mdl->get_photo_resume();
+//				  if(!empty($resume_pic))
+//				  {
+//					  // ubah profile pic menjadi gambar biasa
+//					  $this->photo_mdl->update_resume_deselect($resume_pic['id_pptr']);	
+//				  }
+//				  $this->photo_mdl->update_resume_pic($id_pptr);
+//				}
+//				else if($type == "profile_pic")
+//				{
+//				  $profile_pic = $this->photo_mdl->get_photo_pp();
+//				  //print_r($profile_pic);
+//				  if(!empty($profile_pic))
+//				  {
+//					  // ubah profile pic menjadi gambar biasa
+//					  $this->photo_mdl->update_pp_deselect($profile_pic['id_pptr']);	
+//				  }
+//				  $this->photo_mdl->update_profile_pic($id_pptr);
+//				}
+//				else if($type == "cover")
+//				{
+//				  $cover = $this->photo_mdl->get_photo_cover();
+//				 // print_r($cover);
+//				  if(!empty($cover))
+//				  {
+//					  // ubah profile pic menjadi gambar biasa
+//					  $this->photo_mdl->update_cover_deselect($cover['id_pptr']);	
+//				  }
+//				  $this->photo_mdl->update_cover($id_pptr);
+//				}
+//			  }
+//			  
+//			  // paling belakang, jika proses croping sudah selesai, masukkan ke timeline 
+//			  $check_tml = $this->timeline_model->get_timeline_byphoto($file_name);
+//			  //print_r($check_tml);
+//			  if(empty($check_tml))
+//			  {
+//				if($type == "resume")
+//				{
+//			  		$this->just_insert_tml($a,"Update Photo Resume","Resume");
+//				}
+//				else if($type == "profile_pic")
+//				{
+//					$this->just_insert_tml($a,"Update Profile Picture","profile_pic");
+//				}
+//				else if($type == "cover")
+//				{
+//					$this->just_insert_tml($a,"Update Cover","cover");
+//				}
+//			  }
+//			  
+//			  
+//			}
+//			else
+//			{
+//				show_404();
+//			}
+//			
+//		}
+
+		function crop_rpc()
+		{
+			$this->authentification_model->ajax_access();
+			
+			$this->load->model('timeline/timeline_model');
+			$this->load->library('upload');
+			$this->load->helper('image_thumb_helper');
+			$this->load->helper('username_folder_helper');
+			
+			$username = $this->session->userdata("username");
+			
+			$file_name 		= $_FILES['picture']['name'];
+			$file_size 		= $_FILES['picture']['size'];
+			$file_type 		= $_FILES['picture']['type'];
+			$file_title	   = $_FILES['picture']['name'];
+			
+			$type 	  		 = $this->input->post("type"); echo "<br>";
+			$nama_gambar 	  = $this->input->post("nama_gambar");
+			$file_description = $this->input->post("file_description");
+			$file_crop		= $this->input->post("file-crop");
+			
+			// jika file upload kosong, maka hanya kirimkan yang cropnya saja , tanpa mengubah database
+			// jika file upload isi, maka kirimkan data asli , crop , ubah database
+			if(empty($_FILES))
+			{
+				// jika file upload kosong, maka hanya kirimkan yang cropnya saja , tanpa mengubah database
+				if(!empty($file_crop))
+				{
+				  // jika file_crop tidak kosong 
+				  // ambil dari database profile_pic yang aktif
+				  if($type == "resume")
+				  {  
+				   
+					$pic = $this->photo_mdl->get_photo_resume();
+				  }
+				  else if($type == "profile_pic")
+				  {
+					$pic = $this->photo_mdl->get_photo_pp();
+				  }
+					
+				  // function utama cropping
+				  $explodesi = explode(".",$pic['nama_gambar']);
+				  list($kk, $file_crop)   = explode(';', $file_crop);
+				  list(,$file_crop)       = explode(',', $file_crop);
+				  $file_crop 			  = base64_decode($file_crop);
+				  file_put_contents(pathup("photo/$username/$type/$explodesi[0]"."_thumb.".$explodesi[1]), $file_crop);
+				  /* end cropping */
+				  
+				  $info =  pathup("photo/$username/$type/$explodesi[0]"."_thumb.".$explodesi[1]);
+				  
+				  // dari database
+				  image_small_fr(/*$file_name = */$pic['nama_gambar'],/*$destination =*/ $type, /*$source =*/ $type);
+				  
+				  // edit description aja 
+				  if($type == "resume")
+				  {  
+				   
+					 $str = "update photo_pelaut_tr set description = '$file_description' where id_pptr = '$pic[id_pptr]' ";
+				  	 $this->db->query($str);
+				  }
+				  else if($type == "profile_pic")
+				  {
+					 $str = "update photo_pelaut_tr set description = '$file_description' where id_pptr = '$pic[id_pptr]' ";
+				     $this->db->query($str);
+					 
+					 $str2 = "update timeline set content = '$file_description' where photo = '$pic[nama_gambar]' ";
+					 $this->db->query($str2);
+				  }
+				 
+				}
+			}
+			else
+			{
+				// jika file upload isi, maka kirimkan data asli , crop , ubah database
+				
+				/*extention*/
+				$extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+				
+				$ext = $extt[1];
+				$a = $this->db->query("SHOW TABLE STATUS FROM `infr6975_informaseadb2014` LIKE 'photo_pelaut_tr' ");
+				$b = $a->row_array();
+				$b['Auto_increment'];
+				/*end extention */
+				
+				$config['upload_path'] 	   = pathup("photo/$username/$type");
+				$config['file_name']		 = strtoupper(md5($b['Auto_increment'].$_FILES['picture']['name'])).date('YmdHis').".".$ext;
+				$config['allowed_types'] 	 = 'gif|jpg|png|jpeg|tiff';
+				$config['max_size']		  =  1024 * 1024 * 10; // 10MB;
+				//$config['max_width'] 		 = '1024';
+				//$config['max_height'] 	 = '768';
+				
+				$photo = 'picture'; // name dari form file
+				$this->upload->initialize($config);
+			
+				// buat foldernya dahulu
+				// dari username_folder_helper
+				make_username_folder_pt($username);
+				/*check folder selesai */
+				
+				$this->upload->do_upload($photo);
+				
+				$dataphoto = $this->upload->data();
+				
+				/*Array
+				(
+					[file_name] => 9C3BE8902FFBAB97950B4C8F5131A1E620150415162624.jpeg
+					[file_type] => image/jpeg
+					[file_path] => D:/xampp/htdocs/infrasset/photo/alhusna_99/profile_pic/
+					[full_path] => D:/xampp/htdocs/infrasset/photo/alhusna_99/profile_pic/9C3BE8902FFBAB97950B4C8F5131A1E620150415162624.jpeg
+					[raw_name] => 9C3BE8902FFBAB97950B4C8F5131A1E620150415162624
+					[orig_name] => 9C3BE8902FFBAB97950B4C8F5131A1E620150415162624.jpeg
+					[client_name] => C360_2013-08-12-13-07-25-018.jpg
+					[file_ext] => .jpeg
+					[file_size] => 50.61
+					[is_image] => 1
+					[image_width] => 640
+					[image_height] => 480
+					[image_type] => jpeg
+					[image_size_str] => width="640" height="480"
+				)*/
+
+				
+				$error_upload = $this->upload->display_errors("<p class='alert alert-danger'> Upload : ", "</p>");
+				
+				if(empty($error_upload))
+				{
+				  // function utama cropping
+				  $explodesi = explode(".",$dataphoto['file_name']);
+				  list($kk, $file_crop) = explode(';', $file_crop);
+				  list(,$file_crop)       = explode(',', $file_crop);
+				  $file_crop = base64_decode($file_crop);
+				  file_put_contents(pathup("photo/$username/$type/$explodesi[0]"."_thumb.".$explodesi[1]), $file_crop);
+				  /* end cropping */
+				  
+				  // upload tiny image
+				 image_small_fr($file_name = $dataphoto['file_name'],$destination = $type, $source = $type);
+				  
+				  $dt_photo = array(
+				  'nama_gambar' 		=>	$dataphoto['file_name'], // $photo = $photo[1] *MINDBLOWN*
+				  'size_gambar'		=>	$dataphoto['file_size'], 
+				  'id_pelaut' 	  	  =>	$this->session->userdata('id_user'), 
+				  'type_gambar' 		=>	$dataphoto['file_type'],
+				  "username"	   	   =>	$this->session->userdata('username'),
+				  "title"		  	  => 	$_FILES['picture']['name'],
+				  "file_description"   =>    $file_description
+				  );
+				  
+				  // pemberitahuan ke timeline bahwa user mengupload photo baru
+				  $dt_tml = array(
+				  
+					'content' => $file_description, 
+					'photo'=>$dataphoto['file_name'], 
+					'pelaut_id' => $this->session->userdata('id_user'), 
+					'username' => $this->session->userdata('username'), 
+					'title' => "Added a New Profile Picture", 
+					'type' => 'profile_pic'
+				  
+				  );
+				  
+				  // masukkan dahulu photo 
+				  $this->photo_mdl->insert_photo($dt_photo);
+
+	   			  //masukkan script ini jika sudah melakukan proses cropping dan insert photo
+	  			  $id_pptr = mysql_insert_id();
+	  			  $photo_dlr = $this->photo_mdl->get_photo_id($id_pptr);
+	  			  if(!empty($photo_dlr))
+	  			  {
+	  				if($type == "resume")
+	  				{  
+	  				 
+	  				  $resume_pic = $this->photo_mdl->get_photo_resume();
+	  				  if(!empty($resume_pic))
+	  				  {
+	  					   //ubah profile pic menjadi gambar biasa
+	  					  //$this->photo_mdl->update_resume_deselect($resume_pic['id_pptr']);	
+	  				  }
+	  				  //$this->photo_mdl->update_resume_pic($id_pptr);
+	  				}
+	  				else if($type == "profile_pic")
+	  				{
+	  				  $profile_pic = $this->photo_mdl->get_photo_pp();
+	  				  
+	  				  if(!empty($profile_pic))
+	  				  {
+	  					   //ubah profile pic menjadi gambar biasa
+	  					  $this->photo_mdl->update_pp_deselect($profile_pic['id_pptr']);	
+	  				  }
+	  				  $this->photo_mdl->update_profile_pic($id_pptr);
+	  				}
+	  				else if($type == "cover")
+	  				{
+	  				  $cover = $this->photo_mdl->get_photo_cover();
+	  				  
+	  				  if(!empty($cover))
+	  				  {
+	  					   //ubah profile pic menjadi gambar biasa
+	  					  $this->photo_mdl->update_cover_deselect($cover['id_pptr']);	
+	  				  }
+	  				  $this->photo_mdl->update_cover($id_pptr);
+	  				}
+	  			  }
+	  			  
+				  //paling belakang, jika proses croping sudah selesai, masukkan ke timeline 
+				  $check_tml = $this->timeline_model->get_timeline_byphoto($file_name);
+				  
+				  if(empty($check_tml))
+				  {
+					if($type == "resume")
+					{
+						//$this->just_insert_tml($dt_tml,"Update Photo Resume","Resume");
+					}
+					else if($type == "profile_pic")
+					{
+						$this->just_insert_tml($dt_tml,"Update Profile Picture","profile_pic");
+					}
+					else if($type == "cover")
+					{
+						$this->just_insert_tml($dt_tml,"Update Cover","cover");
+					}
+				  }
+				  
+				 
+				}
+				else
+				{
+					
+					echo $error_upload;
+						
+				}
+				
+				/*
+				*/
+				
+				$info =  "<img src='".img_url("photo/$username/$type/$file_name")."'>". 
+						pathup("photo/$username/$type/$file_name");
+				
+			}
+			
+		}
+		
+		function delete_crop()
+		{
+			$username = $this->session->userdata("username");
+			$file_name = $this->input->post("file_name");
+			$x = $this->input->post("x");
+			$type = $this->input->post("type");
+			
+			if($x == 1)
+			{				
+				$a = unlink(pathup("photo/$username/$type/$file_name"));
+				$ss = explode(".",$file_name);
+				$b = unlink(pathup("photo/$username/$type/$ss[0]"."_small.".$ss[1]));
+				//var_dump($a);
+				//var_dump($b);
+			}
+			
+		}
+		
+		function form_view_rpc()
+		{
+			$x = $this->input->post("x");
+			if($x == 1)
+			{
+				//$username = $this->session->userdata("username");
+				$type = $this->input->post("type"); // type feature = resume, profile_pic , cover
+				if($type == "profile_pic") // profile pic 
+				{
+					$data['dt_gambar'] = $this->photo_mdl->get_photo_pp();
+					$data['type'] = $type;
+					$data['form_action'] = base_url("photo/upload_resume_pic"); // nanti ganti nama function nya 
+					
+				}
+				else if($type == "resume")
+				{
+					$data['dt_gambar'] = $this->photo_mdl->get_photo_resume();
+					$data['type'] = $type;
+					$data['form_action'] = base_url("photo/upload_resume_pic");// nanti ganti nama function nya 
+				}
+				else if($type == "cover")
+				{
+					$data['dt_gambar'] = $this->photo_mdl->get_photo_cover();
+					$data['type'] = $type;
+					$data['form_action'] = base_url("photo/upload_resume_pic");// nanti ganti nama function nya 
+				}
+				
+				//print_r($data);
+				
+				/*else if($type == "cover")
+				{
+					$data['cover'] = $this->photo_mdl->get_photo_cover();	
+				}*/
+				$this->load->view("form-view-rpc",$data);
+			}
+			else
+			{
+				show_404();	
+			}	
+		}
+		
+		// AJAX, form_upload_photo
+		function form_upload_photo_profile()
+		{
+			$x = $this->input->post("x");
+			// FORM AJAX
+			if($x == 1)
+			{
+			  $type = $this->input->post("type");
+			  //echo "x=$x & type=$type";
+			  //$this->load->model('photo/photo_mdl');
+			  $data['profile_pic'] = $this->photo_mdl->get_photo_pp();
+			  $this->load->view("form-upload-profile-picture",$data); 	
+			}
+			else
+			{
+				show_404();	
+			}
+		}
+		
+		// AJAX
+		function form_upload_photo_cover()
+		{
+			$this->authentification_model->close_access();
+			$this->authentification_model->ajax_access();
+			
+			  $type = $this->input->post("type");
+			  //echo "x=$x & type=$type";
+			  //$this->load->model('photo/photo_mdl');
+			  $data['cover'] = $this->photo_mdl->get_photo_cover();
+			  $this->load->view("form-upload-cover",$data); 	
+			
+		}
+		
+		// AJAX
+		function form_upload_photo_resume()
+		{
+			$this->authentification_model->close_access();
+			$this->authentification_model->ajax_access();
+			
+			$this->load->view("form-upload-photo-resume"); 	
+				
+		}
+		
+		// AJAX
+		function make_profile_pic($id_pptr = "")
+		{ // dijalankan lewat ajax
+			
+			$this->authentification_model->close_access();
+			//$this->authentification_model->ajax_access();
+			
+			if($id_pptr == "")
+			{
+				$id_pptr = $this->input->post("id_pptr");	
+			}
+			
+			
+			$this->load->helper("image_thumb_helper");
+			
+			//$this->authentification_model->close_access();
+			$this->authentification_model->ajax_access();
+			// get data photo berdasarkan id
+			$photo = $this->photo_mdl->get_photo_id($id_pptr);
+			if(!empty($photo))
+			{
+			  $profile_pic = $this->photo_mdl->get_photo_pp();
+			  if(!empty($profile_pic))
+			  {
+				  // ubah profile pic menjadi gambar biasa
+				  $this->photo_mdl->update_pp_deselect($profile_pic['id_pptr']);	
+			  }
+			  $this->photo_mdl->update_profile_pic($id_pptr);
+			  image_big_pp($file_name = $photo['nama_gambar']);
+			  image_thumb_pp($file_name = $photo['nama_gambar']);
+			  image_small_pp($file_name = $photo['nama_gambar']);
+			  echo "Profile Picture has been edited ";
+			}
+			else
+			{
+				
+			}				
+			// update data photo
+			// gambar diresize
+			
+			
+			
+		}
+		
+		// AJAX
+		function make_resume_pic($id_pptr = "")
+		{
+			//$this->authentification_model->close_access();
+			$this->authentification_model->ajax_access();
+			
+			if($id_pptr == "")
+			{
+				$id_pptr = $this->input->post("id_pptr");	
+			}
+			
+			$x = $this->input->post("x");
+			$this->load->helper("image_thumb_helper");
+			
+			if($x == 1)
+			{
+				
+				// get data photo berdasarkan id
+				$photo = $this->photo_mdl->get_photo_id($id_pptr);
+				if(!empty($photo))
+				{
+					
+				  $resume_pic = $this->photo_mdl->get_photo_resume();
+				  
+				  if(!empty($resume_pic))
+				  {
+					  // ubah profile pic menjadi gambar biasa
+					  $this->photo_mdl->update_resume_deselect($resume_pic['id_pptr']);	
+				  }
+				  
+				  $this->photo_mdl->update_resume_pic($id_pptr);
+				
+				  image_big_pp($file_name = $photo['nama_gambar'],"resume");
+				  //echo "kampret"; exit;
+				  image_thumb_pp($file_name = $photo['nama_gambar'],"resume");
+				  image_small_pp($file_name = $photo['nama_gambar'],"resume");
+				    
+				  echo "Resume Picture has been edited ";
+				}
+				else
+				{
+					echo "There is no Photo ";
+				}				
+				// update data photo
+				// gambar diresize
+			}
+			else
+			{
+				show_404();	
+			}
+		}
+		
+		
+		function modal_alert()
+		{
+			//$this->authentification_model->close_access();
+			$this->authentification_model->ajax_access();
+			
+			$item = $this->input->post("item");
+			$type = $this->input->post("type");
+			
+			$data['title'] = "Delete Photo";
+			$data['description'] = "Are you sure want to delete this photo ? ";
+			$data['dataarr'] = $this->input->post();
+			
+			$data['success'] = "alert('babi')";
+			if($type == "del_photo")
+			{
+				$data['success'] = "delete_picture($item);";
+			}
+			
+			//print_r($data);
+			$this->load->view('modal-alert',$data);	
+		}
+		
+		function delete_photo()
+		{
+			$this->authentification_model->close_access();
+			//$this->authentification_model->ajax_access();
+			
+			$x = $this->input->post("x");
+			$id_pptr = $this->input->post("id_pptr");
+			$username = $this->session->userdata("username");
+			
+			if($x == 1)
+			{
+			  $strww = "select * from photo_pelaut_tr where id_pptr = '$id_pptr' ";
+			  $q = $this->db->query($strww);
+			  $f = $q->row_array();
+			  
+			  if(!empty($f))
+			  {
+				$nama_photo = explode(".",$f['nama_gambar']);
+				unlink(pathup("photo/$username/big/$f[nama_gambar]"));
+				unlink(pathup("assets/photo/$username/thumbnail/$nama_photo[0]"."_thumb.".$nama_photo[1]));
+				unlink(pathup("assets/photo/$username/small/$nama_photo[0]"."_small.".$nama_photo[1]));
+				
+				// delete photo di timeline
+				$str2 = "delete from timeline where photo = '$f[nama_gambar]' ";
+				$q2 = $this->db->query($str2);
+				
+				// diproses belakangan
+				$str = "delete from photo_pelaut_tr where id_pptr = '$id_pptr' ";
+				$q = $this->db->query($str);
+			  }
+			  else
+			  {
+				  echo "picture not selected";	
+			  }
+			}
+			else
+			{
+				show_404();	
+			}
+		}
+
+        function delete_photo_timeline()
+        {
+            $this->authentification_model->close_access();
+            //$this->authentification_model->ajax_access();
+
+            $x = $this->input->post("x");
+            $id_pptr = $this->input->post("id_pptr");
+            $username = $this->session->userdata("username");
+
+            if($x == 1)
+            {
+                $strww = "select * from timeline where id_timeline = '$id_pptr' ";
+                $q = $this->db->query($strww);
+                $f = $q->row_array();
+
+                if(!empty($f))
+                {
+                    $nama_photo = explode(".",$f['nama_gambar']);
+                    unlink(pathup("photo/$username/big/$f[nama_gambar]"));
+                    unlink(pathup("assets/timeline/$username/thumbnail/$nama_photo[0]"."_thumb.".$nama_photo[1]));
+                    unlink(pathup("assets/timeline/$username/small/$nama_photo[0]"."_small.".$nama_photo[1]));
+
+//                    // delete photo di timeline
+//                    $str2 = "delete from timeline where photo = '$f[nama_gambar]' ";
+//                    $q2 = $this->db->query($str2);
+
+                    // diproses belakangan
+                    $str = "delete from timeline where id_timeline = '$id_pptr' ";
+                    $q = $this->db->query($str);
+                }
+                else
+                {
+                    echo "picture not selected";
+                }
+            }
+            else
+            {
+                show_404();
+            }
+        }
+		
+		// AJAX
+		function upload_photo()
+		{
+			//ini_set('upload_max_filesize','20M');  
+			$this->authentification_model->close_access();
+			//$this->authentification_model->ajax_access();
+			
+			$username = $this->session->userdata("username");
+			$this->load->library('image_lib');
+			$this->load->library('upload');
+			$this->load->helper('image_thumb_helper');
+			$this->load->helper("username_folder_helper");
+			
+			/*extention*/
+			$extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+			
+			$ext = $extt[1];
+			$a = $this->db->query("SHOW TABLE STATUS FROM `infr6975_informaseadb2014` LIKE 'photo_pelaut_tr' ");
+			$b = $a->row_array();
+			$b['Auto_increment'];
+			
+			$configupload['upload_path'] = pathup("photo/$username/big");
+			$configupload['file_name'] = strtoupper(md5($b['Auto_increment'].$_FILES['picture']['name'])).date('YmdHis').".".$ext;
+			$configupload['allowed_types'] = "gif|jpg|png|jpeg";
+			$configupload['max_size']	=  1024 * 1024 * 10; // 10MB;
+			//echo $_FILES['picture']['size']; exit;
+			//$configupload['max_width']  = '1024';
+			//$configupload['max_height']  = '1024';
+			
+			//print $configupload['upload_path']; 
+			
+			$photo = 'picture'; // name dari form file
+			$this->upload->initialize($configupload);
+			
+			// buat foldernya dahulu
+			// dari username_folder_helper
+			make_username_folder_pt($username);
+			/*check folder selesai */
+			
+			$this->upload->do_upload($photo);
+			
+			$dataphoto = $this->upload->data();
+			//print_r($dataphoto); //exit;
+			
+			$error_upload = $this->upload->display_errors('<p class="alert alert-danger"> Upload : ', '</p>');
+			//echo($error_upload); //exit;
+			
+			if(empty($error_upload))
+			{
+				
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = pathup("photo/$username/big/$dataphoto[file_name]");
+				$config['maintain_ratio'] = TRUE;
+				
+				//echo "true way ... ";
+				
+				$hrd = resize_dimension($dataphoto['image_width'],$dataphoto['image_height']);
+				//print_r($dataphoto); exit;
+				
+				$config['quality'] 	= $hrd['quality'];
+				$config['width'] 	  = $hrd['width'];
+				$config['height']	 = $hrd['height'];
+				
+				$this->image_lib->initialize($config);
+				
+				if ( ! $this->image_lib->resize())
+				{
+					$error_resize =  $this->image_lib->display_errors('<p> Image Lib : ','</p>');
+					return array(FALSE,$error_resize);
+				}
+				else
+				{
+					$this->image_lib->clear();
+					// dari image_thumb_helper
+					image_small($file_name = $dataphoto['file_name'],$destination = "photo");
+					
+					/* Medium or Thumnail */
+					image_thumb($file_name = $dataphoto['file_name'],$destination = "photo");
+					
+					//image_resize_photo($dataphoto['file_name']);
+								  //0			1                        2                        3
+					return array(TRUE,$dataphoto['file_name'],$_FILES['picture']['size'],$_FILES['picture']['type']); // output function
+				}
+			}
+			else
+			{
+				//echo "false ...";
+				return array(FALSE,$error_upload);
+			}
+			//echo "out ... ";
+			
+		}
+		
+		function form_upload()
+		{
+			$this->load->view("form-upload-photo");
+		}	
+		
+		function insert_photo()
+		{   
+			$this->authentification_model->close_access();
+			//$this->authentification_model->ajax_access();
+			
+			$this->load->library('form_validation');
+			
+			$photo = "";
+			$photo = $this->upload_photo(); // dari function upload_photo
+			
+			//print_r($photo); exit;
+			//$this->form_validation->set_rules('timeline', 'Timeline', 'required');
+			//$tml = $this->input->post("timeline",TRUE); //echo "lalalala";
+			//$to = $this->input->post('to',TRUE);
+	
+			if($_FILES['picture']['name'] == "" )
+			{
+				echo "You must choose a Photo";
+			}
+			
+			else
+			{
+			  //$this->load->model("timeline_model");
+			  
+			  if($photo[0] == TRUE)
+			  {
+				  $photo_tmp = $photo[1]; // jika gambar ada 
+				  
+				  $dt_photo = array(
+				  'nama_gambar' 	=>	$photo_tmp, // $photo = $photo[1] *MINDBLOWN*
+				  'size_gambar'	=>	$photo[2], 
+				  'id_pelaut' 	  =>	$this->session->userdata('id_user'), 
+				  'type_gambar' 	=>	$photo[3],
+				  "username"	   =>	$this->session->userdata('username'),
+				  "title"		  => 	$_FILES['picture']['name']
+				  );
+				  
+				  // pemberitahuan ke timeline bahwa user mengupload photo baru
+				  $dt_tml = array(
+				  
+					  'content' => "", 
+					  'photo'=>$photo_tmp, 
+					  'pelaut_id' => $this->session->userdata('id_user'), 
+					  'username' => $this->session->userdata('username'), 
+					  'title' => "Added a New Photo", 
+					  'type' => 'photo'
+				  
+				  );
+				  
+				  //print_r($this->session->all_userdata());
+				  
+				  //print_r($dt_tml); exit;			
+				  
+				  $i = $this->photo_mdl->insert_photo($dt_photo);
+				  $this->load->model('timeline_model');
+				  $this->timeline_model->insert_photo_timeline($dt_tml);
+			  
+			  
+				  if(!$i)
+				  {
+					 echo "data tidak berhasil di input ... ";	
+					  
+				  }
+			  }		
+			  else
+			  {
+				  
+				  $photo = $photo[1];  // jika terjadi kesalahan upload gambar
+				  echo $photo;
+			  }
+
+			}
+			
+		}
+		
+		function __destruct()
+		{
+			
+			
+		}
+	}

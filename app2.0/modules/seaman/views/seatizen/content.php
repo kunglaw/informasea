@@ -1,0 +1,106 @@
+<?php // content seatizen, module seaman ?>
+
+
+
+<div id="main-profile" class="col-md-9">
+
+			<?php 
+
+				$dt_header['username'] = $username; 
+
+				$reserve = $this->authentification->reserve();
+
+				
+
+			?>
+
+            <?php $this->load->view($header,$dt_header); ?>
+
+            
+
+            <div role="tabpanel">
+
+                <!-- Nav tabs -->
+
+               
+
+                <?php 
+
+					//$navbar_profile = !empty($navbar_profile) ? $navbar_profile : "navbar-profile";
+
+					
+
+					if($reserve == false)
+
+					{
+
+						
+
+						$navbar_profile = "navbar-profile-free";
+
+					}
+
+				?>
+
+                <?php $this->load->view($navbar_profile,$dt_navbar)?>
+
+                <!-- Tab panes -->
+
+                
+
+                <div class="tab-content">
+
+                    <div role="tabpanel" class="tab-pane active" id="timeline">
+
+                        <div class="row">
+
+                            <div class="col-md-4 hidden-xs">
+
+                                <?php $this->load->view('panel/myaccount-panel')?>
+
+                                
+
+                                <?php $this->load->view('panel/photo-panel') ?>
+    
+
+                                <?php $this->load->view("include/list-friends.php")?>
+
+                            </div>
+
+                            <div class="col-md-8">
+
+                                
+
+                                <?php
+
+   
+
+								  if($this->session->userdata("user") == "pelaut")
+
+								  {
+
+									  $this->load->view('timeline/write-post-block.php');
+
+								  }
+
+								
+
+								?>
+
+                                
+
+                                <?php $this->load->view('timeline/template-profile'); ?>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                </div>
+
+            </div>
+
+        </div>

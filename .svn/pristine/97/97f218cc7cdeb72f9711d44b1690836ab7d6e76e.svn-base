@@ -1,0 +1,376 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+// Controller users, module users
+
+class Users extends MX_Controller {
+
+	function __construct()
+	{
+		
+		parent::__construct();
+		
+		/*if($this->session->userdata("user") != "")
+		{	
+			$this->authentification_model->close_access();
+		}*/
+		
+		
+		$this->load->model('user_model');
+		$this->load->model('nation_model');
+			
+	}
+
+	public function index()
+	{
+		$data['title'] = "Registration";
+		$data['template'] = "template";
+		$data['js']	   = "js";
+		
+		$data['rwnation'] = $this->nation_model->get_nationality();
+		$data['rwuser'] = $this->user_model->get_pelaut();
+		
+		//$check = $this->check_username();
+		//$data['info'] = $check['info'];
+		
+		$this->load->view('index',$data);
+	}
+	
+	public function login()
+	{
+		$this->load->library('form_validation');
+		$this->load->helper('list_error_users_helper');
+		
+		$username = $this->input->post("usernamepl",TRUE);
+		$password = md5($this->input->post("password"));
+		
+		$login_attemp = $this->input->post("login_attemp",true); // int
+		$new_login_attemp = $login_attemp + 1;
+		
+		$this->form_validation->set_rules('usernamepl','Username Field','required|xss_clean');
+		$this->form_validation->set_rules('password','Password Field','required|xss_clean');
+		
+		$taw = "<p>";
+		$tak = "</p>";
+		
+		// TAMPILAN 	
+		$data['title'] = "Registration";
+		$data['template'] = "template";
+		$data['js']	   = "js";
+		
+		$data['rwnation'] = $this->nation_model->get_nationality();
+		$data['rwuser'] = $this->user_model->get_pelaut();
+		/* end TAMPILAN */
+		
+		/* kondisi klo username ada tp pass salah */
+				$str_cu = "select * from pelaut_ms where username = '$username'";
+				$q_cu   = $this->db->query($str_cu);
+				$f_cu 	  = $q_cu->row_array();
+				
+				/* kondisi klo username ada and pass bener */
+				$str_ca = "select * from pelaut_ms where username = '$username' and password = '$password' ";
+				$q_ca   = $this->db->query($str_ca);
+				$f_ca 	  = $q_ca->row_array(); 
+				
+				//$data['show_modal'] 	 = 1;
+				$data['err'] 			= md5(1);
+				$data['u']			  = !empty($f_cu) ? "t" : "f";
+				$data['a']			  = !empty($f_ca) ? "t" : "f";
+		
+		if($this->form_validation->run() == TRUE)
+		{
+			$check = $this->user_model->login($username,$password);		
+			if(!empty($check[0]))
+			{
+				
+				if($check['user'] == "pelaut")
+				{
+					
+					$dt = array('id_user' => $check[0]['pelaut_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check[0]['nama_depan']." ".$check[0]['nama_belakang']);
+					
+					
+					$this->session->set_userdata($dt);
+					
+					
+					header("location:".base_url("home"));
+					
+				}
+				/*else if($check['user'] == "agent")
+				{
+					
+					$dt = array('id_user' => $check[0]['agent_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check['nama']);
+					$this->session->set_userdata($dt);
+					ob_start();
+					header("location:".base_url("agent"));
+				}
+				else if($check['user'] == "company")
+				{
+					$dt = array('id_user' => $check[0]['id_perusahaan'],'username' => $check[1]['username'], 'email' => $check[1]['email'], 'user' => $check['user'], 'nama' => $check['perusahaan']);
+					$this->session->set_userdata($dt);	
+					
+					header("location:".base_url("company"));
+					
+					
+				}*/
+				else
+				{
+					// username and password are invalid
+					//$err = "$taw Username or password are invalid $tak ";
+					
+					//$data['show_modal'] = 1;
+					$data['err']		= md5(1);
+					
+					header("location:".base_url("users/?sm=1&err=$data[err]&c=1&login_attemp=$new_login_attemp&u=t"));
+				}
+				
+			}
+			else
+			{
+				
+				// username and password are invalid
+				
+								
+				
+				header("location:".base_url("users/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));	
+			}
+		}
+		else
+		{
+			$data['show_modal'] = 1;
+			
+			$this->load->view('users/index',$data);	
+			
+		}
+		
+		
+	}
+	
+	//cek username
+	public function check_username()
+	{
+		$taw = "<i class='label label-warning'>";
+		$tak = "</i>";
+		
+		$username 	   = $this->user_model->check_user();
+		$name_post	  = $this->input->post('username');
+		
+		$email 		= $this->user_model->check_email();
+		$email_post	= $this->input->post('email');
+		//print_r($username);
+		//var_dump($username);			
+		
+		if($name_post == "" && $email_post == "") {
+			$info['username'] = "$taw username can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$info['email'] 	= "$taw email can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$nilai = "false";
+		} else {
+			if (empty($username)) {
+				$info['username'] = "";
+				$nilai['username'] = "true"; 
+			} else {
+				$info['username'] = "$taw this username has been used $tak ";
+				$nilai['username'] = "false";
+			}
+			
+			if (empty($email)) {
+				$info['email'] = "";
+				$nilai['email'] = "true"; 
+			} else {
+				$info['email'] = "$taw this email has been used $tak";
+				$nilai['email'] = "false";
+			}
+			
+			//print_r($nilai); exit;
+		}
+		
+		$arr = array('info'=>$info,'nilai'=>$nilai);
+		return $arr;
+	}
+	
+	/*function cajax_username()
+	{
+		$this->authentification_model->ajax_access();
+		
+		$taw = "<i class='label label-warning'>";
+		$tak = "</i>";
+		
+		// check database
+		$username = $this->user_model->check_user();
+		
+		if($name_post == "" && $email_post == "") {
+			$info['username'] = "$taw username can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form
+			
+		} else {
+			if (empty($username)) {
+				$info['username'] = "";
+				
+			} else {
+				$info['username'] = "$taw this username has been used $tak ";
+			}
+		}
+		
+		echo $info['username'];
+	}*/
+	
+	public function logout()
+	{
+		
+		$a  = $this->user_model->logout(); // memasukkan data yang logout
+		
+		$dt = array('id_user' =>NULL,'username' => NULL, 'email' =>NULL, 'user' => NULL, 'nama' => NULL);
+		$this->session->unset_userdata($dt);
+		//$this->session->sess_destroy();
+		
+		header("location:".base_url());
+		
+	}
+	
+	function send_email($user)
+	{
+		// buat email 
+		$this->load->library('email');
+		
+		// set email config
+		$config['mailtype'] = "html";
+		$this->email->initialize($config);
+		//exit('email_jalan');
+		
+		$this->email->from('admin@informasea.com', 'Admin');
+		$this->email->to($user['email']); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('informasea.com Confirmation Account');
+		
+		$data['nama']		= $user['first_name']." ".$user['last_name'];
+		$data['username']	= $user['username'];
+		$data['password']	= md5($user['password']);
+		$data['email']	   = $user['email'];
+		$data['str_url'] 	 = base_url("users/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+		
+		$content = $this->load->view('users/email2',$data,true);
+		$this->email->message($content);
+		
+		$contenti = $this->load->view('users/email',$data,true);
+		$this->email->set_alt_message($contenti);	
+		
+		$this->email->send();
+		
+		//echo $this->email->print_debugger();
+		
+	}
+	
+	function activate()
+	{
+		$a = $this->input->get('a',true);
+		$e = $this->input->get('e',true);
+		$x = $this->input->get('x',true);
+		$u = $this->input->get('u',true);
+		$p = $this->input->get('p',true);
+		
+		// check di database
+		$f = $this->user_model->check_activation();
+		 
+		if(!empty($f))
+		{
+			$this->user_model->update_activation($email);
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	public function register()
+	{
+		
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+		
+		  $this->load->library('form_validation');
+		  $this->form_validation->set_error_delimiters('<i class="label label-warning">', '</i>');
+		  
+		  $username  		= $this->input->post('username',true);
+		  $first_name	  = $this->input->post('first_name',true);
+		  $last_name	   = $this->input->post('last_name',true);
+		  $email		   = $this->input->post('email',true);
+		  $password        = $this->input->post('spassword',true);
+		  
+		  //validation_error cuma nangkap error dari yg ini aja.
+		  $this->form_validation->set_rules('username','Username','required|alpha|xss_clean');
+		  $this->form_validation->set_rules('first_name','First Name','required|xss_clean');
+		  $this->form_validation->set_rules('last_name','Last Name','required|xss_clean');
+		  $this->form_validation->set_rules('email','Email','required|valid_email|matches[re_email]|xss_clean');
+		  $this->form_validation->set_rules('spassword','Password','required|matches[re_password]|xss_clean');		
+			  
+		  $check = $this->check_username();
+		  
+		  
+		  if($this->form_validation->run() == FALSE || $check['nilai']['username'] == "false" || $check['nilai']['email'] == "false") 
+		  {	
+			  $data['title'] = "Registration";
+			  $data['template'] = "template";
+			  
+			  $data['rwnation'] = $this->nation_model->get_nationality();
+			  $data['rwuser'] = $this->user_model->get_pelaut();
+			  
+			  //$check = $this->check_username();
+			  $data['info'] = $check['info'];
+			  $data['input'] = $this->input->post();
+			  
+			  $this->load->view('index',$data);		
+		  } else {
+			  //echo "isian benar"; echo "<br>";
+			 // exit('test mo ...');
+			  
+			  $this->user_model->register();	
+			  
+			  // ambil data yang ada di database
+			  $str_user = "select * from pelaut_ms where username = '$username' ";
+			  $q_user   = $this->db->query($str_user);
+			  $f_user   = $q_user->row_array(); 
+			  
+			  $data_user = array(
+			  	"username"	 => $username,
+			  	"first_name"   => $first_name,
+				"last_name"	=> $last_name,
+				"email"		=> $email,
+				"password"	 => $password,
+				"activation"   => $f_user['activation']
+			  );
+			  
+			  $this->send_email($data_user);
+			  
+			  // kirim email
+			  $data['title']    = "Registration";
+			  $data['template'] = "template";
+			  
+			  $data['rwnation'] = $this->nation_model->get_nationality();
+			  $data['rwuser'] = $this->user_model->get_pelaut();
+			  
+			  //$check = $this->check_username();
+			  $data['info'] 	 = $check['info'];
+			  $data['js']	   = "js";
+			  
+			  $this->load->view('index',$data);
+		  }
+		}
+		else
+		{
+			$data['title'] = "Registration";
+			$data['template'] = "template";
+			
+			$data['rwnation'] = $this->nation_model->get_nationality();
+			$data['rwuser'] = $this->user_model->get_pelaut();
+			
+			//$check = $this->check_username();
+			$data['info'] 	 = $check['info'];
+			$data['js']	   = "js";
+			
+			$this->load->view('index',$data);
+		}
+		
+	}
+}
+
+/* End of file users.php */
+/* Location: ./application/modules/users/controllers/users.php */

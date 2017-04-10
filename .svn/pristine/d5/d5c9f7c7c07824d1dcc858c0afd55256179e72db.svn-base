@@ -1,0 +1,27 @@
+<?php // left_content.php module : default ?>
+
+<div class="col-md-2">    
+  <div id="left-bar" class="panel panel-default hidden-phone">
+      <div class="panel-body">
+         Rifal Qori Kurniawan
+      </div>
+  </div> 
+  
+  <div id="left-bar" class="panel panel-default hidden-xs"> 
+   <div class="container">
+    <div class="panel-title"> 
+    left sidebar
+    </div>
+    <div class="panel-body">
+      <?php $this->load->view('dummy/dummy_list')?>
+    </div>
+    
+    <div class="panel-title"> 
+    left sidebar
+    </div>
+    <div class="panel-body">
+      <?php $this->load->view('dummy/dummy_list')?>
+    </div>
+   </div>
+  </div>
+</div>

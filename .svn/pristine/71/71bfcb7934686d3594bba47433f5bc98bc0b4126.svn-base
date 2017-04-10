@@ -1,0 +1,272 @@
+html {
+  background-color:#F2F2F2;
+}
+
+body
+{
+	padding-top:50px; 
+	background-color:#F2F2F2;
+	/* overflow:hidden !important; /*Penttting!! jangan dihapus */
+	/* overflow:visible; /* */
+	overflow-y:hidden !important;  /* */
+	width:100%;
+	/* height:5000px; /**/
+}
+
+
+/* new */
+*{
+	margin:0px;
+	border-radius:0 !important;  
+	
+}
+
+img{ border:1px solid #CCC; }
+
+#wrapper
+{
+	
+	margin-top:10px;	
+	
+	min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    
+	
+}
+
+#header
+{
+		
+	margin:0px 0px 0px 0px;
+	
+	color:#FFF;
+	
+	background-image: -webkit-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-image: -o-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-image: linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-repeat: no-repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff54b4eb', endColorstr='#ff1d9ce5', GradientType=0);
+	border-bottom: 1px solid #178acc;
+	filter: none;
+	-webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+	
+	
+}
+
+#content
+{
+	margin:0px 0px 0px 0px;
+	
+}
+
+#left-bar
+{
+	margin:0px 0px 5px 0px;
+	
+}
+
+#right-bar
+{
+		
+	margin:0px 0px 0px 0px;
+	
+}
+
+footer
+{
+	
+}
+
+footer .sitemap{
+	
+	
+}
+
+footer .sitemap a{
+	
+}
+
+/* end new */
+
+/* timeline things */
+
+#timeline-content
+{
+	/*margin-top:-15px;	*/
+	
+	
+}
+
+#comment
+{
+	padding:5px;
+
+	
+}
+
+#content-tml p a{
+	
+	margin:0px 10px 0px 0px;	
+	
+	
+	
+}
+
+#post_comment{
+	
+	margin:0px 0px 0px 10px;
+	float:left;
+	
+	width:85%;
+	
+	
+}
+
+#post_comment #post_content{
+	
+	width:70%	
+	
+}
+
+#profile-pic-mini
+{
+	margin:0px 0px 0px 10px;
+	float:left;
+
+		
+}
+/* timeline */
+
+/* halaman login dan register */
+
+#lgn_frm ul { margin:10px 0px 0px 0px }
+#lgn_frm ul li{ margin:0px 10px 0px 0px }
+
+
+/* seatizen */
+
+	.img-profile-seatizen
+	{
+		height:100px;
+		width:100px;	
+				
+	}
+
+/* */
+
+/* halaman vcantsea */
+
+	.img-profile-company
+	{
+		width:102px;
+		height:54px;
+		border:1px solid #CCC;	
+		
+	}
+
+/* */
+
+
+/* panel timeline */
+
+	#profile-pic
+	{
+		height:40px;
+		margin-right:10px;
+		margin-left:-16px;
+		float:left;
+		
+	}
+	
+	.img-profile{
+	
+		height:40px;
+		width:40px;
+	}
+	
+	#title-tml
+	{
+		
+		
+	}
+	
+	.row-tml{
+		
+		margin:0px 0px 5px 0px; 
+		width:100%;
+		
+		
+	}
+	
+	#img-tml{
+		
+		display:block;
+		
+		margin:0px 0px 10px 0px
+		
+		
+	}
+	
+	#sub-content-tml
+	{
+		margin-top:0px;
+		border:0px solid grey;
+		width:100%
+			
+	}
+	
+	#content-tml{
+		
+		margin:0px 0px 0px 0px;
+		
+	}
+	
+	.mini-margin-6
+	{
+		
+		line-height:6px;
+		
+	}
+
+/* */ 
+
+/*
+#banner{min-height:300px;border-bottom:none}
+.page-header h1{font-size:4em}
+.bs-docs-section{margin-top:8em}
+.bs-component{position:relative}
+.bs-component .modal{position:relative;top:auto;right:auto;left:auto;bottom:auto;z-index:1;display:block}
+.bs-component .modal-dialog{width:90%}
+.bs-component .popover{position:relative;display:inline-block;width:220px;margin:20px}
+
+#source-button{position:absolute;top:0;right:0;z-index:100;font-weight:bold}
+.nav-tabs{margin-bottom:15px}
+.progress{margin-bottom:10px}
+
+/*footer{margin:5em 0}
+footer li{float:left;margin-right:1.5em;margin-bottom:1.5em}
+footer p{clear:left;margin-bottom:0}*/
+
+
+.splash{padding:5em 0 0;background-color:#141d27;color:#fff;text-align:center}
+.splash .logo{width:160px}.splash h1{font-size:3em}.splash #social{margin:2em 0}
+.splash .alert{margin:2em 0}
+.section-tout{padding:4em 0 3em;border-bottom:1px solid rgba(0,0,0,0.05);background-color:#eaf1f1}
+.section-tout .fa{margin-right:.5em}
+.section-tout p{margin-bottom:3em}
+.section-preview{padding:4em 0 4em}
+.section-preview .preview {margin-bottom:4em;background-color:#eaf1f1}
+.section-preview .preview .image{position:relative}
+.section-preview .preview .image:before{box-shadow:inset 0 0 0 1px rgba(0,0,0,0.1);position:absolute;top:0;left:0;width:100%;height:100%;content:"";pointer-events:none}
+.section-preview .preview .options{padding:1em 2em 2em;border:1px solid rgba(0,0,0,0.05);border-top:none;text-align:center}
+.section-preview .preview .options p{margin-bottom:2em}
+.section-preview .dropdown-menu{text-align:left}
+.section-preview .lead{margin-bottom:2em}
+
+@media (max-width:767px){.section-preview .image img{width:100%}}
+.sponsor{text-align:center}
+.sponsor a:hover{text-decoration:none}
+
+@media (max-width:767px){.splash{padding-top:4em}.splash .logo{width:100px}.splash h1{font-size:2em}#banner{margin-bottom:2em;text-align:center}}

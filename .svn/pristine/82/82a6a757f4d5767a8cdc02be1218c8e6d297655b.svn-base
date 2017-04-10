@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+
+#content-user
+{
+	margin:0px 10px 0px 0px;	
+	
+}
+

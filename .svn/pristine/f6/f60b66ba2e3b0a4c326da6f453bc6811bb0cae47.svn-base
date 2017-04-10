@@ -1,0 +1,180 @@
+<?php // content center , menu photo, module photo ?>
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<style>
+.subpic{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */ 
+}
+div.description{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:15px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content{
+	padding:10px;
+	margin:0px;
+	font-weight:bold;
+	opacity:0.9;
+}
+
+.list-pic{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	right:0px;
+}
+
+
+</style>
+<div id="" class="col-md-12">
+        <div class="panel panel-default"> 
+            <div class="panel-body">
+				<h2 class=""> My Account </h2>
+<!--                <hr />-->
+<!--                <div class="col-md-12">Edit</div>-->
+                <button class="btn btn-primary" id="editAccount" style="margin-left: 735px"><i class="fa fa-edit"></i>Edit</button>
+                <button class="btn btn-success" id="doneAccount" style="margin-left: 735px"><i class="fa fa-edit"></i>Done</button>
+                <br>
+                <div class="unselectable wrap-text" style="margin-top: 10px;" id="job_description">
+                    <div class="table-responsive">
+                        <table class="table table-stripped" id="tabelAkun">
+                            <tr style="cursor: hand">
+                                <td width="30%">Name</td>
+                                <td width="1">:</td>
+                                <td class="tbl-bold">
+                                    <?php
+                                    echo $detail_pelaut['nama_depan'] ?> <?php echo $detail_pelaut['nama_belakang'] ?></td>
+                            </tr>
+                            <tr>
+
+                                <td>Username</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><input type="text" autocomplete="false" style="background-color: transparent; border: 0" readonly name="username" id="username" value="<?php echo $detail_pelaut['username'] ?>"></td>
+
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><input type="text" autocomplete="false" size="50" style="background-color: transparent; border: 0" readonly name="email" id="email" value="<?php echo $detail_pelaut['email'] ?>"></td>
+                            </tr>
+                            <tr id="old_password" hidden="hidden">
+                                <td>Old Password</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><input type="password" autocomplete="false" size="50" style="background-color: transparent; border: 0" readonly name="password" id="txtold_password" value=""></td>
+                            </tr>
+                            <tr id="new_pass" hidden="hidden">
+                                <td>New Password</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><input type="password" autocomplete="false" size="50" style="background-color: transparent; border: 0" readonly name="password" id="txtnew_password" value=""></td>
+                            </tr>
+                            <tr>
+                                <td><p id="repass" hidden="hidden">Retype Password</p><p id="realpass">Password</p></td>
+                                <td>:</td>
+                                <td class="tbl-bold"><input type="password" autocomplete="false" size="50" style="background-color: transparent; border: 0" readonly name="password" id="password" value=""></td>
+                            </tr>
+
+                        </table>
+                        <hr>
+                    </div><!-- end table -->
+                </div><!-- END QUALIFICATION -->
+
+                <span class="clearfix" ></span>
+                
+              
+                <div id="result"></div>
+            
+                
+        	</div>
+        </div>
+
+    <script>
+        var old_username, old_pass, old_email, new_username, new_password, new_email;
+
+        $(document).ready(function(){
+            $('#doneAccount').hide();
+            $("#editAccount").click(function(){
+                $('#tabelAkun').css("background-color", "#CCCCCC");
+                $('#editAccount').hide();
+                $('#doneAccount').show();
+                $('#username').css({"background-color": "white", "border": "1px"}).prop('readonly', false);
+                $('#email').css({"background-color": "white", "border": "1px"}).prop('readonly', false);
+                $('#txtold_password').css({"background-color": "white", "border": "1px"}).prop('readonly', false);
+                $('#txtnew_password').css({"background-color": "white", "border": "1px"}).prop('readonly', false);
+                $('#password').css({"background-color": "white", "border": "1px"}).prop('readonly', false);
+                $("#old_password").show();
+                $("#new_pass").show();
+                $("#repass").show();
+                $("#realpass").hide();
+
+
+                old_username = $("#username").val();
+                old_email = $("#email").val();
+                old_pass = $("#password").val();
+
+            });
+            $("#doneAccount").click(function(){
+                $('#tabelAkun').css("background-color", "white");
+                $('#editAccount').show();
+                $('#doneAccount').hide();
+                $('#username').css({"background-color": "transparent", "border": "0", "border-color" : "black"}).prop('readonly', true);
+                $('#email').css({"background-color": "transparent", "border": "0", "border-color" : "black"}).prop('readonly', true);
+                $('#txtold_password').css({"background-color": "transparent", "border": "0", "border-color" : "black"}).prop('readonly', true);
+                $('#txtnew_password').css({"background-color": "transparent", "border": "0", "border-color" : "black"}).prop('readonly', true);
+                $('#password').css({"background-color": "transparent", "border": "0", "border-color" : "black"}).prop('readonly', true);
+                $("#old_password").hide();
+                $("#new_pass").hide();
+                $("#repass").hide();
+                $("#realpass").show();
+
+                var username = $("#username").val();
+                var email = $("#email").val();
+                var password = $("#password").val();
+                var idnya = "<?php echo $detail_pelaut['pelaut_id'] ?>";
+                var old_pass = $('#txtold_password').val();
+                var new_pass = $('#txtnew_password').val();
+
+//                alert(idnya);
+                new_username = username;
+                new_email = email;
+                new_password = password == old_pass ? "":password;
+
+//                alert(new_username+" dan "+new_password+" dan "+new_email);
+                if(new_password != "" || old_pass != "" || new_pass != "") {
+//                    alert("Hallo");
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url("seaman/home/processUpdate"); ?>",
+                        data: "x=1&id_pelaut=" + idnya + "&username=" + new_username + "&email=" + new_email + "&password=" + new_password+"&old_pass="+old_pass+"&repass="+new_pass,
+                        success: function (data) {
+//                            alert(data);
+                            updateNewData();
+                            //alert(data);
+                            $("#result").html(data);
+                        }
+//                    error : function(){
+//                        alert("Error bro");
+//                    }
+                    });
+                }
+            });
+        });
+
+        function updateNewData()
+        {
+            var user = new_username == ""?old_username:new_username;
+            var email = new_email == ""?old_email:new_email;
+            var pass = new_password == ""?old_pass:new_password;
+            $("#txtold_password").val("");
+            $("#txtnew_password").val("");
+            $("#password").val("");
+        }
+    </script>
+        
+</div><!-- col-md-8 -->

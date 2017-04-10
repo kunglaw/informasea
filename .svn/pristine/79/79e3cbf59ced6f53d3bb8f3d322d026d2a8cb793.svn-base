@@ -1,0 +1,10 @@
+@charset "utf-8";
+/* Kunglaw css */
+
+/*tambahan kunglaw*/
+.block-home{
+		
+	/*width:83%;
+	margin-left:auto;
+	margin-right:auto;*/
+}	

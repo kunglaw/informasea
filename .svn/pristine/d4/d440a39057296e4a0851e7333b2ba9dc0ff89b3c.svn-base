@@ -1,0 +1,91 @@
+<?php // template module seaman ?>   
+
+<style>
+.subpic{
+    float:left; /* important */
+    position:relative; /* important(so we can absolutely position the description div */ 
+}
+div.description{
+    position:absolute; /* absolute position (so we can position it where we want)*/
+    bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+    left:0px;
+    width:100%;
+    /* styling bellow */
+    background-color:black;
+    font-family: 'tahoma';
+    font-size:15px;
+    color:white;
+    opacity:0.6; /* transparency */
+    filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content{
+    padding:10px;
+    margin:0px;
+    font-weight:bold;
+    opacity:0.9;
+}
+
+.list-pic{
+    position:absolute; /* absolute position (so we can position it where we want)*/
+    top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+    right:0px;
+}
+
+<?php
+    $this->load->model("photo/photo_mdl");
+  $cover = $this->photo_mdl->get_company_cover($company['id_perusahaan']);
+  
+  $ss = explode(".",$cover['nama_gambar']);
+  //print_r($ss);
+  $url_cover = img_url("photo/$username/cover/$ss[0]"."_thumb.".$ss[1]);
+  
+  if(empty($cover))
+  {
+    $url_cover = base_url("assets/img/pattern-cover.png");
+  }
+?>
+
+
+</style>
+
+<div class="col-md-12">
+  <div class="row">
+        
+    <div class="col-md-9">
+    <div class="row">	
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-body"> 
+
+        <?php 
+			
+			$this->load->view('head_detail');
+		
+		?>
+        
+        
+        <div class="col-md-12">
+        <div class="row">
+            <?php 				
+				$this->load->view($halaman_detail);
+			?>
+            
+            
+        </div>    
+        </div>
+     
+     </div><!-- row -->
+     </div>
+     </div>
+     </div>
+     </div>
+    
+     <?php
+	 	
+		$this->load->view('right_content');
+	 
+	 ?>
+  
+  </div><!-- row --> 
+</div><!-- col-md-14 -->
+<?php // end template ?>

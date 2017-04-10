@@ -1,0 +1,417 @@
+<script>
+
+function tes(id,friend,request,deletef,konfirm,element)
+{
+	
+    var keterangan = "start from jstop seatizen : ";
+    
+    $(element+" #btnaddfriend_"+id).hide();
+
+    $(element+" #btndelfriend_"+id).hide();
+
+    $(element+" #btnwaiting_"+id).hide();
+
+    $(element+" #btnconfirm_"+id).hide();
+
+
+
+    //alert(id+"friend :"+friend+"req :"+request+"delete :"+deletef);
+
+    if(friend){
+    
+    //alert("friend");
+    keterangan += "friend aktif";
+    $(element+" #btnaddfriend_"+id).show();
+
+    $(element+" #btndelfriend_"+id).hide();
+
+    $(element+" #btnwaiting_"+id).hide();
+
+    $(element+" #btnconfirm_"+id).hide();
+
+   }else if(request){
+     
+     //alert("request");
+    keterangan += "request aktif";
+     
+    $(element+" #btnaddfriend_"+id).css('display','none');
+
+    $(element+" #btndelfriend_"+id).hide();
+
+    $(element+" #btnwaiting_"+id).show();
+
+    $(element+" #btnconfirm_"+id).hide();
+
+    // alert("#btnaddfriend_"+id);
+
+   }else if(deletef){
+       
+    //alert("deletef");
+    keterangan += "deleteFriend aktif";
+
+    $(element+" #btnaddfriend_"+id).hide();
+
+    $(element+" #btndelfriend_"+id).show();
+
+    $(element+" #btnwaiting_"+id).hide();
+
+    $(element+" #btnconfirm_"+id).hide();
+
+   } else if(konfirm) {
+    
+    //alert("konfirm");
+    keterangan += "confirmFriend aktif";
+    
+    $(element+" #btnaddfriend_"+id).hide();
+
+    $(element+" #btnwaiting_"+id).hide();
+
+    $(element+" #btndelfriend_"+id).hide();
+
+    $(element+" #btnconfirm_"+id).show();
+
+   }
+   console.log(id+", "+keterangan);
+//alert(id+" "+friend+" "+request+" "+deletef)
+
+}
+
+function addFriend(id){
+
+        var id_teman = $("#id_teman_"+id).val();
+
+        $.ajax({
+
+            url : "<?php echo base_url("seatizen/seatizen_ajax/add_friend") ?>",
+
+            data :"id_teman="+id_teman,
+
+            type: "POST",
+
+            success:function(data){
+
+                //alert(data);
+
+                    $("#btnaddfriend_"+id).hide();
+
+                    $("#btnwaiting_"+id).show();
+
+                    $("#btndelfriend_"+id).hide();
+
+            }
+
+
+
+        })
+
+
+
+    }
+
+
+
+   function terima_teman(id){
+
+    var id_teman = $("#id_teman_"+id).val();
+
+    $.ajax({
+
+        url:"<?php echo base_url("seatizen/seatizen_ajax/terima_teman") ?>",
+
+        data:'id_teman='+id_teman,
+
+        type:"POST",
+
+        success:function(data){
+
+            //alert(data);
+
+            $("#btnaddfriend_"+id).hide();
+
+            $("#btnwaiting_"+id).hide();
+
+            $("#btndelfriend_"+id).show();
+
+            $("#btnconfirm_"+id).hide();
+
+        }
+
+    })
+
+}
+
+
+
+    function deleteFriend(id){
+
+        var id_teman = $("#id_teman_"+id).val();
+
+        if(confirm("apakah anda ingin menghapus teman ini ? ")){
+
+        $.ajax({
+
+            url : "<?php echo base_url("seatizen/seatizen_ajax/delete_friend"); ?>",
+
+            data: "id_teman="+id_teman,
+
+            type:"POST",
+
+            success:function(data){
+
+            //    alert(data);
+
+                    $("#btnaddfriend_"+id).show();
+
+                    $("#btnwaiting_"+id).hide();
+
+                    $("#btndelfriend_"+id).hide();
+
+            }
+
+
+
+        })
+
+    }
+
+
+
+    }
+
+    function batal_terima(id){
+
+        var id_teman = $("#id_teman_"+id).val();
+
+        $.ajax({
+
+            url:"<?php echo base_url("seatizen/seatizen_ajax/batal_terima") ?>",
+
+            data:'id_teman='+id_teman,
+
+            type:'POST',
+
+            success:function(data){
+
+                $("#btnaddfriend_"+id).show();
+
+                $("#btndelfriend_"+id).hide();
+
+                $("#btnconfirm_"+id).hide();
+
+                $("#btnwaiting_"+id).hide();
+
+            }
+
+
+
+        })
+
+    }
+
+
+
+    function batalrequest(id){
+
+        var id_teman = $("#id_teman_"+id).val();
+
+        //alert('aku disini');
+
+        $.ajax({
+
+            url : "<?php echo base_url("seatizen/seatizen_ajax/batalrequestfriend"); ?>",
+
+            data: "id_teman="+id_teman,
+
+            type:"POST",
+
+            success:function(data){
+
+             //  alert(data);
+
+                    $("#btnaddfriend_"+id).show();
+
+                    $("#btnwaiting_"+id).hide();
+
+                    $("#btndelfriend_"+id).hide();   
+
+            }
+
+        })
+
+    }
+
+     function getAllDepartmentList()
+
+        {
+
+            var s = "<?php echo $this->uri->segment(4) ?>";
+
+            var datanya = "idnya=<?php if(!empty($search_data['department'])) echo $search_data['department']; else echo '0' ?>";
+
+           
+
+           $.ajax({
+
+                url:"<?php echo base_url("seatizen/list_department") ?>",
+
+                type:"POST",
+
+                data:datanya,
+
+               success: function(data) {
+
+                    $("#get_department_vacant").html(data);
+
+                }
+
+            });
+
+            
+
+            var x = $("#get_department_vacant").val();
+
+            var rank = "<?php if(!empty($search_data['rank'])) echo $search_data['rank']; else echo '0' ?>";
+
+            if(rank != 0) {
+
+                var data_rank = "s="+s+"&id_department=" + x + "&idnya=" + rank;
+
+                getAllRankList(data_rank);
+
+            }
+
+        
+
+    }
+
+    
+
+        function getAllShipList() 
+
+        {
+
+            var datanya = "idshipnya = <?php if(!empty($search_data['ship'])) echo $search_data['ship']; else echo '0' ?>";
+
+            $.ajax({
+
+                url:"<?php echo base_url("seatizen/list_ship") ?>",
+
+                type:"POST",
+
+                data:datanya,
+
+                success: function(data) {
+
+                    $("#get_ship_vacant").html(data);
+
+                }
+
+            });
+
+            
+
+        }
+
+
+
+        function getAllNation(){
+
+            var datanya = "idnation = <?php if(!empty($search_data['nation'])) echo $search_data['name']; else echo '0' ?>";
+
+            $.ajax({
+
+                url:"<?php echo base_url("seatizen/list_nation") ?>",
+
+                type:"POST",
+
+                data:datanya,
+
+                success:function(data){
+
+                    $("#get_nation_seatizen").html(data);
+
+                }
+
+            })
+
+        }
+
+
+
+    
+
+    
+
+    function getAllRankList(datanya){
+
+            $.ajax({
+
+                url:"<?php echo base_url("seatizen/list_rank"); ?>",
+
+                type:"POST",
+
+                data:datanya,
+
+                success:function(hasil){
+
+                    $("#get_rank_vacant").html(hasil);
+
+                }
+
+            });
+
+    }
+
+    
+
+    function getAllCocList(datanya){
+
+        $.ajax({
+
+            url:"<?php echo base_url("seatizen/list_coc"); ?>",
+
+            type:"POST",
+
+            data:datanya,
+
+            success:function(hasil){
+
+                $("#get_coc_class").html(hasil);
+
+            }
+
+        });
+
+    }
+
+
+
+   
+
+     function deletefriend(id_friend){
+
+        //alert('aku disini');
+
+        var type_modal = "delete-friend-modal";
+
+        get_modal(type_modal,id_friend);
+
+
+
+     }
+
+
+
+     function login(){
+
+        var type_modal = "modal-login";
+
+        get_modal(type_modal,99999);
+
+     }
+
+
+
+
+
+</script>

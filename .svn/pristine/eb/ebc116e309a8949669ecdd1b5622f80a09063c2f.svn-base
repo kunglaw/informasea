@@ -1,0 +1,28 @@
+<?php
+if(!defined('BASEPATH')) exit ('No direct access allowed');
+
+class custom404 extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function index()
+    {
+        $this->output->set_status_header('404');
+        //$this->data['template'] = 'template';  // View name
+		$data['message'] = "The Page you are looking for was not found";
+		$data['header'] = "Error 404 , Page Not Found";
+		$data['template'] = 'content/error404/template';
+        $this->load->view('content/error404/index', $data);
+		
+    }
+	
+	function __destruct()
+	{
+		
+		echo "<!-- end -->";	
+	}
+}
+?>

@@ -1,0 +1,52 @@
+<?php // head, ALL MODULES, GENERAL ?>
+
+    <title>Informasea | <?php echo $title ?> </title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta charset="utf-8">
+    <?php 
+		
+		
+		$this->load->view($meta); // satu page , satu meta 
+		
+	?>
+    
+    <link href="<?=base_url("assets/img/favicon.ico")?>" rel="icon" type="image/x-icon"/>
+    <!--    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/normalize.css")?>" />-->
+    <!--    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/font.css")?>" />-->
+    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/bootstrap.min.css")?>" />
+    <!--    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/animate.css")?>" /> -->
+    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/informasea-kunglaw.css")?>" >
+    <link rel="stylesheet" href="<?=base_url("assets/js/jquery-ui-1.11.4.custom/jquery-ui.min.css")?>" >
+    
+    
+    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/font-awesome/css/font-awesome.css")?>" />
+    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/informasea.css")?>" />
+    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/utilities.css")?>" />
+	
+    <?php $this->load->view("css"); ?>
+    <?php $this->load->view($css,$dt_css); ?>
+    
+    
+    <!-- 	<link rel="stylesheet" type="text/css" href="<?=base_url("assets/plugin/plugins/flexslider/flexslider.css")?>" />-->
+    <!--    <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/full-slider.css")?>"  />-->
+    
+    <!--[if IE]>
+    <script src="<?=base_url("assets/js/html5shiv.min.js")?>" ></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js")?>" ></script>
+    <![endif]-->
+    <script type="text/javascript" src="<?=base_url("assets/js/jquery.min.js")?>" ></script>
+    <script type="text/javascript" src="<?=base_url("assets/js/bootstrap.min.js")?>" ></script>
+    <script type="text/javascript" src="<?=base_url("assets/js/jquery-ui-1.11.4.custom/jquery-ui.js")?>"></script>
+    
+
+<!--    <script type="text/javascript" src="<?=base_url("assets/js/jquery.jcarousel.js")?>" ></script>-->
+<!--    <script type="text/javascript" src=""<?=base_url("assets/plugin/plugin/flexslider/jquery.flexslider.js")?>" ></script>-->
+
+	<?php $this->load->view($js_top,$dt_js_top); ?>
+    
+    <!-- google -->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    
+    
+	

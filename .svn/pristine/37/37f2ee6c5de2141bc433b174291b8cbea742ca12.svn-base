@@ -1,0 +1,337 @@
+<?php if(!defined('BASEPATH')) exit ('no direct script access allowed');
+
+class users_sosmed extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();	
+		$this->load->model("users/user_model");
+		
+	}
+	
+	function fb_modal()
+	{		
+		$this->load->view("users/email_confirmation");	
+	}
+	
+	private function send_email($user)
+	{
+		
+		if(empty($user))
+		{
+			$username = $user['username'];
+	
+			$user = $this->user_model->check_nauser($username);
+			
+			
+			$data['nama']		= $user['first_name']." ".$user['last_name'];
+			$data['username']	= $user['username'];
+			$data['password']	= $user['password']; // ini jangan di md5
+			$data['email']	   = $user['email'];
+			$data['str_url'] 	 = 
+			base_url("users/users_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+			
+		}
+		else
+		{
+			$data['nama']		= $user['first_name']." ".$user['last_name'];
+			$data['username']	= $user['username'];
+			$data['password']	= $user['password']; // jangan di md5 juga
+			$data['email']	   = $user['email'];
+			$data['str_url'] 	 = 
+			base_url("users/users_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+		}
+		
+		// buat email 
+		$this->load->library('email');
+		
+		// set email config
+		$config['mailtype'] = "html";
+		$this->email->initialize($config);
+		//
+		//exit('email_jalan');
+		
+		$this->email->from('info@informasea.com', 'informasea.com');
+		$this->email->to($user['email']); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('informasea.com Confirmation Account');
+		
+		$content = $this->load->view('users/email2',$data,true);
+		$this->email->message($content);
+		
+		$contenti = $this->load->view('users/email',$data,true);
+		$this->email->set_alt_message($contenti);	
+	
+		$this->email->send();
+		
+		
+		//echo $this->email->print_debugger();
+		
+	}
+	
+	function facebook()
+	{
+		//print_r($_POST); exit;
+		
+		$this->load->library("form_validation");
+		$this->load->helper("username_folder_helper"); 
+		
+		/* Array ( [fb_id] => 10203185849228742 
+		[fb_first_name] => Aries Dimas 
+		[fb_last_name] => Yudhistira 
+		[fb_cover] => 
+		[fb_picture] =>
+		[fb_email] => 
+		[fb_religion] => 
+		[fb_gender] => male 
+		[fb_username] => 
+		[fb_password] => )*/
+		 
+		// get data
+		$fb_id 			= $this->input->post("fb_id",true);
+		$fb_first_name	= $this->input->post("fb_first_name",true);
+		$fb_last_name	 = $this->input->post("fb_last_name",true);
+		$fb_cover 		 = $this->input->post("fb_cover",true);
+		$fb_picture	   = $this->input->post("fb_picture",true);
+		$fb_email		 = $this->input->post("fb_email",true);
+		$fb_religion	  = $this->input->post("fb_religion",true);
+		$fb_gender		= $this->input->post("fb_gender",true);
+		
+		$activation	   = md5(uniqid(rand(), true));
+		$password 		 = "guest"; // default password bagi pendaftar baru dengan facebook
+		
+		$u = explode("@",$fb_email);
+		$username = $u[0];
+		
+		// cek data
+		$this->form_validation->set_rules("fb_id","fb_id","required|xss_clean");
+		$this->form_validation->set_rules("fb_first_name","fb_first_name","required|xss_clean");
+		$this->form_validation->set_rules("fb_last_name","fb_last_name","required|xss_clean");
+		$this->form_validation->set_rules("fb_email","fb_email","required|valid_email|xss_clean");
+		
+		if($this->form_validation->run() == true && empty($fe))
+		{
+			// cek email 
+			$stre = "SELECT * FROM pelaut_ms where email = '$fb_email'	";
+			$qe   = $this->db->query($stre);
+			$fe   = $qe->row_array($qe);
+			
+			// cek fb_id
+			$str = "SELECT * FROM pelaut_ms where facebook_id = '$fb_id' ";
+			$q   = $this->db->query($str);
+			$f   = $q->row_array();
+			
+			// cek username 
+			$stru = "SELECT * FROM pelaut_ms where username = '$username' ";
+			$qu   = $this->db->query($stru);
+			$fu   = $qu->row_array($qu);
+			
+			// kalau username sudah ada berdasarkan email , maka di update 
+			if(!empty($fu) || !empty($fe))
+			{
+				if($fu['facebook_id'] == 0)
+				{
+				  $strfu  = "UPDATE pelaut_ms SET 			 					 ";
+				  $strfu .= "facebook_id	= '$fb_id'		 					 ";
+				  $strfu .= "WHERE username	= '$username' OR email = '$fb_email' ";
+				  
+				  $qfu   = $this->db->query($strfu);
+				}
+				
+				// login
+				if(!empty($fu))
+				{
+				  $dt = array('id_user'  => $fu['pelaut_id'],
+							  'username' => $fu['username'],
+							  'email' 	=> $fu['email'],
+							  'user' 	 => "pelaut",
+							  'type_user'=> "pelaut",
+							  'nama' 	 => $fu['nama_depan']." ".$fu['nama_belakang']);
+				}
+				else if(!empty($fe))
+				{
+					$dt = array('id_user'  => $fe['pelaut_id'],
+							  'username' => $fe['username'],
+							  'email' 	=> $fe['email'],
+							  'user' 	 => "pelaut",
+							  'type_user'=> "pelaut",
+							  'nama' 	 => $fe['nama_depan']." ".$fe['nama_belakang']);
+				}
+	
+				$this->session->set_userdata($dt);
+				
+				echo "You're Login Sucessfully";
+				
+			}
+			else
+			{
+				// jika fb_id yg di table pelaut_ms kosong
+				// maka buat data baru
+				if(empty($f))
+				{
+					// insert data pelaut dahulu 
+					$str_in  = "INSERT INTO pelaut_ms SET 		 		 	 ";
+					$str_in .= "username 			= '$username'			,";
+					$str_in .= "password			= '".md5($password)."'  ,"; 
+					$str_in .= "nama_depan			= '$fb_first_name'		,";
+					$str_in .= "nama_belakang  	= '$fb_last_name'		,";
+					$str_in .= "agama				= '$fb_religion'		,";
+					$str_in .= "email				= '$fb_email'			,";
+					$str_in .= "gender				= '$fb_gender'			,";
+					$str_in .= "activation			= '$activation'			,";
+					$str_in .= "create_date		= now()					,";
+					$str_in .= "facebook_id		= '$fb_id'				 ";
+					
+					$this->db->query($str_in);
+					
+					exit("why ? ");
+					
+					$pelaut_id = $this->db->insert_id();
+					
+					// create folder username
+					make_username_folder_pt($username);
+					
+					// cover
+					if(!empty($fb_cover))
+					{
+					  // cover
+					  $dt_cover = getimagesize($fb_cover);
+					  $cv_size  = filesize($fb_cover);
+					  $cv_name  = basename($fb_cover);
+					  $c = explode("?",$cv_name);
+					  if(!empty($c))
+					  {
+						  $cv_name = $c[0];	
+					  }	
+						
+					  //upload cover
+					  $copy_cover = copy($fb_cover,pathup("photo/$username/cover/$cv_name"));
+					  
+					  if(!$copy_cover)
+					  {
+						echo "data cover tidak berhasil di copy";  
+					  }
+					  
+					  // insert cover ke database
+					  $str_cv = "INSERT INTO photo_pelaut_tr SET 			 	 ";
+					  $str_cv = "nama_gambar	= '$cv_name'					,";
+					  $str_cv = "size_gambar	= '$cv_size'					,";
+					  $str_cv = "id_pelaut		= '$pelaut_id'					,";
+					  $str_cv = "type_gambar	= '$dt_cover[mime]'				,";
+					  $str_cv = "datetime		= now()							,";
+					  $str_cv = "ip_address		= '".$_SERVER['REMOTE_ADDR']."' ,";
+					  $str_cv = "username		= '$username'					,";
+					  $str_cv = "cover			= '1'							 ";
+					  
+					  $this->db->query($str_cv);
+					}
+					
+					if(!empty($fb_picture))
+					{
+					  // profile_picture 
+					  $dt_prof  = getimagesize($fb_picture);
+					  $pr_size  = filesize($fb_picture);
+					  $pr_name  = basename($fb_picture);
+					  $p = explode("?",$pr_name);
+					  if(!empty($p))
+					  {
+						  $pr_name = $p[0];
+					  }	
+					  
+					  //upload picture
+					  $copy_prof = copy($fb_picture,pathup("photo/$username/profile_pic/$pr_name"));
+					  
+					  if(!$copy_prof)
+					  {
+						echo "data profile tidak berhasil di copy";  
+					  }
+					  
+					  // insert cover ke database
+					  $str_pr = "INSERT INTO photo_pelaut_tr SET 			 	 ";
+					  $str_pr = "nama_gambar	= '$pr_name'					,";
+					  $str_pr = "size_gambar	= '$pr_size'					,";
+					  $str_pr = "id_pelaut		= '$pelaut_id'					,";
+					  $str_pr = "type_gambar	= '$dt_cover[mime]'				,";
+					  $str_pr = "datetime		= now()							,";
+					  $str_pr = "ip_address		= '".$_SERVER['REMOTE_ADDR']."' ,";
+					  $str_pr = "username		= '$username'					,";
+					  $str_pr = "profile_pic	= '1'							 ";
+					  
+					  $this->db->query($str_pr);
+					  
+					  
+					}
+					
+					$data_user = array(
+					  "username"	 => $username,
+					  "first_name"   => $fb_first_name,
+					  "last_name"	=> $fb_last_name,
+					  "email"		=> $fb_email,
+					  "password"	 => md5($password),
+					  "activation"   => $f_user['activation'],
+					);
+					
+					
+					// send_email activation code
+					$this->send_email($data_user);
+					
+					
+					// login
+					$dt = array('id_user'  => $pelaut_id,
+								'username' => $username,
+								'email' 	=> $fb_email,
+								'user' 	 => "pelaut",
+								'type_user'=> "pelaut",
+								'nama' 	 => $fb_first_name." ".$fb_last_name);
+		
+					$this->session->set_userdata($dt);
+					
+					echo "Anda Berhasil Login dengan Facebook ";
+					
+				}
+				else // login
+				{
+					$dt = array('id_user'  => $f['pelaut_id'],
+								'username' => $f['username'],
+								'email' 	=> $f['email'],
+								'user' 	 => "pelaut",
+								'type_user'=> "pelaut",
+								'nama' 	 => $f['nama_depan']." ".$f['nama_belakang']);
+		
+					$this->session->set_userdata($dt);
+					
+					echo "You're Login sucessfully";
+				}
+			}
+		
+		}
+		else
+		{
+			echo "Data Facebook is not complete, unable to Login";
+		}
+		
+	}
+	
+	function gmail()
+	{
+		// get data
+		
+		// insert data 
+		
+		// login 
+		
+		// load
+		
+		
+	}
+	
+	function __destruct()
+	{
+		
+	}
+	
+	
+	
+}

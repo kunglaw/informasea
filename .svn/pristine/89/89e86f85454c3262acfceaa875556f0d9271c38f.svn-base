@@ -1,0 +1,93 @@
+
+<?php // template login 
+
+?>
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-6 text-white hidden-sm hidden-xs m-t-1">
+            <h1><span class="text-link">Welcome to</span> Informasea </h1>
+
+            <p>
+                Informasea is a place for you as a seaman to search Information for Vacantsea and networking. For
+                Shipping Agentsea, this is the place where you can manage and search the best competent seaman to
+                hire.</p>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_search.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Search Vacantsea</h4></div>
+                    <p>
+                        You can use these galleries to insert tables, headers, footers, lists, cover pages, and
+                        other document building blocks. When you create pictures, charts, or diagrams, they also
+                        coordinate with your current document look.
+                    </p>
+                </div>
+            </div>
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_social.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Social Network</h4></div>
+                    <p>
+                        Most controls offer a choice of using the look from the current theme or using a format that
+                        you specify directly. To change the overall look of your document, choose new Theme elements on
+                        the Page Layout tab.
+                    </p>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_managing.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Managing Schedule</h4></div>
+
+                    <p>
+                        Most controls offer a choice of using the look from the current theme or using a format that
+                        you specify directly.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-white m-t-1">
+            <div class="block">
+                <h2> Forgot Password </h2>
+            </div>          
+             
+              <?php
+				echo $ve;
+				if($this->session->flashdata('error') == "")
+				{
+					echo $this->session->flashdata('error');
+				}
+			 ?> 
+            <form class="transparent register-form" role="form" action="<?=base_url("users/users_process/forgotpass")?>" method="post" >
+              
+                <div class="form-group">
+                
+                	<label>Send password to Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="your email" >
+                </div>
+               
+                <a href="<?php echo base_url("users/login")?>" class="pull-left text-link">Login </a>
+                
+                <div class="pull-right">
+                    <button class="btn btn-filled">Send</button>
+                </div>
+                <span class="pull-right">&nbsp; Or &nbsp;</span>
+                 <a href="<?=base_url("users/register")?>" class="pull-right text-link">Register to Informasea</a>
+                 
+                <div class="clearfix"></div>
+               
+            </form>
+        </div>
+    </div>
+</section>
+

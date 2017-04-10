@@ -1,0 +1,21 @@
+<div id="main-profile" class="col-md-12">
+	<?php $dt_header['username'] = $username; ?>
+    
+    <?php $this->load->view($header,$dt_header); ?>
+    
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <?php $dt_navbar['r_active'] = "active" ?>
+        <?php $navbar_profile = !empty($navbar_profile) ? $navbar_profile : "navbar-profile"?>
+        <?php $this->load->view($navbar_profile,$dt_navbar); ?>
+        <!-- Tab panes -->
+        
+        <div class="tab-content">
+            
+            <div role="tabpanel" class="tab-pane active" id="resume">
+                <?php $this->load->view("seatizen/resume-private"); ?>
+            </div>
+           
+        </div>
+    </div>
+</div>

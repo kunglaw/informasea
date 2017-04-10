@@ -1,0 +1,161 @@
+<?php
+	// controller timeline , module guest , seaman
+	
+	if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed ');
+	
+	class timeline extends CI_Controller{
+		
+		function __construct()
+		{
+			
+			parent::__construct();
+			
+			$this->authentification_model->close_access();
+			
+			// hapus ini kalau ingin masuk secara langsung 
+			if($this->input->post("x") != 1)
+			{
+				header("location:".base_url());
+			}
+			
+			
+			$this->load->model("timeline_model");
+			//$this->load->model('users/user_model');
+			
+			
+			
+			
+		}
+		
+		function upload_image()
+		{
+			$this->load->library('image_lib');
+			$this->load->library('upload');
+			
+			$extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+			//print_r($_FILES);
+			$ext = $extt[1];
+			$a = $this->db->query("SHOW TABLE STATUS FROM `infr6975_informaseadb2014` LIKE 'timeline' ");
+			$b = $a->row_array();
+			$b['Auto_increment'];
+			
+			$configupload['upload_path'] = "assets/timeline/";
+			$configupload['file_name'] = strtoupper(md5($b['Auto_increment'].$_FILES['picture']['name'])).date('YmdHis').".".$ext;
+			$configupload['allowed_types'] = "gif|jpg|png|jpeg";
+			$configupload['max_size']	=  1024 * 1024 * 2; // 2MB;
+			//echo $_FILES['picture']['size']; exit;
+			//$configupload['max_width']  = '1024';
+			//$configupload['max_height']  = '1024';
+			
+			//print $configupload['upload_path']; 
+			
+			$photo = 'picture'; // name dari form file
+			$this->upload->initialize($configupload);
+			$this->upload->do_upload($photo);
+			$dataphoto = $this->upload->data();
+			//print_r($dataphoto);
+			
+			$error_upload = $this->upload->display_errors('<p> Upload : ', '</p>');
+			// exit;
+			
+			if(empty($error_upload))
+			{
+				$config['image_library'] = 'gd2';
+				$config['source_image'] = "assets/timeline/$dataphoto[file_name]";
+				//$config['create_thumb'] = TRUE;
+				$config['quality'] = '85%';
+				$config['maintain_ratio'] = TRUE;
+				$config['width'] = $dataphoto['image_width'] * 3/4 ;
+				$config['height'] = $dataphoto['image_height'] * 3/4;
+				
+				$this->image_lib->initialize($config);
+				
+				if ( ! $this->image_lib->resize())
+				{
+					$error_resize =  $this->image_lib->display_errors('<p> Image Lib : ','</p>');
+					return array(FALSE,$error_resize);
+				}
+				else
+				{
+				
+					return array(TRUE,$dataphoto['file_name']);
+				}
+			}
+			else
+			{
+				return array(FALSE,$error_upload);
+			}
+			
+		}
+		
+		function detail()
+		{
+			//$param = $this->uri->segment('');
+			
+			$data['include'] = "";
+			
+			
+			$this->load->view('index',$data);
+				
+			
+		}
+		
+		/* non aktif
+		function insert()
+		{   
+			//echo "lalalala <br>";
+			$this->load->library('form_validation');
+			
+			$photo = "";
+			$photo =  $this->upload_image();
+			
+			
+			
+			//$this->form_validation->set_rules('timeline', 'Timeline', 'required');
+			$tml = $this->input->post("timeline",TRUE); //echo "lalalala";
+			$to = $this->input->post('to',TRUE);
+	
+			if($_FILES['picture']['name'] == "" && $tml == "")
+			{
+				echo "your post can't be empty";
+			}
+			
+			else
+			{
+			  
+			  
+			  $this->load->model("timeline_model");
+			  
+			  if($photo[0] == TRUE)
+			  {
+				  $photo = $photo[1]; // jika gambar ada 
+			  }		
+			  else
+			  {
+				  
+				  $photo = "";  // jika terjadi kesalahan upload gambar
+			  }
+			  
+			 
+			  
+			  $dt_tml = array('content' => $tml, 'photo'=>$photo, 'pelaut_id' => $this->session->userdata('id_user'), 'username' => $this->session->userdata('username'), 'title' => '', 'type' => 'status', 'to' => $to );
+			  
+			  //print_r($this->session->all_userdata());
+			  
+			  
+			  //print_r($dt_tml); exit;			
+			  
+			  $i = $this->timeline_model->insert_timeline($dt_tml);
+			  
+			  
+			  if(!$i)
+			  {
+				 echo "data tidak berhasil di input ... ";	
+				  
+			  }
+			  
+			}
+			
+		} */	
+		
+	}

@@ -1,0 +1,114 @@
+<?php
+
+/**
+
+ * Created by PhpStorm.
+
+ * User: Mohamad
+
+ * Date: 5/5/2015
+
+ * Time: 1:13 PM
+
+ */
+
+?>
+
+<?php
+
+	$this->load->model('company/company_model');
+
+	$company 		= $this->company_model->get_company_panel();
+
+?>
+
+<?php
+
+if(!empty($company)){	
+
+?>
+
+
+
+<div class="widget-box">
+
+    <div class="text-gray widget-box-title"><?=$this->lang->line("new_agentsea")?></div>
+
+    <a href="<?=base_url("agentsea");?>" class="text-link widget-box-seemore">See All</a>
+
+    <?php
+
+	  foreach($company as $row)
+
+	  {
+
+
+
+      	  $username 	= $row['username']; 
+
+		  
+
+		  $url_gambar  = check_logo_agentsea_thumb($username); 
+
+		  
+
+	?>
+
+    <div style="clear: both"></div>
+
+    <div class="media">
+
+        <a class="pull-left small-img-container" href="<?=base_url("company/".$username."/home")?>">
+
+            <img class="media-object img-responsive img-thumbnail" src='<?php echo $url_gambar; ?>' alt="user-image" style="width:46px; height:46px">
+
+        </a>
+
+
+
+        <div class="media-body">
+
+            <div class="text-grey"><a href="<?=base_url("company/".$username."/home")?>"><?php echo $row['nama_perusahaan']; ?></a></div>
+
+            <div class="subtitle">
+
+              <?php $nation = $this->nation_model->get_detail_nationality($row['nationality']); ?>
+
+              <?php if(!empty($nation)){ ?>
+
+              <a href="<?=base_url("agentsea/search/".$nation['name']);?>">
+
+                  <img src="<?=asset_url("flags/".strtolower($nation['flag']));?>">
+
+                  <?=$nation['name']; ?>
+
+              </a>
+
+              <?php } ?>
+
+            
+
+			
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <?php
+
+	  }
+
+	?>
+
+</div>
+
+
+
+<?php
+
+}
+
+?>
+

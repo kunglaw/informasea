@@ -1,0 +1,64 @@
+<?php
+	$username = $this->session->userdata("username"); 
+	
+?>	
+    <div class="pull-left subpic" style="width:150px; height:150px; margin-right:5px; margin-bottom:5px; border:1px solid #999;">
+    <?php
+		$ptml = $this->photo_mdl->select_last_phototml($username);
+		$nama_gambar = explode(".",$ptml['photo']);
+	?>
+    <img src="<?php echo img_url("timeline/$username/thumbnail/$nama_gambar[0]"."_thumb."."$nama_gambar[1]"); ?>" style="width:150px; height:150px;" >
+    <div class='description'>
+			<!-- description content -->
+			<p class='description_content'><?php echo "Timeline Photo" ?></p>
+			<!-- end description content -->
+		</div>
+    </div>
+    </div>
+    
+    <div class="pull-left subpic" style="width:150px; margin-right:5px; height:150px; margin-bottom:5px; border:1px solid #999">
+    <?php
+		
+		$pt = $this->photo_mdl->select_last_photo($username);
+		//print_r($pt);
+		$nama_gambar = explode(".",$pt['nama_gambar']);
+		
+		
+		$url      = img_url("photo/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+		$url_path = pathup("photo/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+		if(!is_file($url_path))
+		{
+			$url 		= img_url("photo/$username/resume/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+			$url_path   = pathup("photo/$username/resume/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+			if(!is_file($url_path))
+			{
+				$url 		= img_url("photo/$username/cover/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+				$url_path   = pathup("photo/$username/cover/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+				if(!is_file($url_path))
+				{
+					$url 		= img_url("photo/$username/profile_pic/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+					$url_path   = pathup("photo/$username/profile_pic/$nama_gambar[0]"."_thumb.".$nama_gambar[1]);
+				}
+			}
+		}
+		
+	?>
+        <img src="<?php echo $url; ?>" style="width:150px; height:150px;" >
+        <div class='description'>
+			<!-- description content -->
+			<p class='description_content'><?php echo "My Photos" ?></p>
+			<!-- end description content -->
+		</div>
+    </div>
+    
+<?php
+	foreach($album as $row){
+		$this->photo_mdl->select_last_photo_album($username,$row['id_album']);
+?>
+	<div style="width:150px; height:150px; margin-bottom:5px; border:1px solid #999">
+    	<img src="<?php echo base_url("assets/photo/$username/$row[photo]"); ?>" style="width:150px; height:150px;" >
+    </div>	
+<?php
+	}
+
+?>

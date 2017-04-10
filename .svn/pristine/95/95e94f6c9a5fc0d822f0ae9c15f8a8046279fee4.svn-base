@@ -1,0 +1,52 @@
+<?php // content center , menu profile, module guest / pelaut ?>
+
+<div id="" class="col-md-8">
+   <?php
+   
+	if($this->session->userdata("user") == "pelaut")
+	{
+		$this->load->view('seaman/post_timeline');
+	}
+	
+	?>
+   
+    <div id="list_timeline">
+    	
+        
+        
+    </div>
+    
+    <script>
+		//alert('<?php echo $username ?>');
+		function get_list_timeline()
+		{
+			$.ajax({
+				
+				
+				type : "POST",
+				url : "<?php echo base_url("seaman/home/get_self_timeline"); ?>",
+				data:"x=1&username=<?php echo $username ?>&ctrl=<?php echo $ctrl ?>", // username dari uri == username login 
+				success : function(data)
+				{
+					
+					$("#list_timeline").html(data);	
+				}
+				
+				
+				
+			});
+			
+			
+		}
+		
+		
+		$(document).ready(function(e) {
+			
+			
+			get_list_timeline();
+			
+        });
+		
+		
+	</script>
+</div><!-- col-md-8 -->

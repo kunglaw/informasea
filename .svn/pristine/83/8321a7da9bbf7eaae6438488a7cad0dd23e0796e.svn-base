@@ -1,0 +1,47 @@
+<?php //list-comment-timeline, module timeline ?>
+
+<div class="comment-block">
+	  <?php if(count($comment) > 15){ ?>
+      <div class="comment-details">
+          <a href="">View 15 more comment..</a>
+      </div>
+      <?php }  ?>
+      
+      <?php
+	
+		  foreach($comment as $row)
+		  {
+			  
+			$profile_pic = $this->user_model->get_profile_pic($row['username']); 
+			// bisa diisi pakai username
+			$nama_gambar = explode(".",$profile_pic);
+			$url = img_url("photo/$row[username]/profile_pic/$nama_gambar[0]"."_small.".$nama_gambar[1]);
+			
+			if(empty($profile_pic))
+			{
+				
+				$url = base_url("assets/img/user.jpg");
+			}
+	  ?>
+      
+      <div class="media comment-item">
+          <a class="pull-left small-img-container" href="#">
+              <img class="media-object img-responsive" src='<?php  echo $url; ?>' alt="user-image">
+          </a>
+          <div class="media-body">
+              <div>
+                  <a href="<?php echo base_url("profile/".$row['username']); ?>" class="media-heading pull-left">
+                  		<b><?php echo $name = $this->timeline_model->get_realname($row['username']);  ?></b>
+                  </a>
+                  <span class="pull-right small-subtitle">10.33</span>
+                  <span class="clearfix"></span>
+              </div>
+              <p><?php echo $row['content']?></p>
+          </div>
+      </div>
+      
+      <?php
+		  }
+	  ?>
+</div>
+

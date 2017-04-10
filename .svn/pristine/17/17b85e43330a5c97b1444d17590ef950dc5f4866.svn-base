@@ -1,0 +1,1207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e7a3f2f5-a329-4e5e-b8b5-56970b7cc919" name="Default" comment="" />
+    <ignored path="informasea.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="informasea" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="vacantsea.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/controllers/vacantsea.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-132.34616" vertical-offset="11995" max-vertical-offset="15912">
+              <caret line="908" column="0" selection-start-line="908" selection-start-column="0" selection-end-line="908" selection-end-column="0" />
+              <folding>
+                <marker date="1437988316915" expanded="true" signature="26487:26516" placeholder="..." />
+                <marker date="1437988316915" expanded="true" signature="26650:26693" placeholder="..." />
+                <marker date="1437988316915" expanded="true" signature="26865:26894" placeholder="..." />
+                <marker date="1437988316915" expanded="true" signature="27064:27093" placeholder="..." />
+                <marker date="1437988316915" expanded="true" signature="27264:27293" placeholder="..." />
+                <marker date="1437988316915" expanded="true" signature="27467:27496" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vacantsea_model.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/models/vacantsea_model.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-12.115385" vertical-offset="5363" max-vertical-offset="9299">
+              <caret line="334" column="0" selection-start-line="334" selection-start-column="0" selection-end-line="334" selection-end-column="0" />
+              <folding>
+                <marker date="1437987070492" expanded="true" signature="356:431" placeholder="SELECT * FRO..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="639:707" placeholder="SELECT * FRO..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="964:1069" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="1297:1400" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="1622:1720" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="2429:2452" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="4007:4030" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="5930:6037" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="6243:6288" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="6850:6879" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="8616:8682" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="9784:9896" placeholder="select * fro..applicant_tr..." />
+                <marker date="1437987070492" expanded="true" signature="10186:10298" placeholder="select * fro..applicant_tr..." />
+                <marker date="1437987070492" expanded="true" signature="10523:10602" placeholder="select * fro..applicant_tr..." />
+                <marker date="1437987070492" expanded="true" signature="10824:10903" placeholder="select * fro..applicant_tr..." />
+                <marker date="1437987070492" expanded="true" signature="11137:11227" placeholder="select * fro..applicant_tr..." />
+                <marker date="1437987070492" expanded="true" signature="11854:11882" placeholder="insert into ..." />
+                <marker date="1437987070492" expanded="true" signature="13101:13161" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="13331:13394" placeholder="select * fro..perusahaan..." />
+                <marker date="1437987070492" expanded="true" signature="13671:13722" placeholder="select * fro..department..." />
+                <marker date="1437987070492" expanded="true" signature="13931:13981" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="14297:14354" placeholder="select * fro..rank..." />
+                <marker date="1437987070492" expanded="true" signature="14675:14734" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="15030:15089" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="15584:15643" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="16008:16105" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="16292:16388" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="16586:16836" placeholder="select * fro..vacantsea..." />
+                <marker date="1437987070492" expanded="true" signature="17138:17162" placeholder="select * fro..department..." />
+                <marker date="1437987070492" expanded="true" signature="17358:17415" placeholder="select * fro..rank..." />
+                <marker date="1437987070492" expanded="true" signature="17548:17571" placeholder="select * fro..coc_class..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="apply_page.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/apply_page.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-23.807692" vertical-offset="1319" max-vertical-offset="2227">
+              <caret line="114" column="68" selection-start-line="114" selection-start-column="68" selection-end-line="114" selection-end-column="68" />
+              <folding>
+                <marker date="1437988278978" expanded="true" signature="2834:3103" placeholder="..." />
+                <marker date="1437988278978" expanded="true" signature="2882:3098" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="js_under.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/js_under.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-22.884615" vertical-offset="51" max-vertical-offset="4862">
+              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="template_detail.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/vacantsea_detail/template_detail.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-13.730769" vertical-offset="0" max-vertical-offset="459">
+              <caret line="21" column="24" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="modal-confirmation.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-confirmation.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-16.346153" vertical-offset="0" max-vertical-offset="595">
+              <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="modal-login.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-login.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-25.115385" vertical-offset="588" max-vertical-offset="1496">
+              <caret line="78" column="52" selection-start-line="76" selection-start-column="20" selection-end-line="78" selection-end-column="52" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="right_content.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/right_content.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="255">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="template.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/template.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="459">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vacantsea-detail.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/vacantsea_detail/vacantsea-detail.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.280837" vertical-offset="0" max-vertical-offset="2992">
+              <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+              <folding>
+                <marker date="1437989732424" expanded="true" signature="1009:3396" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1031:3396" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1059:2098" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1102:1292" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1227:1248" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1330:2083" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1370:1649" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="1512:1626" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2132:2885" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2167:2216" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2323:2870" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2344:2518" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2539:2679" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2700:2849" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="2932:3396" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4399:4584" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4438:4584" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4466:4584" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4589:4709" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4855:5001" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="4883:5001" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="5006:5126" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="5288:5422" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="5328:5422" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="5476:5532" placeholder="..." />
+                <marker date="1437989732424" expanded="true" signature="5617:5746" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/application/modules/timeline/controllers/timeline.php" />
+        <option value="$PROJECT_DIR$/application/config/routes.php" />
+        <option value="$PROJECT_DIR$/../spa/application/config/config.php" />
+        <option value="$PROJECT_DIR$/../spa/application/config/database.php" />
+        <option value="$PROJECT_DIR$/../spa/application/controllers/Blank.php" />
+        <option value="$PROJECT_DIR$/../spa/application/views/blank.php" />
+        <option value="$PROJECT_DIR$/../spa/application/modules/spa/controllers/spa.php" />
+        <option value="$PROJECT_DIR$/app2.0/views/include/navbar.php" />
+        <option value="$PROJECT_DIR$/app2.0/views/include/navbar-login.php" />
+        <option value="$PROJECT_DIR$/app2.0/models/vessel_model.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/list_rank.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/list_dept.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/home/controllers/home.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/home/views/js_under.php" />
+        <option value="$PROJECT_DIR$/app2.0/models/Tracker_model.php" />
+        <option value="$PROJECT_DIR$/app2.0/helpers/tracker_helper.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/js_under.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/content-item.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/content.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/content.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/models/vacantsea_model.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-confirmation.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/apply_page.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/controllers/vacantsea.php" />
+        <option value="$PROJECT_DIR$/app2.0/modules/vacantsea/views/vacantsea_detail/vacantsea-detail.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1066" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="include" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea_detail" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apply_vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vacantsea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="users" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="users" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="login" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="users" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="users" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="company" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="company" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="helpers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="informasea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app2.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FullScreen" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="options.lastSelected" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\xampp\htdocs\informasea\app2.0\helpers" />
+      <recent name="D:\xampp\htdocs\informasea\app2.0\modules\vacantsea\views" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e7a3f2f5-a329-4e5e-b8b5-56970b7cc919" name="Default" comment="" />
+      <created>1429754607011</created>
+      <option name="number" value="Default" />
+      <updated>1429754607011</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18229167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/controllers/vacantsea.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="10965" max-vertical-offset="15963">
+          <caret line="645" column="0" selection-start-line="645" selection-start-column="0" selection-end-line="645" selection-end-column="0" />
+          <folding>
+            <marker date="1437988316915" expanded="true" signature="26487:26516" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="26650:26693" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="26865:26894" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27064:27093" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27264:27293" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27467:27496" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/helpers/tracker_helper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2465" max-vertical-offset="2601">
+          <caret line="145" column="1" selection-start-line="145" selection-start-column="1" selection-end-line="145" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/apply_page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1251" max-vertical-offset="2159">
+          <caret line="111" column="60" selection-start-line="111" selection-start-column="48" selection-end-line="111" selection-end-column="60" />
+          <folding>
+            <marker date="1437988278978" expanded="true" signature="2834:3103" placeholder="..." />
+            <marker date="1437988278978" expanded="true" signature="2882:3098" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/models/vacantsea_model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5210" max-vertical-offset="9231">
+          <caret line="337" column="59" selection-start-line="337" selection-start-column="59" selection-end-line="337" selection-end-column="59" />
+          <folding>
+            <marker date="1437987070492" expanded="true" signature="356:431" placeholder="SELECT * FRO..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="639:707" placeholder="SELECT * FRO..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="964:1069" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="1297:1400" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="1622:1720" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="2429:2452" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="4007:4030" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="5930:6037" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="6243:6288" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="6850:6879" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="8616:8682" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="9784:9896" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10186:10298" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10523:10602" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10824:10903" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="11137:11227" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="11854:11882" placeholder="insert into ..." />
+            <marker date="1437987070492" expanded="true" signature="13101:13161" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="13331:13394" placeholder="select * fro..perusahaan..." />
+            <marker date="1437987070492" expanded="true" signature="13671:13722" placeholder="select * fro..department..." />
+            <marker date="1437987070492" expanded="true" signature="13931:13981" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="14297:14354" placeholder="select * fro..rank..." />
+            <marker date="1437987070492" expanded="true" signature="14675:14734" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="15030:15089" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="15584:15643" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16008:16105" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16292:16388" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16586:16836" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="17138:17162" placeholder="select * fro..department..." />
+            <marker date="1437987070492" expanded="true" signature="17358:17415" placeholder="select * fro..rank..." />
+            <marker date="1437987070492" expanded="true" signature="17548:17571" placeholder="select * fro..coc_class..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/js_under.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4743">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-confirmation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="578">
+          <caret line="20" column="26" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/company/controllers/company.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="646" max-vertical-offset="9622">
+          <caret line="38" column="72" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/content-item.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="799" max-vertical-offset="1360">
+          <caret line="52" column="72" selection-start-line="52" selection-start-column="72" selection-end-line="52" selection-end-column="72" />
+          <folding>
+            <marker date="1437986850083" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="894" max-vertical-offset="1802">
+          <caret line="87" column="24" selection-start-line="87" selection-start-column="24" selection-end-line="87" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/company/views/js_under.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.461538" vertical-offset="0" max-vertical-offset="697">
+          <caret line="16" column="47" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/company/views/content-item.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.692307" vertical-offset="180" max-vertical-offset="1190">
+          <caret line="30" column="59" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/users/controllers/users.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.6538463" vertical-offset="522" max-vertical-offset="2992">
+          <caret line="48" column="52" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/users/controllers/users_process.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.923077" vertical-offset="306" max-vertical-offset="11458">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/models/Tracker_model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.615385" vertical-offset="1176" max-vertical-offset="2924">
+          <caret line="90" column="21" selection-start-line="90" selection-start-column="21" selection-end-line="90" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/users/controllers/company_process.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.653847" vertical-offset="765" max-vertical-offset="9469">
+          <caret line="72" column="83" selection-start-line="72" selection-start-column="83" selection-end-line="72" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/users/views/login/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-76.5" vertical-offset="1581" max-vertical-offset="3757">
+          <caret line="210" column="19" selection-start-line="210" selection-start-column="19" selection-end-line="210" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/company/controllers/company.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="646" max-vertical-offset="9622">
+          <caret line="38" column="72" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/template.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="934">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/helpers/tracker_helper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.346153" vertical-offset="1683" max-vertical-offset="2601">
+          <caret line="124" column="8" selection-start-line="124" selection-start-column="8" selection-end-line="124" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/list_dept.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="934">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/list_rank.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="934">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/content-item.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.461538" vertical-offset="503" max-vertical-offset="1428">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding>
+            <marker date="1437986850083" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-30.346153" vertical-offset="894" max-vertical-offset="1870">
+          <caret line="107" column="10" selection-start-line="107" selection-start-column="10" selection-end-line="107" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.0" vertical-offset="0" max-vertical-offset="714">
+          <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/template.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="934">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/right_content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="934">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-confirmation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.346153" vertical-offset="0" max-vertical-offset="595">
+          <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/modal-login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-25.115385" vertical-offset="588" max-vertical-offset="1496">
+          <caret line="78" column="52" selection-start-line="76" selection-start-column="20" selection-end-line="78" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/apply_vacantsea/apply_page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-23.807692" vertical-offset="1319" max-vertical-offset="2227">
+          <caret line="114" column="68" selection-start-line="114" selection-start-column="68" selection-end-line="114" selection-end-column="68" />
+          <folding>
+            <marker date="1437988278978" expanded="true" signature="2834:3103" placeholder="..." />
+            <marker date="1437988278978" expanded="true" signature="2882:3098" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/controllers/vacantsea.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-132.34616" vertical-offset="11995" max-vertical-offset="15912">
+          <caret line="908" column="0" selection-start-line="908" selection-start-column="0" selection-end-line="908" selection-end-column="0" />
+          <folding>
+            <marker date="1437988316915" expanded="true" signature="26487:26516" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="26650:26693" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="26865:26894" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27064:27093" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27264:27293" placeholder="..." />
+            <marker date="1437988316915" expanded="true" signature="27467:27496" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/models/vacantsea_model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.115385" vertical-offset="5363" max-vertical-offset="9299">
+          <caret line="334" column="0" selection-start-line="334" selection-start-column="0" selection-end-line="334" selection-end-column="0" />
+          <folding>
+            <marker date="1437987070492" expanded="true" signature="356:431" placeholder="SELECT * FRO..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="639:707" placeholder="SELECT * FRO..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="964:1069" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="1297:1400" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="1622:1720" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="2429:2452" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="4007:4030" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="5930:6037" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="6243:6288" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="6850:6879" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="8616:8682" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="9784:9896" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10186:10298" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10523:10602" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="10824:10903" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="11137:11227" placeholder="select * fro..applicant_tr..." />
+            <marker date="1437987070492" expanded="true" signature="11854:11882" placeholder="insert into ..." />
+            <marker date="1437987070492" expanded="true" signature="13101:13161" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="13331:13394" placeholder="select * fro..perusahaan..." />
+            <marker date="1437987070492" expanded="true" signature="13671:13722" placeholder="select * fro..department..." />
+            <marker date="1437987070492" expanded="true" signature="13931:13981" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="14297:14354" placeholder="select * fro..rank..." />
+            <marker date="1437987070492" expanded="true" signature="14675:14734" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="15030:15089" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="15584:15643" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16008:16105" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16292:16388" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="16586:16836" placeholder="select * fro..vacantsea..." />
+            <marker date="1437987070492" expanded="true" signature="17138:17162" placeholder="select * fro..department..." />
+            <marker date="1437987070492" expanded="true" signature="17358:17415" placeholder="select * fro..rank..." />
+            <marker date="1437987070492" expanded="true" signature="17548:17571" placeholder="select * fro..coc_class..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/js_under.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.884615" vertical-offset="51" max-vertical-offset="4862">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/vacantsea_detail/template_detail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.730769" vertical-offset="0" max-vertical-offset="459">
+          <caret line="21" column="24" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app2.0/modules/vacantsea/views/vacantsea_detail/vacantsea-detail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.280837" vertical-offset="0" max-vertical-offset="2992">
+          <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
+          <folding>
+            <marker date="1437989732424" expanded="true" signature="1009:3396" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1031:3396" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1059:2098" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1102:1292" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1227:1248" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1330:2083" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1370:1649" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="1512:1626" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2132:2885" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2167:2216" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2323:2870" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2344:2518" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2539:2679" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2700:2849" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="2932:3396" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4399:4584" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4438:4584" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4466:4584" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4589:4709" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4855:5001" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="4883:5001" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="5006:5126" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="5288:5422" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="5328:5422" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="5476:5532" placeholder="..." />
+            <marker date="1437989732424" expanded="true" signature="5617:5746" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

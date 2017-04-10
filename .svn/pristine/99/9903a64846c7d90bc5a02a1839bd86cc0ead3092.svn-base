@@ -1,0 +1,771 @@
+<?php // content center , detail, module guest / pelaut 
+
+	$username = $this->session->userdata("username");
+?>
+ <div class="tmp_modal">
+		<?php // ini untuk ajax page looohh ?>                
+ </div>
+ 
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<link href="<?php echo base_url("assets/css/jquery.dataTables.css") ?>" type="text/css" rel="stylesheet" />
+<script>
+	 
+	 
+	 
+	 function get_modal(type_modal,modal)
+	 {			
+	 	//alert("tmp = "+tmp+"&type_modal="+type_modal);
+	  
+	   var id_update = $(modal).attr("id_update");
+	   
+	   //alert("id_update = "+id_update+"&modal="+modal+"&type_modal="+type_modal);
+	   
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&modal="+type_modal+"&id_update="+id_update,
+			url:"<?php echo base_url("seaman/resume/modal"); ?>",
+			success: function(data){
+				
+				//alert(data);
+				$(".tmp_modal").html(data);
+				
+			}
+			
+			
+			
+		});
+	 }
+
+</script>
+
+<div class="col-md-9">
+   <?php
+	$profile 		= $resume['profile'];
+	$pelaut	     = $resume['pelaut'];
+	$competency 	 = $resume['competency'];
+	$proficiency  	= $resume['proficiency'];
+	$experience 	 = $resume['experience'];
+	$document	   = $resume['document'];
+
+	//print_r($profile);
+	
+	$this->load->view("menu_myjob.php");
+	
+	?>    
+    <div class="panel panel-default"> 
+    	<div class="panel-body">
+          <h4>Curriculum Vitae  
+          <button class="btn btn-primary btn-sm pull-right" id="profile-btn" modal="form-profile"> 
+              <span class="glyphicon glyphicon-edit"></span> Edit 
+          </button>
+          
+          </h4> 
+           
+          <div class="" id="ajax-data-profile" style="width:100%">
+              	  <br />
+                   <table class="table table-bordered table-hover table-striped" style="width:100%">
+                      <tr>
+                        <td width="30%">Name / Gender </td>
+                        <td width="54%"><?php echo $pelaut['nama_depan']." ".$pelaut['nama_belakang'] ?> / <?php echo $pelaut['gender']; ?></td>
+                        <td width="80%" rowspan="5" valign="middle" >
+                          <?php
+                              $this->load->model('photo/photo_mdl');
+                              $resume_pic = $this->photo_mdl->get_photo_resume();
+                              
+                              if(!empty($resume_pic))
+                              {
+                                  $ss = explode(".",$resume_pic['nama_gambar']);
+                                  $url = img_url("photo/$username/resume/$ss[0]"."_thumb.".$ss[1]);
+                                  
+                              }
+                              else
+                              {
+                                  $url = base_url("assets/user_img/noprofilepic_thumb.png");
+                              }
+                          ?>
+                        <div class="matpic" id="matpic" style="margin-bottom:5px; margin-right:5px;">
+                        <img src="<?php echo $url ?>" alt="" style="width:113px ; height:151px;"/>
+                          <div class='matdesc'>
+                              <!-- description content -->
+                        
+                             <p class='matdesc_cont'>
+                                
+                                <a class="label label-primary" href="#?type=resume_pic" id="mamat-btn">
+                                    <span class="glyphicon glyphicon-camera"></span>
+                                </a>
+                                <!-- <script>
+                                    $("#kempet-btn").click(function(){
+                                        
+                                        $.ajax({
+                                            type: "POST",
+                                            data:"x=1&type=profile_pic",
+                                            url:"<?php echo base_url("photo/form_upload_photo_profile");?>",
+                                            success:function(data)
+                                            {
+                                                $("#mamat-modal").html(data);
+                                            }
+                                                
+                                        })
+                                        
+                                    });
+                               </script>-->
+                             </p>
+                        
+                             <!-- end description content -->
+                            </div>
+                          </div>            
+                         
+                          <!-- <a href="#" class="mamat-btn" >Edit Photo Resume </a> -->
+                          <script>
+                              $(".mamat-btn, #mamat-btn").click(function(){
+                                  
+                                  $.ajax({
+                                      type: "POST",
+                                      data:"x=1&type=resume",
+                                      url:"<?php echo base_url("photo/form_upload_photo_resume");?>",
+                                      success:function(data)
+                                      {
+                                          $("#mamat-modal").html(data);
+                                      }
+                                          
+                                  })
+                                  
+                              });
+                          
+                          </script>
+                         <div id="mamat-modal">
+                         
+                         </div>                      
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Nationality / Status </td>
+                        <td><?php echo $pelaut['kebangsaan']; ?> / <?php echo $pelaut['status_perkawinan']; ?></td>
+                      </tr>
+                      <tr>
+                        <td>Place / Date of Birth </td>
+                        <td ><?php echo $pelaut['tempat_lahir']; ?> / <?php echo date_format_str($pelaut['tanggal_lahir']); ?></td>
+                      </tr>
+                      <tr>
+                        <td>Religion</td>
+                        <td ><?php echo $pelaut['agama']; ?></td>
+                      </tr>
+                      <tr>
+                        <td>Height / Weight </td>
+                        <td><?php echo $profile['height']; ?> cm / <?php echo $profile['weight']; ?> Kg</td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Clothes Size / Shoes Size</td>
+                        <td colspan="2"><?php echo $profile['clothes_size']; ?> / <?php echo $profile['shoes_size']; ?></td>
+                      </tr>                
+                      
+                      <tr>
+                        <td>Address</td>
+                        <td colspan="2"><?php echo $pelaut['alamat']; ?></td>
+                      </tr>
+                      <tr>
+                        <td>Phone / Handphone</td>
+                        <td colspan="2"><?php echo $pelaut['telepon']." / ".$pelaut['handphone']; ?></td>
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td colspan="2"><?php echo $pelaut['email']; ?></td>
+                      </tr>
+                      <tr>
+                        <td>Last Education</td>
+                        <td colspan="2"><?php echo $profile['last_education']?></td>
+                      </tr>
+                      <tr>
+                        <td>Next of kin </td>
+                        <td colspan="2"><?php echo $pelaut['keluarga_terdekat']; ?></td>
+                      </tr>
+                      
+                      
+                      
+                    </table>
+               		
+                  <small class="text-muted"> <i class="glyphicon glyphicon-info-sign"></i> &nbsp; "Address" , "Phone Number", and "Email" will be hidden from others . </small>  
+  
+          </div>
+          
+          <h4> 
+            <button class="btn btn-primary btn-sm pull-right" id="kepelautan-btn" modal="form-kepelautan"> 
+                <span class="glyphicon glyphicon-edit"></span> Edit 
+            </button>
+          </h4>
+          
+          <span class="clearfix"></span>
+          
+          <div id="kepelautan">
+          <br />
+            <table class="table table-bordered table-hover table-striped" style="width:100%">
+              <tr >
+                <td width="30%">COC Class  </td>
+                <td >
+                <?php
+                  $coc = $this->coc_model->get_coc_detail($profile['coc_class']);
+                  
+                  echo $coc['coc_class'];
+                
+                ?>
+                </td>
+              </tr>
+              <tr>
+                <td >Rank / Vessel Type </td>
+                <td colspan="2">
+                <?php
+                 
+                  $rank = $this->rank_model->get_rank_detail($profile['rank']);
+				  $vessel_type = $this->vessel_model->get_ship_type_detail($profile['vessel_type']);
+                  echo $rank['rank']." / ".$vessel_type['ship_type'];
+                  
+                ?>
+                </td>
+              </tr>
+              <tr>
+                <td>Last Education</td>
+                <td colspan="2"><?php echo $profile['last_education']?></td>
+              </tr>
+              <tr>
+                <td>Expected Sallary</td>
+                <td colspan="2">
+                  <span style="font-weight:bold;color:#0C0"> 
+                      <?=$profile['exp_sallary_curr']." ".number_format($profile['expected_sallary'])." / ".$profile['sallary_range']?> </span>
+                </td>
+              
+              </tr>
+            </table>
+          </div>
+        
+      </div>
+    </div>
+    
+     <!-- table document and medical record -->
+     <div id="data-table-document" class="panel panel-default">
+        <div class="panel-body">
+            <h4> Document and Medical Record <button class="btn btn-primary btn-sm pull-right" id="document-btn" modal="form-add-document"> <span class="glyphicon glyphicon-plus"></span> Add </button></h4>
+            <?php //$this->load->view('form-add-experience')?>
+            <div class="" style="width:100%">
+                <br />
+                <table class="table table-bordered hover" style="font-size:12px">
+                    <thead style="font-weight:bold; " class="bg-primary">
+                    <tr>
+                        <td width="">Type</td>
+                        <td width="">Number </td>
+                        <td>Place</td>
+
+                        <td><?=$date_issued_lbl?></td>
+                        <td><?=$date_expired_lbl?></td>
+
+                        <td width="15%">Action</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+
+
+                    foreach($document as $row) {
+                        if ($row['type_document'] == "document") {
+                            $date_issued = date_format_str($row['date_issued']);
+                            $date_expired = date_format_str($row['date_expired']);
+
+                            ?>
+              <tr>
+                <td><?php echo $row['type'] ?></td>
+                <td><?php echo $row['number'] ?> </td>
+                <td><?php echo $row['place'] ?> </td>
+                
+                <td><?php echo $date_issued ?></td>
+                <td><?php echo $date_expired ?></td>
+                <td> 
+                  <button class="btn btn-default btn-xs document-update-btn-<?php echo $row['document_id']?>" modal="form-update-document" title="Update" id_update="<?php echo $row['document_id']?>"><span class="glyphicon glyphicon-edit"></span> </button>
+                  <button class="btn btn-default btn-xs document-delete-btn-<?php echo $row['document_id']?>" modal="delete-document-modal"  
+                  id_update="<?php echo $row['document_id']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button>
+                </td>
+              </tr>
+              <script>
+                  $(".document-update-btn-<?php echo $row['document_id']?>").click(function(e){
+              
+                      var type_modal = $(this).attr("modal");
+                      get_modal(type_modal,".document-update-btn-<?php echo $row['document_id']?>");
+                      
+                  });
+                  $(".document-delete-btn-<?php echo $row['document_id']?>").click(function(e){
+              
+                      var type_modal = $(this).attr("modal");
+                      get_modal(type_modal,".document-delete-btn-<?php echo $row['document_id']?>");
+                      
+                  });
+              </script>
+              <?php
+                        }
+                    }
+                    ?>
+                    </tbody>
+
+                </table>
+            </div>
+            <br>
+            <button class="btn btn-primary btn-sm pull-right" id="medical-btn" id_pelaut="<?php echo $document[0]['pelaut_id'] ?>" modal="form-add-medical"><span class="glyphicon glyphicon-plus"></span> Add </button>
+            <br>
+            <?php //$this->load->view('form-add-experience')?>
+            <div class="" style="width:100%">
+                <br />
+                <table class="table table-bordered hover" style="font-size:12px">
+                    <thead style="font-weight:bold; " class="bg-primary">
+                    <tr>
+                        <td width="">Type</td>
+                        <td width="">Number </td>
+                        <td>Place</td>
+
+                        <td><?=$date_issued_lbl?></td>
+                        <td><?=$date_expired_lbl?></td>
+
+                        <td width="15%">Action</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+
+
+                    foreach($document as $row) {
+                        if ($row['type_document'] == "medical" || $row['type_document'] == "medical_cert") {
+                            $date_issued = date_format_str($row['date_issued']);
+                            $date_expired = date_format_str($row['date_expired']);
+
+                            ?>
+                            <tr>
+                                <td><?php echo $row['type'] ?></td>
+                                <td><?php echo $row['number'] ?> </td>
+                                <td><?php echo $row['place'] ?> </td>
+
+                                <td><?php echo $date_issued ?></td>
+                                <td><?php echo $date_expired ?></td>
+                                <td>
+                                    <button class="btn btn-default btn-xs document-update-btn-<?php echo $row['document_id']?>" modal="form-update-medical" title="Update" id_update="<?php echo $row['document_id']?>"><span class="glyphicon glyphicon-edit"></span> </button>
+                                    <button class="btn btn-default btn-xs document-delete-btn-<?php echo $row['document_id']?>" modal="delete-medical-modal"
+                                            id_update="<?php echo $row['document_id']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button></td>
+                            </tr>
+                            <script>
+                                $(".document-update-btn-<?php echo $row['document_id']?>").click(function(e){
+
+                                    var type_modal = $(this).attr("modal");
+                                    get_modal(type_modal,".document-update-btn-<?php echo $row['document_id']?>");
+
+                                });
+                                $(".document-delete-btn-<?php echo $row['document_id']?>").click(function(e){
+
+                                    var type_modal = $(this).attr("modal");
+                                    get_modal(type_modal,".document-delete-btn-<?php echo $row['document_id']?>");
+
+                                });
+                            </script>
+
+                        <?php
+                        }
+                    }
+                    ?>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+     <!-- end document and medical record -->
+    
+    <div id="data-table-competency" class="panel panel-default">
+    	<div class="panel-body">
+        <h4> COC and Endorsement <!-- Certificate of Competency --> &nbsp;  <button class="btn btn-primary btn-sm pull-right" id="coc-btn" modal="form-add-competency"> <span class="glyphicon glyphicon-plus"></span> Add </button></h4>
+        <?php //$this->load->view('form-add-competency'); ?>
+         <div class="" style="width:100%">
+       	 <table class="table table-bordered hover" style="font-size:12px"><br />
+		 <thead>			
+          <tr style="font-weight:bold"  class="bg-primary">
+          	
+            <td>Certificate of Competency </td>
+            <td>No License</td>
+            <!-- <td>Country</td> -->
+            <td>Place & <?=$date_issued_lbl?></td>
+            <td><?=$date_expired_lbl?></td>
+            
+           <td width="15%">Action</td>
+          </tr>
+         </thead>
+         <tbody>
+         <?php
+		 foreach($competency as $row){
+			 
+			 if($row['grade_license'] != "Certificate of Endorsement" && $row['type'] == "coc")
+			 {
+				 $e = "UNLIMITED";
+			 }
+			 else
+			 {
+				 $e = date_format_str($row['expired_date']);
+			 }
+			 
+		 ?>
+          <tr>
+          <?php $n = ""; if($row['type'] == "cor"){ $n = $row['negara']; } ?>
+            <td><?php echo $row['grade_license']." ".$n ?></td>
+            <td><?php echo $row['no_license']?></td>
+            <!-- <td><?php echo $row['negara']?></td> -->
+            <td><?php echo $row['place_issued']." , ".date_format_str($row['date_issued']) ?></td>
+            <td><?php echo $e; ?></td>
+            <td>
+            	
+                <button class="btn btn-default btn-xs competency-update-btn-<?php echo $row['id_licenses']?>" modal="form-update-competency" id_update="<?php echo $row['id_licenses']?>" title="Update"><span class="glyphicon glyphicon-edit"></span> </button>
+                
+                <?php if($row['type'] != "coc"){ ?>
+                <button class="btn btn-default btn-xs competency-delete-btn-<?php echo $row['id_licenses']?>" modal="delete-competency-modal" id_update="<?php echo $row['id_licenses']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button>
+                <?php } ?>
+                              
+            </td>
+          </tr>
+          <script>
+          $(".competency-update-btn-<?php echo $row['id_licenses']?>").click(function(e){
+		
+			var type_modal = $(this).attr("modal");
+			get_modal(type_modal,".competency-update-btn-<?php echo $row['id_licenses']?>");
+			e.preventDefault();
+		  });
+		  
+		  $(".competency-delete-btn-<?php echo $row['id_licenses']?>").click(function(e){
+		
+			var type_modal = $(this).attr("modal");
+			get_modal(type_modal,".competency-delete-btn-<?php echo $row['id_licenses']?>");
+			e.preventDefault();
+		  });
+		  
+		</script>
+         <?php
+		 }
+		 //$this->load->view('form-update-competency');
+		 ?>
+        </tbody>
+        </table>
+        <br />
+         <small class="text-muted"> <i class="glyphicon glyphicon-info-sign"></i> &nbsp; The "Number" of the document will be hidden from others . </small>
+        
+        </div>
+        </div>
+    </div>
+    
+    <?php /* ===== PR ===?><div id="data-table-proficiency" class="panel panel-default">
+    	<div class="panel-body">
+        <h4> Certificate of proficiency ( Datatable JSON )<button class="btn btn-primary btn-sm pull-right " id="proficiency-btn" modal="form-add-proficiency" > 
+        <span class="glyphicon glyphicon-plus"></span> Add </button></h4>
+        <?php ////$this->load->view('form-add-proficiency');?>
+        <div class="">
+        <br />
+           <table class="table table-bordered" style="font-size:12px">
+           	<thead>
+            <tr style="font-weight:bold" class="bg-primary">
+              
+              <td>Certificate</td>
+              <td>Number </td>
+              <td>Place Issued</td>
+              <td>Expired Date</td>
+              <td width="15%">Action</td>
+            </tr>
+            </thead>
+            <tbody>
+            	
+            </tbody>
+           <?php //$this->load->view('form-update-proficiency')?>
+          </table>
+        </div>
+        </div>
+    </div><?php */?>
+    
+    <div id="data-table-proficiency" class="panel panel-default">
+    	<div class="panel-body">
+        <h4> Certificate of Proficiency <button class="btn btn-primary btn-sm pull-right " id="proficiency-btn" modal="form-add-proficiency"> 
+        <span class="glyphicon glyphicon-plus"></span> Add </button></h4>
+        <?php ////$this->load->view('form-add-proficiency');?>
+        
+        <div class="" style="width:100%">
+        <br />
+           <table class="table table-bordered hover" style="font-size:12px">
+           	<thead>
+              <tr style="font-weight:bold" class="bg-primary">
+                
+                <th>Certificate</th>
+                <th>Number </th>
+                <th>Place Issued</th>
+                <th><?=$date_expired_lbl?></th>
+                <th width="15%">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php
+			foreach($proficiency as $row2)
+			{
+			?>
+            <tr>
+              <td><?php echo $row2['sertifikat_stwc']; ?></td>
+              <td><?php echo $row2['no_sertifikat']; ?></td>
+              <td><?php echo $row2['place_issue']; ?></td>
+              <td><?php echo date_format_str($row2['date_issue']); ?></td>
+              <td> 
+                <button class="btn btn-default btn-xs proficiency-update-btn-<?php echo $row2['id_sertifikat']?>" modal="form-update-proficiency" title="Update" id_update="<?php echo $row2['id_sertifikat']?>"><span class="glyphicon glyphicon-edit"></span> </button>
+                <button class="btn btn-default btn-xs proficiency-delete-btn-<?php echo $row2['id_sertifikat']?>" modal="delete-proficiency-modal"  
+                id_update="<?php echo $row2['id_sertifikat']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button></td>
+            </tr>
+            <script>
+				$(".proficiency-update-btn-<?php echo $row2['id_sertifikat']?>").click(function(e){
+			
+					var type_modal = $(this).attr("modal");
+					get_modal(type_modal,".proficiency-update-btn-<?php echo $row2['id_sertifikat']?>");
+					
+				});
+				$(".proficiency-delete-btn-<?php echo $row2['id_sertifikat']?>").click(function(e){
+			
+					var type_modal = $(this).attr("modal");
+					get_modal(type_modal,".proficiency-delete-btn-<?php echo $row2['id_sertifikat']?>");
+					
+				});
+			</script>
+            <?php
+			}
+			?>
+            </tbody>
+           <?php //$this->load->view('form-update-proficiency')?>
+          </table>
+          <br />
+           <small class="text-muted"> <i class="glyphicon glyphicon-info-sign"></i> &nbsp; The "Number" of the document will be hidden from others . </small>
+        </div>
+        </div>
+    </div>
+    
+    
+    <div id="data-table-experience" class="panel panel-default">
+    	<div class="panel-body">
+        <h4> Sea Service Record <button class="btn btn-primary btn-sm pull-right" id="experience-btn" modal="form-add-experience"> <span class="glyphicon glyphicon-plus"></span> Add </button></h4>
+         <?php //$this->load->view('form-add-experience')?>
+         
+          <div class="" style="width:100%">
+          <br />
+            <table class="table table-bordered hover" style="font-size:12px">
+             <thead style="font-weight:bold; " class="bg-primary">
+              <tr>
+                <td width="">Vessel Name</td>
+                <td width="">Vessel Type </td>
+                <td>Weight</td>
+                <td>Rank</td>
+                
+                <td>Company</td>               
+                <td width="20%">Periode</td>
+                <td width="13%">Action</td>
+              </tr>
+             </thead>
+             <tbody>
+              <?php
+                  $this->load->model("vessel_model");
+                  
+                  $vessel_model = $this->vessel_model;
+              
+                  foreach($experience as $row)
+                  {
+                      //$vessel_name = $vessel_model->get_ship_detail($row['ship_id']);
+                      $vessel_type = $vessel_model->get_ship_type_detail($row['ship_type_id']);
+                      $rank 		= $this->resume_model->get_rank_detail($row['rank_id']);
+                      
+                      $periode_from = date_format_str($row['periode_from']);
+                      $periode_to = date_format_str($row['periode_to']);
+					  $create_date = date_format_str($row['datetime']);
+					  $last_update = date_format_str($row['last_update']);
+                       
+              ?>
+              <tr title="Data update" data-toggle="popover" data-content="Create Date: <?php echo $create_date; ?> Last Update : <?php echo $last_update; ?> " id="data-update" data-placement="bottom" >
+              
+              	<td ><?php echo $row['ship_name'] ?> </td>
+              	<td ><?php echo $vessel_type['ship_type'] ?> </td>
+                <td ><?php echo $row['weight']."  ".$row['satuan']  ?></td>
+                
+                <td><?php  echo $rank['rank'] ?> </td>
+                
+                <td><?php echo $row['company'] ?></td>
+                
+                <td ><?php echo $periode_from ?> ~ <?php echo $periode_to; ?></td>
+                <td > 
+                  <button class="btn btn-default btn-xs experience-update-btn-<?php echo $row['experience_id']?>" modal="form-update-experience" title="Update" id_update="<?php echo $row['experience_id']?>"><span class="glyphicon glyphicon-edit"></span> </button>
+                  <button class="btn btn-default btn-xs experience-delete-btn-<?php echo $row['experience_id']?>" modal="delete-experience-modal"  
+                  id_update="<?php echo $row['experience_id']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button>
+                 
+                </td>
+              </tr>
+              <script>
+                  $(".experience-update-btn-<?php echo $row['experience_id']?>").click(function(e){
+              
+                      var type_modal = $(this).attr("modal");
+                      get_modal(type_modal,".experience-update-btn-<?php echo $row['experience_id']?>");
+                      
+                  });
+                  $(".experience-delete-btn-<?php echo $row['experience_id']?>").click(function(e){
+              
+                      var type_modal = $(this).attr("modal");
+                      get_modal(type_modal,".experience-delete-btn-<?php echo $row['experience_id']?>");
+                      
+                  });
+              </script>
+              </tr>
+              <?php
+                  }
+              ?>
+             </tbody>
+             
+            </table>
+            
+            <small class="text-muted"> <i class="glyphicon glyphicon-info-sign"></i> &nbsp; The "Vessel Name" will be hidden from others. </small>
+            
+          </div>
+        </div>
+    </div>
+    
+   
+
+</div><!-- col-md-8 -->      
+
+    <script src="<?php echo base_url("assets/js/jquery.dataTables.min.js"); ?>"></script>
+	<script>
+	
+		function show_table_competency()
+		{
+			$("#data-table-competency table").DataTable({
+				"paging":   false,
+				"ordering": false,
+				"info":     false,
+				"searching":false
+			});
+			
+		}
+		
+		
+		function show_table_proficiency()
+		{
+			$("#data-table-proficiency table").DataTable({
+				/*"ajax":""
+				"processing":true,
+				"serverSide":true,*/
+				
+				"paging":   false,
+				"ordering": false,
+				"info":     false
+			
+			});
+			
+		}
+		
+		function show_table_experience()
+		{
+			$("#data-table-experience table").DataTable({
+				"paging":   true,
+				"ordering": false,
+				"info":     false,
+				"searching":true
+			
+			});
+				
+		}
+		
+		function show_table_document()
+		{
+			$("#data-table-document table").DataTable({
+				"paging":   false,
+				"ordering": false,
+				"info":     false,
+				"searching":false
+				
+			
+			});
+				
+		}
+		
+        // data table setting
+		$(document).ready(function(e) {
+			
+			show_table_competency();
+			
+			show_table_proficiency();
+			
+			show_table_experience();
+			
+			show_table_document();
+			
+        });        
+    </script>
+    <script>
+
+	 
+	 $(document).ready(function(e) {
+		
+        $("#profile-btn").click(function(e) { // edit profile 
+			var type_modal = $(this).attr("modal"); 
+			
+			get_modal(type_modal,"#profile-btn");
+			
+        });
+		
+		$("#kepelautan-btn").click(function(e) { // kepelautan
+			
+			var type_modal = $(this).attr("modal"); 
+			
+			get_modal(type_modal,"#kepelautan-btn");
+			
+        });
+		
+		 $("#coc-btn").click(function(e) { // competency
+			var type_modal = $(this).attr("modal"); 
+		
+			get_modal(type_modal,"#coc-btn");
+			
+        });
+		
+		 $("#proficiency-btn").click(function(e) { //proficiency
+			var type_modal = $(this).attr("modal"); 
+			
+			get_modal(type_modal,"#proficiency-btn");
+			
+        });
+		
+		 $("#experience-btn").click(function(e) { //experience 
+			var type_modal = $(this).attr("modal"); 
+			
+			get_modal(type_modal,"#experience-btn");
+			
+        });
+		
+		$("#document-btn").click(function(e){
+			var type_modal = $(this).attr("modal");
+			
+			get_modal(type_modal,"#document-btn");
+				
+		});
+		
+		$("#medical-btn").click(function(e){
+			
+			//alert("sasas");
+			
+            var type_modal = $(this).attr("modal");
+
+            get_modal(type_modal,"#medical-btn");
+
+        });
+		
+		/* update zone */
+		
+		$(".exp-update-btn").click(function(e){ // experience update
+			var type_modal = $(this).attr("modal");
+			
+			get_modal(type_modal,".exp-update-btn");
+			
+		});
+		
+		
+    });
+		
+		
+	</script>

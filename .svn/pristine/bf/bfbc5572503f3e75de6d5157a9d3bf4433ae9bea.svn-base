@@ -1,0 +1,20 @@
+<?php // template seatizen ?>
+    <div class="container-fluid">
+    	<?php if($tes != "ya"){ ?>
+
+        <div class="row">
+
+            <?php $this->load->view("content"); ?>
+            <?php $this->load->view("right_content"); ?>
+
+        </div>
+        <?php } else { ?>
+
+        	<div class="row">
+        		<?php $this->load->view('aa'); ?>
+        	</div>
+
+
+    	<?php } ?>
+    </div>
+<?php // end template ?>

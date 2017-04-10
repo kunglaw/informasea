@@ -1,0 +1,112 @@
+<?php // self panel ?>
+<?php
+	$username_url = $this->uri->segment(2);
+	$this->load->model('seatizen/seatizen_model');
+	$check_username = $this->seatizen_model->check_seatizen($username_url);
+	
+	if(empty($check_username))
+	{
+		$username = $this->session->userdata("username");
+	}
+	
+	$this->load->model("users/user_model");
+	$this->load->model("photo/photo_mdl");
+	$this->load->model("rank_model");
+	
+	$pelaut = $this->user_model->get_detail_pelaut($username);
+	$frienda = $pelaut['array_teman'];
+	
+	if($frienda != "")
+	{
+		$friends = explode("|",$pelaut['array_teman']);	
+	}
+	else
+	{
+		$friends = array();	
+	}
+
+?>
+
+<?php
+
+?>
+
+<div class="widget-box">
+    <div class="text-gray widget-box-title">Friends</div>
+    <a href="<?php echo base_url("profile/".$username_url."/friends") ?>" class="text-link widget-box-seemore">See All</a>
+    <div style="clear: both"></div>
+    
+    <?php
+	  $i = 0;
+	  
+	  // print_r($friends);
+	  	  
+	if(!empty($friends)){
+		foreach($friends as $row)
+		{
+			
+			$a = $this->user_model->get_detail_pelaut_byid($row);
+			//print $a['rank'];
+			$s = $this->rank_model->get_rank_detail($a['rank']);
+			//print_r($s);
+			$b = $this->photo_mdl->get_photo_pp($a['username']);
+		   
+			$url_gambar = check_image_seaman($a['username']);
+			
+			$info_tambahan = isset($s['rank']) ? $s['rank'] : "";
+			if($a['rank'] == 0)
+			{
+			  $info_tambahan = $a['city']." , ".$a['kebangsaan']; 
+			  
+			  if($a['kebangsaan'] == "" && $a['city'] == "")
+			  {
+				  
+				 $info_tambahan = $a['gender'];  
+			  }
+			  
+			  else if($a['city'] == "")
+			  {
+				  
+				  $info_tambahan = $a['kebangsaan'];	
+			  }
+			  
+			}
+		  
+		  
+	  ?>
+    
+    <div class="media">
+        <a class="pull-left small-img-container" href="<?php echo base_url("profile/".$a['username']) ?>">
+            <img class="media-object img-responsive" src='<?php echo $url_gambar; ?>' alt="user-image">
+        </a>
+        <div class="media-body">
+            <div class="text-grey">
+            	<a href="<?php echo base_url("profile/".$a['username']); ?>">
+            	<?php echo "".$a['nama_depan']." ".$a['nama_belakang'].""; ?> </a> </div>
+            <div class="subtitle"><?php echo ucfirst($info_tambahan)  ?></div>
+        </div>
+    </div>
+    
+    <?php
+	  
+	  	if ($i == 5){ break; }
+		$i++;
+	  }
+	}
+	else
+	{   
+	
+		echo "<h5> You have no Friend </h5>";
+		
+		echo "<a href='".base_url("seatizen")."' class='list-group-item'>
+		<i class='fa fa-plus-square-o fa-2x text-link pull-left'></i>
+		<h4 class='pull-left'>Start Adding Friends</h4> 
+		
+		<span class='clearfix'></span>
+		
+		</a>";
+		
+			
+	}
+	?>
+</div>

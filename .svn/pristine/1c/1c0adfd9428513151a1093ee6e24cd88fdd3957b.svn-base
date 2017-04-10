@@ -1,0 +1,36 @@
+<?php // LEFT CONTENT RESUME ?>
+
+
+<div class="col-md-3">
+  <div id="left-bar" class="panel panel-default hidden-phone">
+      <div class="panel-body">
+        <?php 
+		  	$this->load->view('resume/left_profile');
+		  ?> 
+      </div>
+  </div> 
+  
+  <?php
+//    $this->load->view("content/my-profile");
+  ?>
+  
+ <?php 
+ // from general view/content
+ $this->load->view('content/myjobtimeline-panel'); ?>
+  
+  <?php 
+ // from general view/content
+ $this->load->view('content/notification-panel'); ?>
+ 
+ <?php // Ship ?>
+  <?php $this->load->view("content/ship-experience-panel"); ?>
+  
+  <?php // Friends 
+  $this->load->view("content/friends-panel");
+  ?>
+   
+  <?php // Photo 
+  $this->load->view("content/photo-panel");
+  ?> 
+  
+</div><!-- col-md-4 -->

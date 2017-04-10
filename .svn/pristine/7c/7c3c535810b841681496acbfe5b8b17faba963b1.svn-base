@@ -1,0 +1,169 @@
+<?php // list photo timeline , module photo, self list photo ?>
+
+<?php 
+	$this->load->helper("text");
+	$username = $this->session->userdata("username");
+	
+	if(empty($photo))
+	{
+		echo "You have no Photo yet";
+	}
+
+    $idnya = array();
+	$a=0;
+	foreach($photo as $row)
+	{
+        $idnya[$a++] = $row['id_timeline'];
+	  $nama_gambar = explode(".",$row['photo']);
+?>
+
+	<div class="subpic" style="margin-bottom:5px; margin-right:5px;">
+		<img src="<?php echo img_url("timeline/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]) ?>" style="width:150px; height:150px; " >
+
+        <div class="dropdown list-pic">
+          <a href="#" class="dropdown-toggle btn btn-sm btn-default" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+              <span class="glyphicon glyphicon-list-alt" id=""></span>
+          </a>
+            <input type="hidden" value="" >
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Download</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="javascript:make_profile_picture(<?php echo $row['id_timeline']?>)">Make Profile Picture</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="javascript:">Make Resume Photo</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="setID(<?= $row['id_timeline'] ?>)" data-toggle="modal" data-target=".bs-example-modal-lg">Delete</a></li>
+          </ul>
+        </div>
+      	<?php
+			if($row['content'] == "")
+			{
+				$row['content'] = "Timeline Photo";
+			}
+		?>
+        <div class='description'>
+                <!-- description content -->
+                <p class='description_content'><?php echo character_limiter($row['content'],10); ?></p>
+                <!-- end description content -->
+        </div>
+      </div>
+<!--        --><?php //echo img_url("timeline/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]) ?>
+
+<!--    </div>	-->
+    <script>
+		//$(".description-"+<?php echo $row['id_timeline']?>).hide();
+		//$(".list-pic-"+<?php echo $row['id_timeline']?>).hide();
+	</script>
+
+<?php
+
+	}
+?>
+
+<div class="modal fade bs-example-modal-lg" id="modal-form-delete">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+
+
+            <div class="modal-body">
+
+<!--                <img src="--><?php //echo img_url("timeline/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]) ?><!--" >-->
+
+                Are you sure to delete this photo ?
+            </div>
+
+            <div class="modal-footer">
+<!--                <input type="hidden" value="--><?php //echo $row['id_timeline'] ?><!--" id="photos_id">-->
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirmDelete">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script>
+
+    var id_photo;
+    function setID(id_pptr)
+    {
+        //alert("kampret");
+        id_photo = id_pptr;
+
+    }
+
+    function make_profile_picture(id_pptr)
+    {
+        $.ajax({
+
+            type:"POST",
+            data:"x=1&id_pptr="+id_pptr,
+            url:"<?php echo base_url("photo/make_profile_pic")?>",
+            success: function(data){
+
+                alert(data);
+                get_photo(); // get list photo
+
+            }
+
+        });
+    }
+
+    function make_resume_picture(id_pptr)
+    {
+
+        $.ajax({
+
+            type:"POST",
+            data:"x=1&id_pptr="+id_pptr,
+            url:"<?php echo base_url("photo/make_resume_pic")?>",
+            success: function(data){
+
+                alert(data);
+                get_photo(); // get list photo
+
+            }
+
+        });
+
+    }
+
+    /*$(document).ready(function(e) {
+
+     $(".subpic").hover(function(){
+
+     $(this).find(".description").toggle();
+     $(this).find("a .list-pic").toggle();
+
+     });
+     });*/
+
+</script>
+
+
+<script>
+
+    $("#confirmDelete").click(function(){
+        $.ajax({
+
+            type:"POST",
+            data:"x=1&id_pptr="+id_photo,
+            url:"<?php echo base_url("photo/delete_photo_timeline")?>",
+            success: function(data){
+
+                //alert(data);
+                get_photo(); // get list photo
+            }
+        });
+    });
+
+	$(document).ready(function(e) {
+	  //$(".description").hide();
+	 // $("a .list-pic").hide();
+
+	});
+
+</script>
+

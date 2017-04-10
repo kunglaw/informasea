@@ -1,0 +1,65 @@
+<?php // content center , detail, module guest / pelaut 
+
+// proses ini yang mengatur munculnya post timeline berdasarkan pertemanan
+$this->load->model('friendship_model');
+$username_url =  $this->uri->segment(2);
+$aaa = $this->friendship_model->detail_friend($username_url);
+$pelaut_id_profile = $aaa['pelaut_id'];
+$pelaut_id_session = $this->session->userdata("id_user");
+
+
+$cf = $this->friendship_model->check_friends($pelaut_id_profile,$pelaut_id_session); // cek hubungan pertemanan 
+
+
+?>
+
+<div id="" class="col-md-8">
+   <?php
+												//$cf == true : mengatur rule pemunculan post timeline
+	if($this->session->userdata("user") == "pelaut" && $cf == true)
+	{
+		$this->load->view('seaman/post_timeline');
+	}
+	
+	?>
+    
+    <div id="list_timeline">
+    	
+        
+        
+    </div>
+    
+    <script>
+		
+		function get_list_timeline()
+		{
+			$.ajax({
+				
+				
+				type : "POST",
+				url : "<?php echo base_url("seaman/home/get_self_timeline"); ?>",
+				data:"x=1&uri=<?php echo $this->uri->segment(2); ?>&username=<?php echo $username ?>&ctrl=<?php echo $ctrl ?>",
+				success : function(data)
+				{
+					
+					$("#list_timeline").html(data);	
+				}
+				
+				
+				
+			});
+			
+			
+		}
+		
+		
+		$(document).ready(function(e) {
+			
+			
+			get_list_timeline();
+			
+        });
+		
+		
+	</script>
+</div><!-- col-md-8 -->

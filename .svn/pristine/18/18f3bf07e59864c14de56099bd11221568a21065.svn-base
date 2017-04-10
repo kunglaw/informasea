@@ -1,0 +1,110 @@
+<span class="clearfix"></span>
+
+<?php
+foreach ($get_vacantsea->result_array() as $key) {
+    $vacantsea_id   = $key['vacantsea_id'];
+    $vacantsea      = $key['vacantsea'];
+    $perusahaan     = $key['perusahaan'];
+    $description    = $key['description'];
+    $departement_id = $key['departement'];
+    $rank_id        = $key['rank_id'];
+    $ship_id        = $key['ship_type'];
+    $navigation_area    = $key['navigation_area'];
+    $annual_sallary     = $key['annual_sallary'];
+    $contract_type      = $key['contract_type'];
+    $contract_dinamic   = $key['contract_dinamic'];
+    $ship               = $key['ship'];
+    $requested_certificates   = $key['requested_certificates'];
+    $requested_coc      = $key['requested_coc'];
+    $nationality_id     = $key['id_nationality'];
+    $create_date        = $key['create_date'];
+    $expired_date       = $key['expired_date'];
+    $benefits           = $key['benefits'];
+    $sallary_range      = $key['sallary_range'];
+    $sallary_curr       = $key['sallary_curr'];
+    $experience         = $key['experience'];
+
+    $logo               = img_url("company/default/maersk_logo.jpg");
+?>
+<div class="list-group-item">
+    <div class="media">
+        <div class="media-left text-center">
+            <img src="<?=$profil_pic;?>" alt="company logo"
+            class="logo-container thumbnail block " width="115" height="115">
+            <?php
+                $d1     = strtotime($expired_date);
+                $end    = ceil(($d1-time())/60/60/24);
+                if ($end > 0) {
+                    echo $btn_applicant;
+                }    
+            ?>
+        </div>
+
+        <div class="media-body">
+            <div class="float-left media-heading medium">
+                <a href="#" class="text-link"><h4><?=$perusahaan;?></h4></a></div>
+            <div class="float:right">
+                <?php
+                $username_company   = $this->session->userdata("username_company");
+                $username           = $this->uri->segment(2);
+                if (!empty($username_company) AND $username_company==$username) {
+                   echo "<a href='http://localhost/company.informasea/vacantsea/edit/".$vacantsea_id."'>
+                        <span style='cursor:pointer' class='glyphicon glyphicon-edit sub-header-right'></span></a>";
+                }?>
+            </div>
+
+            <div style="clear: both"></div>
+            <div class="subtitle text-gray"><?=$navigation_area;?></div>
+            <div class="subtitle custom-h4"><?=$key['rank'];?></div>
+            <?php
+                if (!empty($annual_sallary)) {
+                   echo "<div class='subtitle text-gray'>Annual Salary:</div>";
+                   echo "<h4 class='text-link custom-h4'>".$sallary_curr." ".number_format($annual_sallary)."</h4>"; 
+                }
+            ?>
+            <div class="subtitle text-gray">Position:</div>
+                <a href="<?=base_url("vacantsea/detail/".$vacantsea_id);?>" class="subtitle text-link" target="_blank"><h4 class="custom-h4"><?=$vacantsea;?></h4></a>
+                <p><?=$description;?></p>
+            <div class="float-right subtitle"> 
+               <div class="text-muted"> Posted: <?php echo date('F d, Y', strtotime($create_date));?></div> 
+                    <?php
+                    
+                    if ($end > "3") {
+                        if ($end > 1 && $end <=7) {
+                            $expired    = $end;
+                           echo "<div class='text-danger' title='".$expired_date."'>End : <b>".$expired." days left</b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+                        }elseif ($end > 7 && $end <= 31) {
+                            $expired    = $end/7;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-danger' title='".$expired_date."'>End : <b>".$expired." Week left</b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+                        }elseif ($end > 31 && $end <=365 ) {
+                            $expired    = $end/31;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-danger' title='".$expired_date."'>End : <b>".$expired." Month left</b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+                        }elseif ($end > 365 ) {
+                            $expired    = $end/365;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-danger' title='".$expired_date."'>End : <b>".$expired." Year left</b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+
+                        }
+                        
+                    }elseif($end >= "0"){
+                        echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$end." days left </b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+                    }else{
+                        echo "<div class='text-muted' title='".$expired_date."'>End : <b>Expired </b> of ".date('F d, Y', strtotime($expired_date))."</div>";
+                    }?>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<?php
+}
+?>
+
+<div class="pagination" style="float:right; margin-top:3%">
+<ul>
+    <?php echo $this->pagination->create_links(); ?>
+</ul>
+</div>

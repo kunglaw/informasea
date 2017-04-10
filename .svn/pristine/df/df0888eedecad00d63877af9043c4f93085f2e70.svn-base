@@ -1,0 +1,353 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed '); 
+	
+	// class controller Profile , Module seaman, 
+	
+	class Profile extends MX_Controller
+	{
+		
+		function __construct()
+		{
+			parent::__construct();	
+			//$this->authentification_model->close_access();
+			/*
+				buat pengecualian untuk halaman ini 
+			
+			*/
+			
+			$this->load->model('seatizen/seatizen_model');
+			$this->load->model('timeline_model');
+			$this->load->model('users/user_model');
+			$this->load->model('friendship_model');
+			$this->load->model('photo/photo_mdl');
+			
+		}
+		
+		// public 
+		public function index()
+		{
+			$username = $this->uri->segment(2);//username yang ada di url
+			
+			$data['title'] = "Profile";
+			$data['css'] = "seaman/profile/head";
+			$data['template'] = "seaman/profile/template";
+			$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); echo "<br>";
+			$data['timeline'] = $this->timeline_model->get_self_tml();
+			$data['ctrl'] = "profile";
+			
+			//print_r($data); exit;
+			
+			$this->load->view('index',$data);
+			
+		}
+		
+		/* routes = profile/$username/experiences 
+		public */
+		public function experiences()
+		{
+			$this->load->model('vessel_model'); // vessel model
+			$this->load->model("rank_model");
+			$this->load->model('department_model');
+			$this->load->model("coc_model");
+			$this->load->model('seaman/resume_model');
+			$this->load->model('experience_model');
+			// experience controller profile
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			if($check_username)
+			{
+			  
+			  // cek jika username login sama username url sama atau tidak 		
+				if($username_url == $username_login)
+				{		
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  
+				  $data["title"] = $nama." experiences";
+				  $data['resume'] = $this->resume_model->get_resume();
+				  $data["template"] = "experiences/template";
+				  $data['header']   = "header"; //luar
+				  $data['content']  = "experiences/content";
+				  $data['username'] = $username_url;
+				  $data['nama'] = $nama;
+				  $data['js']	= "experiences/js";
+				  //exit("friends ... ");
+				}
+				else
+				{
+				  $this->load->model("users/user_model"); // dari module users
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  
+				  $data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"]." Experiences";
+				  //$data['css'] = "seaman/detail/head";
+				  $data['experience'] = $this->experience_model->get_experience_pelaut($username_url);
+				  $data['header']   = "experiences/header"; //dalam folder friends
+				  $data['content']  = "experiences/content-person";
+				  $data['template'] = "seaman/experiences/template";
+				  $data['ctrl'] = "detail";
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  //$data['username'] = $username_url;
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+				  $data['js']	= "experiences/js";
+					
+				}
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			  
+			  
+			}
+			else
+			{
+			  show_404();
+			}
+			//echo "jalan";	
+		}
+		
+		/* routes = profile/$username/friends 
+		public */
+		public function friends()
+		{
+			
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			//print_r($check_username); exit;
+			
+			if($check_username)
+			{
+				
+				// cek jika username login sama username url sama atau tidak 		
+				if($username_url == $username_login)
+				{		
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  $data["title"] = $nama." friends";
+				  $data["template"] = "friends/template";
+				  $data['header']   = "header"; //luar
+				  $data['username'] = $username_url;
+				  $data['nama'] = $nama;
+				  //exit("friends ... ");
+				}
+				else
+				{
+				  $this->load->model("users/user_model"); // dari module users
+				  $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+				  
+				  $data['title'] = "About ".$check_username['nama_depan']." ".$check_username["nama_belakang"];
+				  //$data['css'] = "seaman/detail/head";
+				  $data['header']   = "friends/header"; //dalam folder friends
+				  $data['template'] = "seaman/friends/template";
+				  $data['ctrl'] = "detail";
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  //$data['username'] = $username_url;
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					
+				}
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			}
+			else
+			{
+			  show_404();
+			}
+		}
+		
+		public function account()
+        {
+            $username_url = $this->uri->segment(2); // username dari url
+            $username_login = $this->session->userdata("username");
+//			echo $username_login." == ".$username_url;
+            $check_username = $this->seatizen_model->check_seatizen($username_url);
+            //print_r($check_username); exit;
+//            echo "Hello";
+            if($check_username)
+            {
+                // cek jika username login sama username url sama atau tidak
+                if($username_url == $username_login)
+                {
+
+                    $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+                    $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+                    $data["title"] = "My Account";
+                    $data["template"] = "account/template";
+                    $data['header']   = "header"; //luar
+                    $data['username'] = $username_url;
+                    $data['nama'] = $nama;
+//                    print_r($data['detail_pelaut']);
+                }
+                else
+                {
+                    $this->load->model("users/user_model"); // dari module users
+                    $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+
+                    $data['title'] = "About ".$check_username['nama_depan']." ".$check_username["nama_belakang"];
+                    //$data['css'] = "seaman/detail/head";
+                    $data['header']   = "account/header"; //dalam folder about
+                    $data['template'] = "seaman/account/template";
+                    $data['ctrl'] = "detail";
+                    $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username");
+                    //$data['username'] = $username_url;
+                    $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+                }
+                //print_r($data); exit;
+                $this->load->view("index",$data);
+            }
+            else
+            {
+                show_404();
+            }
+        }
+		
+		/* routes = profile/$username/about 
+		public */
+		public function about()
+		{
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			//print_r($check_username); exit;
+			if($check_username)
+			{
+				
+				// cek jika username login sama username url sama atau tidak 		
+				if($username_url == $username_login)
+				{		
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  $data["title"] = "About Me";
+				  $data["template"] = "about/template";
+				  $data['header']   = "header"; //luar
+				  $data['username'] = $username_url;
+				  $data['nama'] = $nama;
+				}
+				else
+				{
+				  $this->load->model("users/user_model"); // dari module users
+				  $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+				  
+				  $data['title'] = "About ".$check_username['nama_depan']." ".$check_username["nama_belakang"];
+				  //$data['css'] = "seaman/detail/head";
+				  $data['header']   = "about/header"; //dalam folder about
+				  $data['template'] = "seaman/about/template";
+				  $data['ctrl'] = "detail";
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  //$data['username'] = $username_url;
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					
+				}
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			}
+			else
+			{
+			  show_404();
+			}
+		}
+		
+		public function detail()
+		{
+			
+			if($this->uri->segment(3) == "post")
+			{
+				$this->post();
+				return false;
+			}
+			
+			$username = $this->uri->segment(2);//username yang ada di url
+			$username_login = $this->session->userdata("username");
+			
+			$nama = $this->session->userdata("nama");
+			
+			// artinya ini adalah person dimana dia bukan yang login 
+			if($username != $username_login)
+			{
+				//echo "tidak sama"; exit;
+				$check_username = $this->seatizen_model->check_seatizen($username);
+				
+				if(empty($check_username))
+				{
+					
+					/*$this->load->model("users/user_model"); // dari module users
+					$data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+					
+					$data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					$data['css'] = "seaman/detail/head";
+					$data['template'] = "seaman/detail/template";
+					$data['ctrl'] = "detail";
+					$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); 
+					$data['username_url'] = !empty($username) ? $username : $this->uri->segment(2);*/
+					show_404("custom404");
+					
+					
+				}
+				else
+				{
+					$this->load->model("users/user_model"); // dari module users
+					$data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+					
+					$data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					$data['css'] = "seaman/detail/head";
+					$data['template'] = "seaman/detail/template";
+					$data['ctrl'] = "detail";
+					$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); 
+					//$data['username'] = $username_url;
+			 		$data['nama'] = $data['title'];
+					
+				}
+			}
+			else
+			{
+				$data['title'] = $nama;
+				$data['css'] = "seaman/profile/head";
+				$data['template'] = "seaman/profile/template";
+				$data['ctrl'] = "profile";
+				$data['username'] = $username_login;
+				
+			}
+			
+			 // menugaskan list timeline untuk mengambil datanya dari controller profile/detail
+			$this->load->view('index',$data);	
+			
+		}
+		
+		function post()
+		{
+			// detail posting timeline
+			
+			$id_timeline = $this->uri->segment(4);	
+			
+			$username = $this->uri->segment(2);//username yang ada di url
+			$check_username = $this->seatizen_model->check_seatizen($username);
+			
+			
+			$data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+			//$data['css'] = "seaman/detail/head";
+			$data['template'] = "seaman/detail_timeline/template";
+			//$data['ctrl'] = "detail";
+			//$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); 
+			$data['row'] = $this->timeline_model->detail_timeline($id_timeline);
+			//print_r($data['timeline']);
+			//$data['username_url'] = !empty($username) ? $username : $this->uri->segment(2); 
+		
+			$this->load->view('index',$data);
+			
+
+		}
+		
+		public function photo()
+		{
+			//Module::run("photo/photo/get_photo_person");	
+		}
+		
+		function __destruct()
+		{
+			
+			
+		}
+		
+		
+	}
+	

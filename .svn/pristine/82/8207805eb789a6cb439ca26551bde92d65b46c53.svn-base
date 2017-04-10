@@ -1,0 +1,40 @@
+<?php // js under module users ?>
+
+<script>
+	$(document).ready(function() {
+		$('#footer').removeClass('footer-container-bg');
+		$("#username_info").hide();
+	});
+	
+	$("#username_reg").change(function(){
+
+		var username = $(this).val();
+		var page = "<?=$this->uri->segment(3)?>";
+		
+		if(page == "agentsea")
+		{
+			check_username_company(username);	
+			
+		}
+		else
+		{
+			check_username(username);
+		}
+		
+	});
+	
+	$("#email").change(function(){
+		var email = $(this).val();
+		
+		var page = "<?=$this->uri->segment(3)?>";
+		
+		if(page == "agentsea")
+		{
+			check_email_company(email);
+		}
+		else
+		{
+			check_email(email);	
+		}
+	});
+</script>

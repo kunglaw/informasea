@@ -1,0 +1,175 @@
+<?php
+
+$this->load->model('nation_model');
+$this->load->model('vacantsea/vacantsea_model');
+$username           = $this->uri->segment(2);
+$username_pelaut    = $this->session->userdata('username');
+$get_vacantsea      = $this->company_model->vacantsea("where username='$username' order by create_date desc limit 5");
+
+foreach ($get_vacantsea->result_array() as $key) {
+
+    $vacantsea_id   = $key['vacantsea_id'];
+    $vacantsea      = $key['vacantsea'];
+    $perusahaan     = $key['perusahaan'];
+    $description    = $key['description'];
+    $departement_id = $key['departement'];
+    $rank_id        = $key['rank_id'];
+    $ship_id        = $key['ship_type'];
+    $navigation_area    = $key['navigation_area'];
+    $annual_sallary     = $key['annual_sallary'];
+    $contract_type      = $key['contract_type'];
+    $contract_dinamic   = $key['contract_dinamic'];
+    $ship               = $key['ship'];
+    $requested_certificates   = $key['requested_certificates'];
+    $requested_coc      = $key['requested_coc'];
+    $nationality_id     = $key['id_nationality'];
+    $create_date        = $key['create_date'];
+    $expired_date       = $key['expired_date'];
+    $benefits           = $key['benefits'];
+    $sallary_range      = $key['sallary_range'];
+    $sallary_curr       = $key['sallary_curr'];
+    $experience         = $key['experience'];
+    $logo               = img_url("company/default/maersk_logo.jpg");
+ 
+   
+    $placement          = $this->nation_model->get_detail_nationality($nationality_id);
+    $flag_placement     = strtolower($placement['flag']);
+
+    $q_applicant        = $this->company_model->getapplicant("where id_vacantsea='$vacantsea_id' and username='$username_pelaut' ")->row_array();
+    $status_applicant   = $q_applicant['status'];
+
+    //count applicant
+    $sum_applicant      = $this->company_model->count_applicant("where id_vacantsea='$vacantsea_id'")->row_array();
+
+?>
+<div class="list-group-item">
+    <div class="media">
+        <div class="media-left text-center">
+            <img src="<?=$profil_pic;?>" alt="company logo"
+                 class="logo-container thumbnail block " width="115" height="115">
+                    <?php
+                    //V.2
+                    $type_user   = $this->session->userdata("type_user");
+                    $d1     = strtotime($expired_date);
+                    $end    = ceil(($d1-time())/60/60/24);
+                    $now    = date("Y-m-d");
+
+                    if ($type_user == "pelaut" || $user == "pelaut") { // LOGIN : PELAUT
+                        if ($now > $expired_date) { // jika expired
+                            echo "<button type='button' class='btn btn-full'>Expired</button> ";
+                        
+                        }else{ 
+                            if ($status_applicant == "Processed") {
+                                echo "<div class='text-success applicants ft-12'><small>already applied</small></div>";
+
+                            }elseif ($status_applicant == "Approved") {
+                                echo "<button type='button' class='btn btn-full btn-success'><i class='glyphicon glyphicon-ok'></i> Approved</button>";
+
+                            }elseif ($status_applicant == "Rejected") {
+                                echo "<button type='button' class='btn btn-full btn-danger'><i class='glyphicon glyphicon-remove'></i> Rejected</button>";
+
+                            }elseif ($status_applicant == "Canceled") {
+                                echo "<button type='button' class='btn btn-full btn-danger'><i class='glyphicon glyphicon-remove'></i> Canceled</button>";
+                                
+                            }else{
+                                echo "<a href='".base_url('vacantsea/detail/'.$vacantsea_id)."' class='btn btn-filled btn-full block apply-vacant-button'> Apply </a>";
+                            }
+                        }
+
+                    }elseif ($type_user == "company" || $type_user == "agent") { //LOGIN : COMPANY AND AGENT
+                        //button apply aplicant not display
+
+                    }else{ // USER NOT LOGIN
+                        echo "<button class='btn btn-full btn-filled apply-vacant-button' data-toggle='modal' data-target='#myModal'>Apply</button>";
+                    }
+
+                    //count applicant
+                    if ($sum_applicant['jumlah'] > 0) {
+                        echo "<div class='text-gray applicants ft-12'><small><a href='#'>".$sum_applicant['jumlah']." applicant</a></small></div>";
+                    }
+                    ?>
+        </div>
+        <div class="media-body">
+            <a href="<?=base_url("vacantsea/detail/".$vacantsea_id);?>" class="subtitle text-link" target="_blank"><h4 class="custom-h4"><?=$vacantsea;?></h4></a>
+            <div class="float-left media-heading medium">
+                <a href="<?=base_url("agentsea/$username/home")?>" class="text-link"><small><?=$perusahaan;?></small></a></div>
+            <div class="float:right">
+                <?php
+                    $id_perusahaan      = $this->session->userdata("id_perusahaan");
+                    $username_company   = $this->session->userdata("username_company");
+                    $username_sitizen   = $this->session->userdata("username");
+                    $username           = $this->uri->segment(2);
+                    if (!empty($username_company) AND $username_company==$username) {
+
+                       echo "<a href='http://$url/edit_vacant/".$id_perusahaan."&".$username_company."&".$vacantsea_id."_key"."' target='_blank'>
+                            <span style='cursor:pointer' class='glyphicon glyphicon-edit sub-header-right'></span></a>";
+                    }
+                ?>
+            </div>
+
+            <div style="clear: both"></div>
+            <div class="subtitle text-gray">Placement :
+            	<?php 
+                if(!empty($placement)){
+                	// echo "<a href='".base_url('agentsea/search/'.$placement['name'])."'>";
+            		echo "<img src='".asset_url('flags/'.$flag_placement)."'> "; 
+					echo $placement["name"];
+                    // echo "</a>";
+                }else{
+                    echo "-";
+                }
+                ?>
+            </div>
+            <div class="subtitle custom-h4">Rank : <?=$key['rank'];?></div>
+            <?php
+                echo "<div class='subtitle text-gray'>Annual Salary:</div>";
+                if (!empty($username_company) || !empty($username_sitizen)) {
+                    if (!empty($annual_sallary)) {
+                       echo "<h7 class='text-danger custom-h7'>".$sallary_curr." ".number_format($annual_sallary)."</h7>"; 
+                    }else{
+                        echo "Nego";
+                    }
+                }else{
+                    echo "<h7 class='text-danger custom-h7'>Please Login to view the Salary</h7>";
+                }
+            ?>
+            <div class="subtitle text-gray">&nbsp;</div>
+            <div class="subtitle text-gray">Description:</div> 
+            <div style="width:80%; float:left"><p><?=$description;?></p></div>
+            <div class="float-right subtitle" style="float:right"> 
+               <div class="text-muted"> Posted: <?php echo date('F d, Y', strtotime($create_date));?></div> 
+                <?php
+                    if ($end >= "1") {
+                        if ($end > 1 && $end <=7) {
+                            $expired    = $end;
+                           echo "<div class='text-muted' title='".$expired_date."'>End : <b>".$expired." Days</b> Left</div>";
+                        }elseif ($end > 7 && $end <= 31) {
+                            $expired    = $end/7;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End :  <b>".$expired." Weeks</b> Left</div>";
+                        }elseif ($end > 31 && $end <=365 ) {
+                            $expired    = $end/31;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End :  <b>".$expired." Month</b> Left</div>";
+                        }elseif ($end > 365 ) {
+                            $expired    = $end/365;
+                            $expired    = round($expired,0);
+                            echo "<div class='text-muted' title='".$expired_date."'>End :  <b>".$expired." Year</b> Left</div>";
+
+                        }
+                        
+                    }elseif($end == "0"){
+                        echo "<div class='text-danger' title='".$expired_date."'>End :  <b>Today </b> </div>";
+                    }elseif ($now > $expired_date) {
+                        echo "<div class='text-danger' title='".$expired_date."'><b>Expired </b> </div>";
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+}
+?>
+
+<?php //$this->load->view('modal-login'); ?>

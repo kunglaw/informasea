@@ -1,0 +1,105 @@
+<?php // template login 
+
+?>
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-6 text-white hidden-sm hidden-xs m-t-1">
+            <h1><span class="text-link">Welcome to</span> Informasea </h1>
+
+            <p>
+                Informasea is a place for you as a seaman to search Information for Vacantsea and networking. For
+                Shipping Agentsea, this is the place where you can manage and search the best competent seaman to
+                hire.</p>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_search.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Search Vacantsea</h4></div>
+                    <p>
+                        Find your preferable jobs on department, rank , sallary, ect
+                    </p>
+                </div>
+            </div>
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_social.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Social Network</h4></div>
+                    <p>
+                        Keep in touch with all seafarer and manning agencies 
+                    </p>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_managing.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Managing Schedule</h4></div>
+
+                    <p>
+                        Complete your resume will make agencies to find you easier 
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-white m-t-1">
+            <div class="block">
+                <h2> Forgot Password 
+                
+                  <button class="btn btn-filled" onClick="javascript:location.href = '<?=base_url("users/forgotpass")?>' ">
+                      SEAMAN</button>
+                  <button class="btn btn-transparent" onClick="javascript:location.href = '<?=base_url("users/forgotpass/agentsea")?>' ">
+                  AGENTSEA</button>
+                
+                </h2>
+                
+            </div>          
+             
+             <?php
+				echo $ve;
+				if($this->session->flashdata('error') != "")
+				{
+					echo $this->session->flashdata('error');
+				}
+				
+				if($this->session->flashdata('success') != "")
+				{
+					echo $this->session->flashdata('success');
+				}
+			 ?> 
+             
+            <form class="transparent register-form" role="form" action="<?=base_url("users/users_process/forgotpass")?>" method="post" >
+              
+                <div class="form-group">
+                
+                	<label>Send password to Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="your email" >
+                </div>
+                
+                <div class="form-group">
+                	<div class="g-recaptcha" data-sitekey="6LcFQgkTAAAAACqUmwpvnuFlJc9f8eqjkdRP7Tq2"></div>
+                </div>
+                
+                <a href="<?php echo base_url("users/login")?>" class="pull-left text-link">Login </a>
+                
+                <div class="pull-right">
+                    <button class="btn btn-filled">Send</button>
+                </div>
+                <span class="pull-right">&nbsp; Or &nbsp;</span>
+                 <a href="<?=base_url("users/register")?>" class="pull-right text-link">Register to Informasea</a>
+                 
+                <div class="clearfix"></div>
+               
+            </form>
+        </div>
+    </div>
+</section>
+

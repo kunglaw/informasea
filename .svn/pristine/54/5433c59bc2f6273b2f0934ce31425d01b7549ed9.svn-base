@@ -1,0 +1,190 @@
+<?php
+$username_comp = $company["username"];
+$logo_img = $company["logo_image"];
+$path_img = img_url("company/photo/$username_comp/profil_pic/$logo_img");
+$vacantsea_title = $title;
+$id = $this->uri->segment(3);
+$sess_data = $this->session->all_userdata();
+$sallary = !empty($sess_data['username']) ? $vacantsea['sallary_curr']." ".number_format($vacantsea["annual_sallary"]) : "Please Login to view the Salary";
+$id_user = $this->session->userdata("id_user");
+$class_text = !empty($id_user) ? "text-success" : "text-danger";
+
+$create = date_create($vacantsea['create_date']);
+$expired = date_create($vacantsea['expired_date']);
+
+$create = date_format($create, 'F d, Y');
+$expired = date_format($expired, 'F d, Y');
+
+/*$username = $this->session->userdata("username");
+$username_company = $this->session->userdata("username_company");
+
+
+ if(!empty($username))
+{
+track_seatizen("vacantsea detail"); 
+track_vacantsea_visitor($id);
+}
+else if(!empty($username_company))
+{
+track_agentsea("vacantsea detail");
+}*/
+?>
+
+<div class="col-md-9">
+    <div class="box">
+        <div class="media">
+            <a class="pull-left" href="#">
+                <img src="<?= $path_img ?>" alt="" id="img-profile-company" class="logo-container thumbnail block " style="border:1px solid #CCC" height="54" width="102" />
+            </a>
+
+            <div class="media-body">
+                <div class="pull-left">
+                    <h4 class="media-heading"><span class="text-link"><?= $company["nama_perusahaan"] ?></span></h4>
+
+                    <p><span class="text-gray"><?=$nationality["name"]?></span><br>
+                        <b title="Rank : <?=$rank['rank'];?>"><?=$rank["rank"]?></b></p>
+                </div>
+                <!--                            <div class="pull-right">-->
+                <!--                                <button type="button" class="btn btn-outline">Save Job</button>-->
+                <!--                                <button type="button" class="btn btn-filled">Apply</button>-->
+                <!--                            </div>-->
+                <span class="clearfix"></span>
+            </div>
+        </div>
+        <div class="information">
+            <h5 class="text-gray">
+                About company:
+            </h5>
+
+            <p class="text-gray7"><?=$company["description"]?></p>
+            <table class="text-gray7">
+                <tr>
+                    <td>Web</td>
+                    <td>:</td>
+                    <td><a href="#" class="text-link"><?=$company["website"]?> </a></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>:</td>
+                    <td><?=$company["email"]?></td>
+                </tr>
+                <tr>
+                    <td>Phone number</td>
+                    <td>:</td>
+                    <td><?=$company["no_telp"]?></td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div class="information">
+            <h5 class="text-gray">Annual Salary</h5>
+
+            <h3 class="<?php echo $class_text ?> small-margin-top"><?= $sallary ?></h3>
+
+            <h5 class="text-gray">Title</h5>
+
+            <h3 class="text-link small-margin-top"><?=$vacantsea["vacantsea"]?></h3>
+
+            <p class="text-gray7"><?=$vacantsea["description"]?></p>
+            <h5 class="text-gray">Description:</h5>
+            <?php
+            $qualification = [
+                'Department',
+                'Rank',
+                'Ship Type',
+                'Navigation Area/Country',
+                'Salary',
+                'Contract Type',
+                'Contract Dynamic',
+                'Benefits',
+                'Vessel Name',
+                'Requested Certificates',
+                'Required Certificates of Competency',
+                'Nationality'
+            ];
+            $qlt_value = [
+                $department["department"],
+                $rank["rank"],
+                $ship_type["ship_type"],
+                $vacantsea['navigation_area'],
+                $vacantsea["annual_allary"],
+                $vacantsea['contract_type'],
+                $vacantsea['contract_dynamic'],
+                $vacantsea['benefits'],
+                $ship['ship_name'],
+                $vacantsea['requested_certificates'],
+                $vacantsea['requested_coc'],
+                $nationality["name"]
+            ]; ?>
+            <div class="row text-gray7">
+                <div class="col-md-6">
+                    <table>
+
+                        <?php
+                        for ($i = 0; $i < 7; $i++) {
+                            echo '<tr>
+										<td>' . $qualification[$i] . '</td>
+										<td>:</td>
+										<td>';
+                                        if(!empty($qlt_value[$i])){
+                                            echo $qlt_value[$i];
+                                        }else{
+                                            echo "-";
+                                        } 
+                                        echo '</td>
+									</tr>';
+                        }
+                        ?>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table>
+                        <?php
+                        for ($i = 7; $i < 12; $i++) {
+                            echo '<tr>
+										<td>' . $qualification[$i] . '</td>
+										<td>:</td>
+										<td>';
+                                        if(!empty($qlt_value[$i])){
+                                            echo $qlt_value[$i];
+                                        }else{
+                                            echo "-";
+                                        }
+                                        echo '</td>
+									</tr>';
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+            <br>
+
+            <div>
+                <div class="pull-left">
+                    <p class="text-gray7"><span class="text-link">Posted</span>: <?php echo $create ?> &nbsp;
+                        &nbsp; <span
+                            class="text-link">End</span>: <?= $expired ?></p>
+                </div>
+                <div class="pull-right">
+                    <?php if($already_applied){ ?>
+                        <div class="text-success applicants ft-12"><small>You've already applied for this vacant</small></div>
+                    <?php }else{ ?>
+                    <input type="hidden" value="<?php echo $id."&".$vacantsea["vacantsea"] ?>" id="url-data">
+                    <?php
+                    $now    = date('Y-m-d');
+                    if ($now > $vacantsea['expired_date']) {
+                        echo "<button type='button' class='btn btn-full' data-container='body' data-toggle='popover' data-placement='top' data-content='Sorry, Vacantsea Expired'>Apply</button> ";
+                    }else{
+                    ?>
+                    <a href="#" id="" class="btn btn-filled apply-vacant-button">Apply</a>
+                    <?php } ?>
+                    <?php } ?>
+                </div>
+                <span class="clearfix"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-login">
+    <!--Ajax-->
+</div>

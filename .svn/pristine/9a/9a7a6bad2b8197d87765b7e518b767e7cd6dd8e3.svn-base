@@ -1,0 +1,626 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed');
+
+class photo_crop extends MX_Controller{
+	
+	function __construct()
+	{
+			
+		parent::__construct();
+		$this->load->model("photo_mdl");
+		$this->load->helper("image_thumb_helper");
+	}
+	
+	function crop_modal()
+	{
+		$x = 1;
+		$type = $this->input->post("type",true);
+		$user = $this->input->post("user",true);
+		
+		if($x == 1)
+		{
+			
+			//$this->load->view("list-photo/content");
+			//$this->load->view("include/content"); bisa
+			//$this->load->view("cropper-master/crop_modal");
+			//$this->load->view("include/crop_modal");
+			
+			if($user == "seaman")
+			{
+			  if($type == "resume")
+			  {
+				  $this->load->view("include/crop_resume_modal");
+			  }
+			  else if($type == "profile_pic")
+			  {
+				  $this->load->view("include/crop_profile_modal");
+			  }
+			}
+			else if($type == "company") // agentsea
+			{
+			  if($type == "resume")
+			  {
+				  
+			  }
+			  else if($type == "profile_pic") // meanager atau 
+			  {
+				  
+			  }
+			  else if($type == "logo")
+			  {
+				  
+			  }
+			  else if($type == "header")
+			  {
+				  
+			  }
+			}
+		}
+		
+	}
+
+	function cropping_cover_company()
+	{
+		// form validation
+		$this->load->library("form_validation");
+		$this->load->helper("file");
+		$this->load->library("user_agent");
+		$username = $this->session->userdata("username_company");
+		/*
+			Array
+			(
+				[img_input] => 
+				[nama_gambar] => 
+				[photo_type] => cover
+				[img_data] => 
+				[img_src] => http://localhost/informasea_assets/img/img_ship.png
+				[pos] => 
+				[cover-position] => -210
+			)
+			
+			Array
+			(
+				[name] => 45629_funny_wtf_tom_cruise_laughing.jpg
+				[type] => image/jpeg
+				[tmp_name] => D:\xampp\tmp\php57FA.tmp
+				[error] => 0
+				[size] => 1073450
+			)
+		*/
+		//post
+		$img_src 	 	= $this->input->post("img_src",true);
+		$nama_gambar 	= $this->input->post("nama_gambar",true);
+		$photo_type  	 = $this->input->post("photo_type",true);
+		$img_data       = $this->input->post("img_data",true);
+		$pos		 	= $this->input->post("post",true);
+		$cover_position = $this->input->post("cover-position",true);
+		$image_height   = $this->input->post("image-height",true);
+		$default_width  = $this->input->post("default-width",true);
+		$title		  = basename($img_src);
+		
+		// file
+		$img_input 	  = $_FILES['img_input'];
+		$imgin_name 	 = $_FILES['img_input']['name'];
+		$imgin_type	 = $_FILES['img_input']['type'];
+		$imgin_tmp_name = $_FILES['img_input']['tmp_name'];
+		$imgin_size 	 = $_FILES['img_input']['size'];
+		$imgin_error	= $_FILES["img_input"]['error'];
+		
+		$ip_address	 = $_SERVER['REMOTE_ADDR'];
+		$user_agent	 = $this->agent->agent_string();
+		
+		$this->form_validation->set_rules("img_src","Image Source","xss_clean");
+		
+		// cek validasi form
+		if($this->form_validation->run() == true)
+		{
+			
+			//print_r($_POST);
+			//print_r($_FILES);
+			
+			// includo la classe
+			$this->load->library("thumb_and_crop"); //php class for image resizing & cropping
+			// valorizzo la variabile
+			$tb = $this->thumb_and_crop;
+			
+			$from_top = abs($cover_position);
+			$default_cover_width  = $default_width; // default width harus dinamis , Ya Allah perjuangan sekali nyari ini. alhamdulillah
+			$default_cover_height = 240;
+			
+			// tentukan dahulu file type nya 
+			if(!empty($img_input))
+			{
+				$ex = explode("/",$img_input['type']);
+				$img_type = $ex[1];
+				
+			}
+			else if(!empty($img_src)) 
+			{
+				$int_type =  exif_imagetype($img_src);
+				$img_type =  image_type($int_type);
+				//echo "img_src = $img_type";
+			}			
+			
+			$username_company = $this->session->userdata('username_company');
+			// nama gambar original
+			$original 	  = "cover.".$img_type;
+		
+	$path_original = pathup("company/photo/$username_company/cover/$original");
+			 
+			if(!empty($img_input))
+			{
+				$b = move_uploaded_file($img_input['tmp_name'],$path_original);
+			}
+			else if(!empty($img_src))
+			{
+				$a = copy($img_src,$path_original);
+				if(!$a){
+					echo "something wrong !!";	
+				}	
+			}
+			
+			// apro l'immagine
+			$tb->openImg($path_original); //original cover image
+			
+			$w = $tb->getWidth();
+			$h = $tb->getHeight();
+			
+			$newHeight = $tb->getRightHeight($default_cover_width);
+			//echo "w = ".$w." - h = ".$h." - newHeight = ".$newHeight;
+			
+			$tb->creaThumb($default_cover_width, $newHeight);	
+					
+			$tb->setThumbAsOriginal();
+			
+			$tb->cropThumb($default_cover_width, $default_cover_height, 0, $from_top);			
+			
+			// nama gambar thumb
+			$cover = "cover_thumb.".$img_type;
+		
+
+				$cover_path = pathup("company/photo/$username_company/cover/$original");
+			
+			$tb->saveThumb($cover_path); //save cropped cover image
+			
+			$tb->resetOriginal();
+			
+			$tb->closeImg();
+			
+			// DATABASE
+			// jika di database kosong 
+			$str = "SELECT * FROM photo_perusahaan_tr where username = '$username_company' and cover = 1";
+			$q = $this->db->query($str);
+			$f = $q->row_array();
+			$id_photo = $f['id_photo'];
+				//echo "<h1>".$str."</h1>";
+			if(empty($f))
+			{
+				if(!empty($img_input))
+				{
+					$size_gambar = $img_input['size'];
+					$title = $img_input['name'];	
+				}
+				else
+				{
+					$size_gambar = "";
+					$title = basename($img_src);
+				}
+				$id_p = $this->session->userdata('id_perusahaan');
+				$str2  = "INSERT INTO photo_perusahaan_tr SET  	 ";
+				$str2 .= "nama_gambar	= '$original' 		,";
+				$str2 .= "size_gambar	= '$size_gambar'	,";
+				$str2 .= "id_perusahaan		= '$id_p'		,";
+				$str2 .= "type_gambar	= '$imgin_type'	,";
+				$str2 .= "datetime		= now()				,";
+				$str2 .= "ip_address		= '$ip_address'		,";
+				$str2 .= "username		= '$username_company'		,";
+				$str2 .= "cover 			= 1					";				
+				//echo "<h1>".$str2."</h1>";
+
+				$this->db->query($str2);
+				
+			}
+			else
+			{
+				if(!empty($img_input))
+				{
+					$size_gambar = $img_input['size'];
+					$title = $img_input['name'];	
+				}
+				else
+				{
+					$size_gambar = "";
+					$title = basename($img_src);
+				}
+				
+				$str2  = "UPDATE photo_perusahaan_tr SET  	 	 ";
+				$str2 .= "nama_gambar	= '$original' 		,";
+				$str2 .= "size_gambar	= '$size_gambar'	,";
+				//$str2 .= "id_pelaut		= '$id_pelaut'		,";
+				$str2 .= "type_gambar	= '$type_gambar'	,";
+				$str2 .= "datetime		= now()				,";
+				$str2 .= "ip_address		= '$ip_address'		";
+				//$str2 .= "username		= '$username'		,";
+				//$str2 .= "cover 			= 1					,";
+				$str2 .= "WHERE id_photo  = '$id_photo' AND cover = 1     "; 
+				//echo "<h5> ".$str2."</h5>";
+				$this->db->query($str2);
+				
+			}
+		
+			$data['status'] = 200;
+			$data['msg']	= "cover suceessfully updated";
+			$data['url']    = $cover;
+			
+		}
+		else
+		{
+			$data['status'] = 200;
+			$data['msg']	= "cover can't updated";
+		}
+		
+		echo json_encode($data);
+	}
+	
+	function cropping_cover()
+	{
+		// form validation
+		$this->load->library("form_validation");
+		$this->load->helper("file");
+		$this->load->library("user_agent");
+		$username = $this->session->userdata("username");
+		/*
+			Array
+			(
+				[img_input] => 
+				[nama_gambar] => 
+				[photo_type] => cover
+				[img_data] => 
+				[img_src] => http://localhost/informasea_assets/img/img_ship.png
+				[pos] => 
+				[cover-position] => -210
+			)
+			
+			Array
+			(
+				[name] => 45629_funny_wtf_tom_cruise_laughing.jpg
+				[type] => image/jpeg
+				[tmp_name] => D:\xampp\tmp\php57FA.tmp
+				[error] => 0
+				[size] => 1073450
+			)
+		*/
+		//post
+		$img_src 	 	= $this->input->post("img_src",true);
+		$nama_gambar 	= $this->input->post("nama_gambar",true);
+		$photo_type  	 = $this->input->post("photo_type",true);
+		$img_data       = $this->input->post("img_data",true);
+		$pos		 	= $this->input->post("post",true);
+		$cover_position = $this->input->post("cover-position",true);
+		$image_height   = $this->input->post("image-height",true);
+		$default_width  = $this->input->post("default-width",true);
+		$title		  = basename($img_src);
+		
+		// file
+		$img_input 	  = $_FILES['img_input'];
+		$imgin_name 	 = $_FILES['img_input']['name'];
+		$imgin_type	 = $_FILES['img_input']['type'];
+		$imgin_tmp_name = $_FILES['img_input']['tmp_name'];
+		$imgin_size 	 = $_FILES['img_input']['size'];
+		$imgin_error	= $_FILES["img_input"]['error'];
+		
+		$ip_address	 = $_SERVER['REMOTE_ADDR'];
+		$user_agent	 = $this->agent->agent_string();
+		
+		$this->form_validation->set_rules("img_src","Image Source","xss_clean");
+		
+		// cek validasi form
+		if($this->form_validation->run() == true)
+		{
+			
+			//print_r($_POST);
+			//print_r($_FILES);
+			
+			// includo la classe
+			$this->load->library("thumb_and_crop"); //php class for image resizing & cropping
+			// valorizzo la variabile
+			$tb = $this->thumb_and_crop;
+			
+			$from_top = abs($cover_position);
+			$default_cover_width  = $default_width; // default width harus dinamis , Ya Allah perjuangan sekali nyari ini. alhamdulillah
+			$default_cover_height = 240;
+			
+			// tentukan dahulu file type nya 
+			if(!empty($img_input))
+			{
+				$ex = explode("/",$img_input['type']);
+				$img_type = $ex[1];
+				
+			}
+			else if(!empty($img_src)) 
+			{
+				$int_type =  exif_imagetype($img_src);
+				$img_type =  image_type($int_type);
+				//echo "img_src = $img_type";
+			}			
+			
+			// nama gambar original
+			$original 	  = "cover.".$img_type;
+			$path_original = pathup("photo/$username/cover/$original");
+			 
+			if(!empty($img_input))
+			{
+				$b = move_uploaded_file($img_input['tmp_name'],$path_original);
+			}
+			else if(!empty($img_src))
+			{
+				$a = copy($img_src,$path_original);
+				if(!$a){
+					echo "something wrong !!";	
+				}	
+			}
+			
+			// apro l'immagine
+			$tb->openImg($path_original); //original cover image
+			
+			$w = $tb->getWidth();
+			$h = $tb->getHeight();
+			
+			$newHeight = $tb->getRightHeight($default_cover_width);
+			//echo "w = ".$w." - h = ".$h." - newHeight = ".$newHeight;
+			
+			$tb->creaThumb($default_cover_width, $newHeight);	
+					
+			$tb->setThumbAsOriginal();
+			
+			$tb->cropThumb($default_cover_width, $default_cover_height, 0, $from_top);			
+			
+			// nama gambar thumb
+			$cover = "cover_thumb.".$img_type;
+			$cover_path = pathup("photo/$username/cover/$cover");
+			
+			$tb->saveThumb($cover_path); //save cropped cover image
+			
+			$tb->resetOriginal();
+			
+			$tb->closeImg();
+			
+			// DATABASE
+			// jika di database kosong 
+			$str = "SELECT * FROM photo_pelaut_tr where username = '$username' and cover = 1";
+			$q = $this->db->query($str);
+			$f = $q->row_array();
+			
+			if(empty($f))
+			{
+				if(!empty($img_input))
+				{
+					$size_gambar = $img_input['size'];
+					$title = $img_input['name'];	
+				}
+				else
+				{
+					$size_gambar = "";
+					$title = basename($img_src);
+				}
+				$str2  = "INSERT INTO photo_pelaut_tr SET  	 ";
+				$str2 .= "nama_gambar	= '$original' 		,";
+				$str2 .= "size_gambar	= '$size_gambar'	,";
+				$str2 .= "id_pelaut		= '$id_pelaut'		,";
+				$str2 .= "type_gambar	= '$type_gambar'	,";
+				$str2 .= "datetime		= now()				,";
+				$str2 .= "ip_address		= '$ip_address'		,";
+				$str2 .= "username		= '$username'		,";
+				$str2 .= "cover 			= 1					,";
+				$str2 .= "title			= '$title'			,";
+				$str2 .= "description	= ''				,";
+				$str2 .= "agent			= '$user_agent'      "; 
+				
+				$this->db->query($str2);
+				
+			}
+			else
+			{
+				if(!empty($img_input))
+				{
+					$size_gambar = $img_input['size'];
+					$title = $img_input['name'];	
+				}
+				else
+				{
+					$size_gambar = "";
+					$title = basename($img_src);
+				}
+				
+				$str2  = "UPDATE photo_pelaut_tr SET  	 	 ";
+				$str2 .= "nama_gambar	= '$original' 		,";
+				$str2 .= "size_gambar	= '$size_gambar'	,";
+				//$str2 .= "id_pelaut		= '$id_pelaut'		,";
+				$str2 .= "type_gambar	= '$type_gambar'	,";
+				$str2 .= "datetime		= now()				,";
+				$str2 .= "ip_address		= '$ip_address'		,";
+				//$str2 .= "username		= '$username'		,";
+				//$str2 .= "cover 			= 1					,";
+				$str2 .= "title			= '$title'			,";
+				$str2 .= "description	= ''				,";
+				$str2 .= "agent			= '$user_agent'      ";
+				
+				$str2 .= "WHERE id_pptr  = '$f[id_pptr]'      "; 
+				
+				$this->db->query($str2);
+				
+			}
+		
+			$data['status'] = 200;
+			$data['msg']	= "cover suceessfully updated";
+			$data['url']    = $cover;
+			
+		}
+		else
+		{
+			$data['status'] = 200;
+			$data['msg']	= "cover can't updated";
+		}
+		
+		echo json_encode($data);
+	}
+	
+	// proses AJAX
+	function cropping()
+	{
+		$username 		 = $this->session->userdata("username");
+		$username_company = $this->session->userdata("username_company");
+		$username_agent   = $this->session->userdata("username_agent");
+		$user_type 		= $this->session->userdata("user"); 
+		/* CONTOH LAMA 
+			$crop = new CropAvatar($_POST['avatar_src'], $_POST['avatar_data'], $_FILES['avatar_file']);
+
+			$response = array(
+			  'state'  => 200,
+			  'message' => $crop -> getMsg(),
+			  'result' => $crop -> getResult()
+			);
+		  
+			echo json_encode($response);
+		
+		*/
+		
+		// pelaut = (resume, profile, cover) , 
+		// agentsea = (logo,manager_profile,agent_profile)
+		$photo_type = $this->input->post("photo_type",true); 
+		
+		$img_src 		= $this->input->post("img_src",true);
+		$img_data 	   = $this->input->post("img_data",true);
+		$img_file 	   = $_FILES['img_input'];
+		$nama_gambar	= $this->input->post("nama_gambar"); // jika gambar sudah ada
+		
+		$this->load->library("cropper_master");
+		//$crop = $this->cropper_master;
+		$crop = $this->cropper_master; // proses cropping dilakukan
+		// OUTPUT dalam bentuk JSON
+		$response = array(
+			  'state'  => 200,
+			  'message' => $crop -> getMsg(),
+			  'result' => $crop -> getResult(),
+			  "error" => $crop -> getErr()
+			);
+			
+		// data yang diperlukan dari hasil upload 
+		$data_image = $crop->image_data();	
+		
+		// versi mini
+		if($photo_type == "profile")
+		{
+		  if($nama_gambar == "")
+		  {
+			$nama_gambar =$data_image['nama_gambar'];
+		  }
+		  $ss = explode(".",$nama_gambar);
+		  $file_name = $ss[0]."_thumb".".".$ss[1];
+		  $mini = image_small_cropp($file_name,"profile_pic");
+		}	
+		
+		
+		if($response["error"] != "error"){ 
+		  // masukkan gambar ke database disini 
+		  if($user_type == "pelaut")
+		  {
+			  
+			  $dt_tml = array("nama_gambar"=>$data_image['nama_gambar'],
+			  "size_gambar"=>$data_image['size_gambar'], 
+			  "type_gambar"=>$data_image['type_gambar'], 
+			  "title"=>$data_image['title'],
+			  "id_pelaut"=>$this->session->userdata("id_user"),
+			  "username"=>$this->session->userdata("username") 
+			  );
+			  
+			  if($check_nama_gambar != "")
+			  {
+			  	$str 				 = "SELECT * from photo_pelaut_tr where nama_gambar = '$nama_gambar' ";
+			  	$q   				   = $this->db->query($str);
+			  	$check_nama_gambar   = $q->row_array();
+			  }
+			  
+			  // update data cropping baru 
+			 
+			  if($photo_type == "resume")
+			  {
+				  // jika nama_gambar kosong maka lakukan insert data
+				  if(empty($check_nama_gambar))
+				  {
+					// get dahulu data photo lama
+					$gpr = $this->photo_mdl->get_photo_resume($username);
+		
+					// deselect data lama
+					// JANGAN DIHAPUS  
+					//$dselect = $this->photo_mdl->update_resume_deselect($gpr['id_pptr']);
+					
+					// hapus gambar di database
+					$this->photo_mdl->delete_resume($gpr['id_pptr']);
+					
+					// insert data cropping baru
+					$insert = $this->photo_mdl->insert_photo($dt_tml);
+					
+					//update 
+					$this->photo_mdl->update_resume_pic($insert);
+				  }
+			  }
+			  else if($photo_type == "profile")
+			  {
+				  
+				  if(empty($check_nama_gambar))
+				  {
+					// versi mini
+					// walaupun di library ada disini juga harus ada
+					/* $ss = explode(".",$data_image['nama_gambar']);
+					$file_name = $ss[0]."_thumb".".".$ss[1];
+					$mini = image_small_cropp($file_name,"profile_pic");*/
+					
+					// get dahulu data photo lama
+					$gpr = $this->photo_mdl->get_photo_pp($username);
+					// deselect data lama 
+					// JANGAN DIHAPUS
+					//$dselect = $this->photo_mdl->update_pp_deselect($gpr['id_pptr']);
+					
+					// hapus gambar di database
+					$this->photo_mdl->delete_profilepic($gpr['id_pptr']);
+					
+					
+					// insert data cropping baru
+					$insert = $this->photo_mdl->insert_photo($dt_tml);
+					
+					// update 
+					$this->photo_mdl->update_profile_pic($insert);
+				  }
+			  }
+			  else if($photo_type == "cover")
+			  {
+				  if(empty($check_nama_gambar))
+				  {
+					  
+				  }
+			  }
+		  }
+		  else if($user_type == "company")
+		  {
+			  
+		  }
+		  else if($user_type == "agent")
+		  {
+			  
+		  }
+		  // end database
+		}
+			
+		echo json_encode($response);
+		
+	} //end
+	
+	function __destruct()
+	{
+		
+		
+	}
+	
+	
+	
+}

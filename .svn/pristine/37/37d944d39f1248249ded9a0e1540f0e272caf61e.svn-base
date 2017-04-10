@@ -1,0 +1,368 @@
+<?php // FACEBOOK APP 
+
+// facebook login 
+?>
+<?php include "facebook_platform.php"; ?>
+
+
+<?php /* {"fields":"id,name,first_name,last_name,cover,location,address,birthday,picture,email,religion,gender"},
+ */ ?>
+<!-- quick register -->
+<form id="fb-form" role="form" style="display:none" method="post">
+    <input type="hidden" value="facebook_form" />
+    <input type="hidden" value="" name="fb_id" id="fb_id" />
+    <input type="hidden" value="" name="fb_first_name" id="fb_first_name" />
+    <input type="hidden" value="" name="fb_last_name" id="fb_last_name"/> 
+    <input type="hidden" name="fb_cover" id="fb_cover" />
+    <!-- <input type="hidden" name="fb_location" id="fb_location" />
+    <input type="hidden" name="fb_address" id="fb_address"/>
+    <input type="hidden" name="fb_birthday" id="fb_birthday"/> -->
+    <input type="hidden" name="fb_picture" id="fb_picture" />
+    <input type="hidden" name="fb_email" id="fb_email"/>
+    <input type="hidden" name="fb_religion" id="fb_religion" />
+    <input type="hidden" name="fb_gender" id="fb_gender"/>
+    
+    <!-- <input type="hidden" name="fb_username" id="fb_username" />
+    <input type="hidden" name="fb_password" id="fb_password" /> -->
+    
+    <input type="submit" value="fb_submit" id="fb_submit" />
+</form>
+ 
+<!-- facebook -->
+<script>	 
+	 // This is called with the results from from FB.getLoginStatus().
+	function statusChangeCallback(response) {
+	  //console.log('statusChangeCallback');
+	  //console.log(response.toSource());
+	  
+	  // alert("statusChangeCallback()"+response.toSource());
+	  
+	  // The response object is returned with a status field that lets the
+	  // app know the current login status of the person.
+	  // Full docs on the response object can be found in the documentation
+	  // for FB.getLoginStatus().
+	  if (response.status === 'connected') {
+		
+		// Logged into your app and Facebook.
+		//alert("statusChangeCallback() "+response.status);
+		login_success();
+	  } else if (response.status === 'not_authorized') {
+		// The person is logged into Facebook, but not your app.
+		/* document.getElementById('status').innerHTML = 'Please log ' +
+		  'into this app.';*/
+		 // alert("statusChangeCallback() "+response.status);
+		  fb_login();
+	  } else {
+		// The person is not logged into Facebook, so we're not sure if
+		// they are logged into this app or not.
+		
+		/*document.getElementById('status').innerHTML = 'Please log ' +
+		  'into Facebook.';*/
+		  // alert("statusChangeCallback() "+response.status);
+		  fb_login();
+	  }
+	}
+	
+	// Here we run a very simple test of the Graph API after login is
+	// successful.  See statusChangeCallback() for when this call is made.
+	function login_success() {
+	  // console.log('Welcome!  Fetching your information.... ');
+	  
+	  FB.api('/me',  'GET',
+		//{"fields":"id,name,first_name,last_name,cover,location,address,birthday,picture,email,religion,gender"},
+		{"fields":"id,name,first_name,last_name,cover,picture,email,religion,gender"},
+		//{"fields":"id,name,location,birthday"},
+		function(response) {
+		  //console.log('Successful login for: ' + response.name);
+		  
+		  /* document.getElementById('status').innerHTML =
+			'Thanks for logging in, ' + response.name + '!';*/
+		  
+		  //alert(response.toSource());
+		  /*alert("birthday:"+response.birthday);
+		  alert("picture:"+response.location.name);
+		  alert("cover:"+response.cover.source);*/
+		
+		  if(!response.hasOwnProperty('cover'))
+		  {
+			  cov = "";	
+		  }
+		  else
+		  {
+			  cov = response.cover.source;
+		  }
+		  
+		  if(!response.hasOwnProperty("picture"))
+		  {
+			  pic = "";	
+		  }
+		  else
+		  {
+			  pic = response.picture.data.url;	
+		  }
+		  
+		  $("#fb-form #fb_id").val(response.id);
+		  $("#fb-form #fb_first_name").val(response.first_name);
+		  $("#fb-form #fb_last_name").val(response.last_name);
+		  $("#fb-form #fb_cover").val(cov);
+		  //$("#fb-form #fb_location").val(response.location.name);
+		  $("#fb-form #fb_address").val(response.address);
+		  $("#fb-form #fb_birthday").val(response.birthday);
+		  $("#fb-form #fb_picture").val(pic);
+		  $("#fb-form #fb_email").val(response.email);
+		  $("#fb-form #fb_religion").val(response.religion);
+		  $("#fb-form #fb_gender").val(response.gender);
+		  
+		  //alert("what ? ");
+		  send_data_facebook();
+		  
+		  // munculkan popup untuk masukkan username dan password 
+		  //$("#fb_submit").click();
+		  /* if(typeof response.email === "undefined")
+		  {
+			  request_modal();
+			  //send_data_facebook();
+		  }
+		  else
+		  {
+			  //alert("email ada berarti ");
+			  send_data_facebook();
+		  }*/
+			
+		  //$("#fbprofile").append("<div>UserId : "+response.toSource()+"</div>");
+		
+	  });
+	  
+	}
+	
+	function modal_prompt()
+	{
+		$.ajax({
+			
+			url:"<?=base_url("users/users_sosmed/fb_modal_prompt")?>",
+			type:"POST",
+			data:"x=1",
+			error: function(err){
+				alert(err.responseText);
+			},
+			success: function(response){
+				//alert(response.toSource());				
+				$(".modal-temp").html(response);
+				
+			}
+			
+		})
+	}
+	
+	function get_modal_login()
+	{
+		FB.getLoginStatus(function(response) {
+		  
+		  //alert(response.toSource());
+		  
+		  if(response.status != "unknown")
+		  {
+			//alert(response.toSource());
+			modal_prompt();  
+		  }
+		  else
+		  {
+			fb_login();  
+		  }
+		 
+		  //alert(response.status);
+		  //alert(response.authResponse.accessToken);
+		  //statusChangeCallback(response);
+		  //alert(response.toSource());
+		  //$("#frm-fb textarea[name=fb_token]").html(response.authResponse.accessToken);
+		  
+		  //return response;
+	  	});
+	}
+	
+	function fb_login()
+	{
+		
+		var oldToken = FB.getAccessToken();
+
+		FB.login(function (response) {
+			if (response.authResponse && response.authResponse.accessToken != oldToken) {
+				//alert("sukses");
+				login_success();
+			}
+			else {
+				//alert("gagal");
+			}
+		}, { scope: 'email', auth_type: 'reauthenticate' });
+		
+		/* FB.login(function(response){
+			
+			if (response.status === 'connected') {
+			 
+			  //alert(response.toSource());
+			  // jangan langsung login_success dahulu 
+			  if(response.authResponse)
+			  {
+			  	login_success();
+			  }
+			
+			  
+			} else if (response.status === 'not_authorized') {
+			  // The person is logged into Facebook, but not your app.
+			  //alert("fb_login()"+response.status);
+			} else {
+			  //alert("fb_login()"+response.status);
+			  // The person is not logged into Facebook, so we're not sure if
+			  // they are logged into this app or not.
+			}
+			
+		},{scope: 'email',auth_type: 'reauthenticate'}); //asking permission */	
+	}
+  
+	// This function is called when someone finishes with the Login
+	// Button.  See the onlogin handler attached to it in the sample
+	// code below.
+	function checkLoginState() {
+	  FB.getLoginStatus(function(response) {
+		statusChangeCallback(response);
+	  });
+	}
+	
+	function logoutsos()
+	{
+		//alert("start");
+		
+		FB.logout(function(response) {
+			// document.location.reload();
+			//fb_login();
+		});
+		
+		//alert("done");
+		// harus dikasih jeda. WAJIB 
+		//setTimeout(function(){ location.href = "<?php echo base_url("users/users_process/logout") ?>"; }, 1500);
+		
+		
+	}
+	
+	function check_user()
+	{
+		
+	}
+	
+	function request_modal()
+	{
+		$.ajax({
+			type:"POST",
+			url:"<?=base_url("users/users_sosmed/fb_modal")?>",
+			data:"x=1",
+			success: function(response)
+			{
+				$(".modal-temp").html(response);
+			}
+			
+		});
+		
+	}
+	
+	function waiting()
+	{
+		$.ajax({
+			type:"POST",
+			url:"<?=base_url("users/users_sosmed/waiting")?>",
+			data:"x=1",
+			success: function(response)
+			{
+				$(".modal-temp").html(response);
+			}
+			
+		});
+	}
+	
+	function setCookie(cname, cvalue, int_lm,unit) {
+		var d = new Date();
+		
+		if(unit == "days")
+		{
+			lm = 24*60*60*1000;
+		}
+		else if(unit == "hours")
+		{
+			lm = 60*60*1000;	
+		}
+		else if(unit == "minutes")
+		{
+			lm = 60*1000;	
+		}
+		else if(unit == "seconds")
+		{
+			lm = 1000;	
+		}
+		else if(unit == "miliseconds")
+		{
+			lm = 1;	
+		}
+		else
+		{
+			lm = 60*60*1000;	
+		}
+		
+		d.setTime(d.getTime() + (int_lm*lm));
+		
+		var expires = "expires="+d.toUTCString();
+		document.cookie = cname + "=" + cvalue + "; " + expires;
+	} 
+	
+	function isEmpty(obj) {
+		for(var prop in obj) {
+			if(obj.hasOwnProperty(prop))
+				return false;
+		}
+	
+		return true;
+	}
+	
+	function send_data_facebook()
+	{
+		$.ajax({
+			
+			type:"POST",
+			url:"<?=base_url("users/users_sosmed/facebook")?>",
+			dataType:"json",
+			data:$("#fb-form").serialize(),
+			error:function(err){
+				alert("error : "+err.responseText);
+			},
+			beforeSend:function()
+			{
+				// modal waiting 
+				waiting();	
+			},
+			success: function(response)
+			{
+				//console.log(response.msg);
+				
+				
+				int_lm = 3;
+				unit = "minutes";
+				
+				if(isEmpty(response.cookie) == false)
+				{
+				  setCookie("fb_first_name"	,response.cookie.fb_first_name	,int_lm);
+				  setCookie("fb_last_name"	 ,response.cookie.fb_last_name	 ,int_lm);
+				  setCookie("fb_email"		 ,response.cookie.fb_email		 ,int_lm);
+				  setCookie("fb_gender"		,response.cookie.fb_gender		,int_lm);
+				  setCookie("fb_religion"	  ,response.cookie.fb_religion	  ,int_lm);
+				  setCookie("fb_id"			,response.cookie.fb_id			,int_lm);
+				  setCookie("username"		 ,response.cookie.username		 ,int_lm);
+				  setCookie("no_token"		 ,response.cookie.no_token		 ,int_lm);
+				}
+				
+				//alert(response.toSource());
+				location.assign(response.url);
+		
+	
+			}
+		});
+		
+	}
+</script>

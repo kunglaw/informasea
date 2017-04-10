@@ -1,0 +1,173 @@
+<?php // content center , detail, module guest / pelaut 
+
+	$username = $this->session->userdata("username");
+?>
+
+<div class="col-md-9">
+    <?php
+	
+	
+	$this->load->view("menu_myjob.php");
+	$id_user = $this->session->userdata("id_user");	
+	?>
+    
+    <?php
+		$arrdata['url']  	  	  = "vacantsea/cancel_applicant"; // dari modal alert, kemana ... 
+		$arrdata['title']  		= "Cancel Vacantsea";
+		$arrdata["description"]  = "are you sure want to cancel this Vacantsea ? ";
+		
+		$str_url = "";
+		for($i = 0; $i <= count($arrdata)-1; $i++)
+		{
+			$key = array_keys($arrdata);
+			$str_url .= $key[$i]."=".$arrdata[$key[$i]]."&"; 	
+		}
+		$str_url .= "x=1";
+	?>
+   
+    <div class="panel panel-default"> 
+    	<div class="panel-body">
+            <h3 class=""> Resume Upload  </h3>
+            <div> Beside you fill the resume from the template we gave it to you, you can upload resume on your own style.  
+            
+            </div>
+            <div style="font-weight:bold" id="info">
+            	
+            
+   			</div>
+            <hr />
+          <div><button class="btn btn-primary btn-sm pull-right" id="add-resume-btn" modal="form-upload-resume"> <span class="glyphicon glyphicon-plus"></span> Add </button></div>
+          <div class="" id="file-resume" style="width:100%">
+          <br />
+            <table class="table table-bordered" style="font-size:12px">
+              <thead style="font-weight:bold; " class="bg-primary">
+              <tr>
+                <td width="">No</td>
+                <td width="">Title </td>
+                <td>Upload Date</td>
+                <td width="15%">Action</td>
+              </tr>
+             </thead>
+             <tbody>
+             <?php
+			 	$no = 1;
+				foreach($file_resume as $row)
+				{
+			 		
+			 ?>
+              <tr>
+                <td> <?php echo $no; ?> </td>
+                <td> <?php echo $row['title'];  ?> </td>
+                <td> <?php echo $row['datetime']  ?> </td>
+                <td> 
+                  <?php $str = str_replace(" ","-",$row['title']); ?>
+                  <a href="<?php echo base_url("resume/resume_download/$row[title]/$row[id_file_resume]"); ?>" class="btn btn-default btn-xs resume-download-btn-<?php echo $row['id_resume_file']?>" id_update="<?php echo $row['id_resume_file']?>" title="Download"><span class="glyphicon glyphicon-download"></span> </a>
+                  
+                  <button class="btn btn-default btn-xs resume-delete-btn-<?php echo $row['id_resume_file']?>" modal="resume-delete-modal"  
+                  id_update="<?php echo $row['id_resume_file']?>" title="Delete"><span class="glyphicon glyphicon-remove"></span> </button></td>
+              </tr>
+              <script>
+                  
+                  $(".resume-delete-btn-<?php echo $row['id_resume_file']?>").click(function(e){
+              
+                      var type_modal = $(this).attr("modal");
+                      get_modal(type_modal,".resume-delete-btn-<?php echo $row['id_resume_file']?>");
+                      
+                  });
+              </script>
+              </tr>
+             <?php
+			 		$no++;
+				}
+			 ?>
+              
+             </tbody>
+             
+            </table>
+          </div> 
+        </div>
+    </div>
+</div>
+
+<span class="file-resume-temp"></span>
+<span class="file_resume-modal-alert"></span>
+
+<script src="<?php echo asset_url("js/jquery.dataTables.min.js"); ?>"></script>
+<script>
+	
+	
+	function cmd_cancel(id_resume_file,dturl,url)
+	{
+		
+		//alert ("asasasa");
+		$.ajax({ 
+			
+			type:"POST",
+			data:dturl+"&id_resume_file="+id_resume_file,
+			url:url,
+			success: function(data){
+				//alert(data);
+				$(".file-resume-modal-alert").html(data);
+			}
+		
+		
+		});
+		
+	}
+	
+	function get_modal(type_modal,modal)
+	 {			
+	 	//alert("tmp = "+tmp+"&type_modal="+type_modal);
+	  
+	   var id_update = $(modal).attr("id_update");
+	   
+	   //alert("id_update = "+id_update+"&modal="+modal+"&type_modal="+type_modal);
+	   
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&modal="+type_modal+"&id_update="+id_update,
+			url:"<?php echo base_url("seaman/resume/modal"); ?>",
+			success: function(data){
+				
+
+				$(".file-resume-temp").html(data);
+				
+			}
+			
+			
+			
+		});
+	 }
+	
+	function show_table_file_resume()
+	{
+		$("#file-resume table").DataTable({
+			"paging":   true,
+			"ordering": false,
+			"info":     false,
+			"searching":true
+		
+		});
+			
+	}
+	
+	$(document).ready(function(e) {
+       show_table_file_resume();
+	   
+	   
+    });
+	
+	$("#add-resume-btn").click(function(){
+			
+		var type_modal = $(this).attr("modal"); 
+		
+		get_modal(type_modal,"#add-resume-btn");
+	   
+	   
+   });
+
+</script>
+
+
+        	

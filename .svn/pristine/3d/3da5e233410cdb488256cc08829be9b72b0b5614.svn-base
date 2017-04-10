@@ -1,0 +1,158 @@
+<style>
+label {
+    color:black;
+}
+.modal-backdrop
+    {
+        z-index:-1 !important;  
+    }
+</style>
+
+<?php
+$id_user = $this->session->userdata("id_user");
+
+?>
+<div class="modal fade modal-resume" id="modal-form-add-document" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog"><!-- large -->
+    <div class="modal-content"> 
+        <div class="modal-header bg-primary" style="padding:-20px 0 -20px 0">
+            <h4> Report a Problem <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></h4>
+            
+        </div>
+
+<!--        --><?php //print_r($myDocument); ?>
+         
+        <form method="POST" enctype="multipart/form-data" id="form-report">
+        <div class="modal-body">
+
+          <div id="form-add-document">
+            <div id="info">   
+            
+
+            </div>
+                <?php // via json encode ?>
+                <div class="form-group">
+                    <input type="hidden" value="<?php echo $id_user; ?>" name="id_user" id="id_user" />
+                    <!--<input type="hidden" value="<?php echo current_url() ?>" name="url" /> -->
+                    <input type="hidden" value="<?php echo $this->session->userdata("username"); ?>" name="username" id="username"/>
+
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Where is the problem ? 
+                    </label>
+                     <select name="page" id="page" class="form-control" style="width:60%">
+                        <option> Select a page </option>
+                        <option value="home"> Home </option>
+                        <option value="seatizen"> Seatizen </option>
+                        <option value="vacantsea"> Vacantsea </option>
+                        <option value="agentsea"> Agentsea </option>
+                        <option value="resume"> Resume </option>
+                        <option value="Friends"> Friends </option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="number">
+                            Report Your Problem
+                    </label>
+                    <textarea class="form-control" name="report" id="report" style="resize:none;" rows="8"> </textarea>
+                    <!-- <input type="text" value="" name="number" id="number" placeholder="" class="form-control" style="width:80%"  />
+                    -->
+                </div>
+
+                <div class="form-group">
+                    <input type="file"  name="picture" id="picture" />
+                     <!-- <button type="button" onclick="javascript:document.getElementById('picture').click()" class="btn btn-primary btn-sm pull-right">
+       <span class="glyphicon glyphicon-picture"></span>&nbsp;Upload</button> -->
+
+                </div>
+              
+                <button class="btn btn-success" id="add-document-btn" type="button"> <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Save </button>
+                <button class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp; Cancel </button>
+            </form>
+          </div>
+        </div><!-- modal-body -->
+        
+    </div><!-- modal-content -->
+  </div><!-- modal-dialog --> 
+</div><!-- modal -->
+
+<script>
+
+// $(document).ready(function(){
+
+//     $("#form-report").submit(function(){
+//         alert('tes');
+//         var data = $(this).serialize();
+//         alert(data);
+//         // $.ajax({
+//         //     type:"POST",
+//         //     url:"<?php echo base_url("home/report_process/add_report_process"); ?>",
+//         //     data:$("#")
+//         // })
+
+
+
+
+//     })
+// });
+            function add_document_process()
+            {
+                var data = $("#form-report").serialize();
+                // var data += $("#picture").val();id_user=8&username=bale13&page=vacantsea&report=+njh
+
+
+                // var id_user = $("#id_user").val();
+                // var usernmae= $("#username").val();
+                // var page = $("#page").val();
+                // var picture = $("#picture").val();
+                // var report = $("#report").val();
+                // var data = "id_user="+id_user+"&username="+username+"&page="+page+"&report="+report+"&picture="+picture;
+                
+                alert(data);
+
+                // alert(data);
+                // var x = $("#picture").val();
+                // alert(x);
+                $.ajax({
+
+                    type:"POST",
+                    url:"<?php echo base_url("home/report_process/add_report_process"); ?>",
+                    data: data,
+                    success:function(data){
+
+                        $("#info").html(data);
+                        //$("#modal-form-add-document").hide();
+                        //location.reload();
+                        setTimeout(function(){
+
+                    $("#modal-form-add-document").modal("hide");
+                    $("#page").val();
+                    $("#report").val('');
+                    $("#info").html('');
+
+
+                },5000)
+                        
+                    },
+                    error:function(ds){
+                        alert(ds.responseText);
+                    }
+                });
+            }
+
+            </script>
+            <script>
+            $(document).ready(function(){
+                   $("#form-report").submit(function(){
+                alert('tes');
+                add_document_process();
+            });
+            })
+            
+         
+          
+          </script>

@@ -1,0 +1,126 @@
+<?php // left profile  
+
+//$this->load->model("application/modules/users/models/user_model");
+$this->load->model("users/user_model"); // dari module users 
+
+$id_user = $this->session->userdata("id_user");
+$nama = $this->session->userdata("nama");
+$user = $this->session->userdata("user");
+$username = $this->session->userdata("username");
+
+if(empty($user))
+{
+	//$url = "assets/user_img/noprofilepic.bmp";
+	$nama = "Guest";
+	$url = "user_img/noprofilepic.png";
+	
+}
+else{
+	
+  $profile_pic = $this->user_model->get_profile_pic($id_user);
+  
+  $ss = explode(".",$profile_pic);
+  $url = "photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1];
+  
+  if(empty($profile_pic) || !is_file(pathup("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1])))
+  {
+	  
+	  $url = "user_img/noprofilepic.png";
+  }
+}
+
+//print_r($this->session->all_userdata());
+
+?>
+<style>
+.subpic, .matpic{
+	margin-left:auto;
+	margin-right:auto;
+	position:relative; /* important(so we can absolutely position the description div */ 
+	
+}
+div.description, .matdesc{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:15px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content, .matdesc_cont{
+	padding:10px;
+	margin:0px;
+	font-weight:bold;
+	opacity:0.9;
+}
+
+.list-pic{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	right:0px;
+}
+
+
+</style>
+<script>
+	$(document).ready(function(e) {
+		$(".description, .matdesc").hide();
+        $("#wrap #subpic").hover(function(){
+			
+			$(".description").slideToggle(100);
+		});
+		$(".matpic").hover(function(){
+			
+			$(".matdesc").slideToggle(100);
+		});
+		
+    });
+</script>
+
+<div id="wrap">
+  <div class="subpic" id="subpic" style="margin-bottom:5px; margin-right:5px;">
+  <img src="<?php echo img_url($url); ?>"  class=" hidden-xs hidden-sm" style="width:100%; border:1px solid #CCC" />
+     <div class='description'>
+        <!-- description content -->
+  
+       <p class='description_content'>
+          
+          <a class="label label-primary" href="#?type=profile_pic" id="kempet-btn">
+              <span class="glyphicon glyphicon-camera"></span>
+          </a>
+          <script>
+              $("#kempet-btn").click(function(){
+                  
+                  $.ajax({
+                      type: "POST",
+                      data:"x=1&type=profile_pic",
+                      url:"<?php echo base_url("photo/form_upload_photo_profile");?>",
+                      success:function(data)
+                      {
+                          $("#mamat-modal").html(data);
+                      }
+                          
+                  })
+                  
+              });
+         </script>
+       </p>
+  
+       <!-- end description content -->
+      </div>
+   </div>
+  <span class="clearfix"></span>
+</div>
+<p align="center"> <strong> <a href='<?php echo base_url("profile/$username"); ?>' id="nama_profile"> <?php echo $nama ?> </a> </strong> </p>
+<div id="mamat-modal">
+ 
+</div>
+
+
+
+

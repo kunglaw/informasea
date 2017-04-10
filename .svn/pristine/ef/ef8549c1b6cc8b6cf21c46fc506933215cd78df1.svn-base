@@ -1,0 +1,22 @@
+<?php // template seatizen, module seaman ?>
+
+<div class="container-fluid">
+    <div class="row">        
+        
+        <?php 
+		if($ctrl == "seatizen")
+		{
+		 $this->load->view("seatizen/content"); 
+		 $this->load->view("seatizen/right_content",$dt_content);
+		}
+		else if($ctrl == "resume")
+		{
+	     $this->load->view("seatizen/content-resume-private");	
+		}
+			  
+		?>
+        
+    </div>
+</div>
+
+

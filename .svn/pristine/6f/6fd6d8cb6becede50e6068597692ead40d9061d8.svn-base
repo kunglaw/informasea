@@ -1,0 +1,27 @@
+<?php
+	
+	class Nation_model extends CI_Model{
+		
+		public function get_nationality()
+		{
+			$str = "select * from nationality";
+			$q = $this->db->query($str);
+			$f = $q->result_array();
+			
+			return $f;	
+			
+		}
+		
+		public function get_detail_nationality($nation)
+		{
+			$str = "select * from nationality where name LIKE '$nation' or id = '$nation' ";
+			$q = $this->db->query($str);
+			$f = $q->row_array();
+			
+			return $f;	
+			
+		}
+		
+	}
+
+?>

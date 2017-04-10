@@ -1,0 +1,53 @@
+<?php //post-comment-timeline, module timeline   ?>
+
+<?php
+  
+  // post comment , module seaman
+  
+  $this->load->model("users/user_model"); // dari module users 
+  
+  $username = $this->session->userdata("username");
+  $id_user = $this->session->userdata("id_user");
+  $nama = $this->session->userdata("nama");
+  $user = $this->session->userdata("user");
+  
+  
+  $url = check_profile_seaman($username);
+
+?>
+
+<div class="post-comment-block">
+    <form id="form_comment_<?php echo $id_timeline; ?>" action="">
+    	<input type="hidden" value="<?php echo $id_timeline; ?>" name="id_timeline"   />
+        <div class="form-group col-md-1 col-xs-2">
+        <a class="pull-left small-img-container" href="#">
+            <img class="img-responsive img-thumbnail" src='<?= $url ?>' alt="user-image">
+        </a>
+        </div>
+        <div class="form-group has-feedback col-md-9 col-xs-7">
+            <label class="sr-only" for="exampleInputEmail3">Email address</label>
+            <input type="text" name="post_content" class="form-control" id="post_content_<?php echo $id_timeline; ?>" placeholder="Write a comment">
+            <i class="glyphicon glyphicon-camera form-control-feedback"></i>
+        </div>
+        <div class="form-group col-md-2 col-xs-3">
+            <button class="btn btn-filled form-control" type="button" name="" id="post_it_<?php echo $id_timeline; ?>" >Post</button>
+        </div>
+    </form>
+    <span class="clearfix"></span>
+</div>
+
+<script>
+	
+	$("#post_content_<?php echo $id_timeline; ?>").keydown(function(event){
+    if(event.keyCode == 13) {
+		event.preventDefault();
+		post_comment(<?php echo $id_timeline; ?>);	
+	  }
+	});
+	
+	$("#post_it_<?php echo $id_timeline; ?>").click(function(){
+		
+		post_comment(<?php echo $id_timeline; ?>);	
+		
+	})
+</script>

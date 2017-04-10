@@ -1,0 +1,51 @@
+<?php // content center , menu photo, module photo ?>
+<script src="<?php echo base_url("assets/js/jquery.form.min.js");?>"></script>
+<style>
+.subpic{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */ 
+}
+div.description{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:15px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content{
+	padding:10px;
+	margin:0px;
+	font-weight:bold;
+	opacity:0.9;
+}
+
+.list-pic{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	right:0px;
+}
+
+
+</style>
+<div id="" class="col-md-12">
+        <div class="panel panel-default"> 
+            <div class="panel-body">
+				<h2 class=""> About Me </h2>
+                <hr />
+                
+               <span class="clearfix" ></span>
+                
+              
+                
+            
+                
+        	</div>
+        </div>
+        
+</div><!-- col-md-8 -->

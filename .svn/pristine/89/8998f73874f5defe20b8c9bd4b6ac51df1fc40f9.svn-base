@@ -1,0 +1,1153 @@
+<?php if(!defined('BASEPATH')) exit ('no direct script access allowed');
+
+class users_process extends MX_Controller{
+	
+	private $attemp=0;
+	
+	function __construct()
+	{
+		//authentification
+		//echo "<pre>";
+		$this->authentification->open_access();
+		
+		$this->load->model('user_model');
+		$this->load->model('company_model');
+		
+		$this->load->model('nation_model');
+		
+        $this->load->library('form_validation');
+        $this->load->helper('list_error_users_helper');
+	}
+
+    public function login_process()
+    {
+        $this->processing_login();
+    }
+
+    /* Function buatan radit yang berfungsi untuk memproses login saat membuka halaman tertentu dan user belum login */
+    function login_first_process()
+    {
+        $this->processing_login(true);
+    }
+	
+	function login_universal()
+	{		
+		$username = $this->input->post("username_lg",TRUE);
+        $password = md5($this->input->post("password_lg"));
+		
+		$this->form_validation->set_rules('username_lg','Username','required|xss_clean');
+        $this->form_validation->set_rules('password_lg','Password','required|xss_clean');
+		
+		// apakah username itu termasuk company/agentsea atau seaman
+		$str_p = "select * from pelaut_ms where username = '$username' ";
+		$q_p = $this->db->query($str_p);
+		$f_p = $q_p->row_array();
+		//print_r($f_p);
+		
+		$str_a = "select * from perusahaan where username = '$username' ";
+		$q_a = $this->db->query($str_a);
+		$f_a = $q_a->row_array();
+		//print_r($f_a);
+		
+		if($this->form_validation->run() == TRUE)
+        {
+			// PELAUT
+			if(!empty($f_p)) // Jika username yang tertangkap adalah pelaut
+			{
+				$check 		= $this->user_model->login($username,$password); // check username active dan password benar dan password
+            	$check_user   = $this->user_model->check_user($username); // check user active
+            	$check_nauser = $this->user_model->check_nauser($username); // check user tidak active
+				
+				// KONDISI USERNAME DAN PASSWORD BENAR
+				if(!empty($check[0]))
+				{
+					$this->attemp = 0;
+					
+					if($check['user'] == "pelaut")
+					{
+						$dt = array('id_user' => $check[0]['pelaut_id'],
+							'username' => $check[0]['username'],
+							'email' => $check[0]['email'],
+							'user' => $check['user'],
+							'nama' => $check[0]['nama_depan']." ".$check[0]['nama_belakang']);
+	
+						$nama_user = $check[0]['nama_depan']." ".$check[0]['nama_belakang'];
+	
+						$this->session->set_userdata($dt);
+						
+						if($login_first) echo "success//<div class='alert alert-success'>Welcome to Informasea $nama_user//$page</div>"; //user active, username salah pass salah; //user active, username benar pass benar
+						else header("location:".$page);
+	
+					}
+					/*else if($check['user'] == "agent")
+					{
+	
+						$dt = array('id_user' => $check[0]['agent_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check['nama']);
+						$this->session->set_userdata($dt);
+						ob_start();
+						header("location:".base_url("agent"));
+					}
+					else if($check['user'] == "company")
+					{
+						$dt = array('id_user' => $check[0]['id_perusahaan'],'username' => $check[1]['username'], 'email' => $check[1]['email'], 'user' => $check['user'], 'nama' => $check['perusahaan']);
+						$this->session->set_userdata($dt);
+	
+						header("location:".base_url("company"));
+	
+	
+					}*/
+					else
+					{
+						// username and password are invalid
+	
+						//$data['show_modal'] = 1;
+						$data['err']		= md5(1);
+	
+						if($login_first) echo "warning//<div class='alert alert-warning'>Sorry you're not register in informasea</div>";
+						else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+					}
+				}
+	
+				// KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH
+				if(!empty($check_user))
+				{
+					$data['err'] = md5(1);
+	
+					$this->load->helper('cookie');
+					$this->load->model('photo/photo_mdl');
+	
+					$photo = $this->photo_mdl->get_photo_pp($check_user['username']);
+					$cover = $this->photo_mdl->get_photo_cover($check_user['username']);
+	
+					$ss = explode(".",$photo['nama_gambar']);
+					$url = img_url("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1]);
+	
+					if(empty($photo) || !is_file(pathup("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1])))
+					{
+	
+						$url = base_url("assets/img/img_default.png");
+					}
+	
+					$url_cover = img_url("photo/$username/cover/".$cover['nama_gambar']);
+	
+					if(empty($cover) || !is_file(pathup("photo/$username/cover/".$cover['nama_gambar'])))
+					{
+	
+						$url_cover = base_url("assets/img/blur-background09.jpg");
+					}
+	
+					$cookies = array(
+						array(
+							'name'   => 'name',
+							'value'  => $check_user['nama_depan']." ".$check_user['nama_belakang'],
+							'expire' => '86500',
+						),
+						array(
+							'name'   => "photo",
+							'value'  => $url,
+							'expire' => '86500',
+						),
+						array(
+	
+							'name'   => "username",
+							'value'  => $check_user['username'],
+							'expire' => '86500',
+						),
+	
+						array(
+							'name'   => "cover",
+							'value'  => $url_cover,
+							'expire' => '86500'
+						)
+					);
+	
+					// HARUSS REDIRECTTT !!!
+	
+					foreach($cookies as $cookie){
+						$this->input->set_cookie($cookie);
+					}
+	
+					// HARUSS REDIRECTTT !!!
+					if($login_first) echo "warning//<div class='alert alert-warning'>The Username or Password you entered is incorrect</div>";
+					else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+	
+	
+				}
+	
+				// KONDISI USERNAME belom ACTIVE dan PASSWORD benar atau SALAH
+				else if(!empty($check_nauser))
+				{
+					$data['err'] = md5(2);
+	
+					//echo "check_nauser"; exit;
+					$url = base_url("assets/img/img_default.png");
+					$url_cover = base_url("assets/img/blur-background09.jpg");
+	
+					$cookies = array(
+						array(
+							'name'   => 'name',
+							'value'  => $check_nauser['nama_depan']." ".$check_nauser['nama_belakang'],
+							'expire' => '86500',
+						),
+	
+						array(
+							'name'   => "photo",
+							'value'  => $url,
+							'expire' => '86500',
+						),
+	
+						array(
+	
+							'name'   => "username",
+							'value'  => $check_nauser['username'],
+							'expire' => '86500',
+						),
+	
+						array(
+							'name'   => "cover",
+							'value'  => $url_cover = base_url("assets/img/blur-background09.jpg"),
+							'expire' => '86500'
+						)
+					);
+	
+					// HARUSS REDIRECTTT !!!
+	
+					foreach($cookies as $cookie){
+						$this->input->set_cookie($cookie);
+					}
+	
+					// HARUSS REDIRECTTT !!!
+					header("location:".base_url("users/formactivation/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+	
+				// KONDISI USERNAME dan PASSWORD SALAH
+				if(empty($check_user) && empty($check[0]) && empty($check_nauser))
+				{
+	
+					// username and password are invalid
+	
+					$data['err']		= md5(1);
+					if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+					else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+				
+			}
+			
+			// PERUSAHAAN 
+			else if(!empty($f_a))
+			{
+				
+				$check_a 	   = $this->company_model->login($username,$password); // check username active dan password benar dan password
+				$check_agent   = $this->company_model->check_company($username); // check company active
+				$check_naagent = $this->company_model->check_nacompany($username); // check company tidak active
+				
+				if(!empty($check_a[0]))
+				{			
+					//echo "masuk level 1";
+				
+					if($check_a['user'] == "company")
+					{	
+						//echo "masuk dimarih ...";exit;
+										
+						$dt = array('id_perusahaan' => $check_a[0]['id_perusahaan'],
+						'username_company' => $check_a[0]['username'], 
+						'email_perusahaan' => $check_a[0]['email'], 
+						'user_company' => $check_a['user'], 
+						'nama_perusahaan' => $check_a[0]['nama_perusahaan'], 
+						'contact_person' => $check_a[0]['contact_person']);
+						
+						if ($remember_me) {
+							// Set remember me value in session
+							$this->session->set_userdata('remember_me', TRUE);
+						}
+						
+						$this->session->set_userdata($dt);
+						
+						// locationnya harus beda 
+						/*
+							kalau local
+							http://localhost/company.informasea/home
+							
+							kalau hosting
+							informasea.com/company.informasea/home
+						*/
+					
+						header("location:".base_url("company/$dt[username_company]/home"));
+						
+					}
+					/* else if($check['user'] == "agent")
+					{
+						
+						$dt = array('id_user' => $check[0]['agent_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check['nama']);
+						$this->session->set_userdata($dt);
+						ob_start();
+						header("location:".base_url("agent"));
+					}
+					else if($check['user'] == "company")
+					{
+						$dt = array('id_user' => $check[0]['id_perusahaan'],'username' => $check[1]['username'], 'email' => $check[1]['email'], 'user' => $check['user'], 'nama' => $check['perusahaan']);
+						$this->session->set_userdata($dt);	
+						
+						header("location:".base_url("company"));
+						
+						
+					}*/
+					else
+					{
+						// username and password are invalid
+						$err = "$taw Username or password are invalid $tak ";
+						
+						//$data['show_modal'] = 1;
+						$data['err']		= md5(1);
+						
+						header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+					}
+					
+				}
+	
+				// KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH v
+				else if(!empty($check_agent))
+				{
+					//echo "KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH v"; exit;
+					
+					$data['err'] = md5(1);
+	
+					$this->load->helper('cookie');
+					$this->load->model('photo/photo_mdl');
+					
+					$photo = $this->photo_mdl->get_photo_pp($check_agent['username']);
+					$cover = $this->photo_mdl->get_photo_cover($check_agent['username']);
+					
+					$ss = explode(".",$photo['nama_gambar']);
+					$url = img_url("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1]);
+					
+					if(empty($photo) || !is_file(pathup("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1])))
+					{
+						
+						$url = base_url("assets/img/img_default.png");
+					}
+					
+					$url_cover = img_url("photo/$username/cover/".$cover['nama_gambar']);
+					
+					if(empty($cover) || !is_file(pathup("photo/$username/cover/".$cover['nama_gambar'])))
+					{
+						
+						$url_cover = base_url("assets/img/blur-background09.jpg");
+					}
+					
+					$cookies = array(
+						array(
+						  'name'   => 'company_name',
+						  'value'  => $check_agent['nama_perusahaan'],
+						  'expire' => '86500',
+						),
+						
+						array(
+						  'name'   => "photo_company",
+						  'value'  => $url,
+						  'expire' => '86500',
+						),
+						
+						array(
+						
+						  'name'   => "username_company",
+						  'value'  => $check_agent['username'],
+						  'expire' => '86500',
+						),
+						
+						array(
+						  'name'   => "cover_company",
+						  'value'  => $url_cover,
+						  'expire' => '86500'
+						)
+					);
+	
+					// HARUSS REDIRECTTT !!! 
+					
+					foreach($cookies as $cookie){
+						$this->input->set_cookie($cookie);
+					}
+					
+					// HARUSS REDIRECTTT !!!				
+					header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+					
+				}
+				
+				// KONDISI USERNAME belom ACTIVE dan PASSWORD benar
+				else if(!empty($check_naagent))
+				{
+					$data['err'] = md5(2);
+					
+					//echo "check_nauser"; exit;
+					$url = base_url("assets/img/img_default.png");
+					$url_cover = base_url("assets/img/blur-background09.jpg");
+					
+					$cookies = array(
+						array(
+						  'name'   => 'company_name',
+						  'value'  => "",
+						  'expire' => '86500',
+						),
+						
+						array(
+						  'name'   => "photo_company",
+						  'value'  => $url,
+						  'expire' => '86500',
+						),
+						
+						array(
+						
+						  'name'   => "username_company",
+						  'value'  => $check_agent['username'],
+						  'expire' => '86500',
+						),
+						
+						array(
+						  'name'   => "cover_company",
+						  'value'  => $url_cover,
+						  'expire' => '86500'
+						)
+					);
+					
+					// HARUSS REDIRECTTT !!! 
+					
+					foreach($cookies as $cookie){
+						$this->input->set_cookie($cookie);
+					}
+					
+					// HARUSS REDIRECTTT !!!				
+					header("location:".base_url("users/formactivation_agent/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				}
+				
+				// KONDISI USERNAME dan PASSWORD SALAH  v
+				else if(empty($check_agent) && empty($check_a[0]) && empty($check_naagent))
+				{
+					// username and password are invalid
+					
+					$data['err']		= md5(1);
+									
+					
+					header("location:".base_url("users/login/agentsea?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));	
+				}
+			}
+
+			else
+			{
+				// LOGIN UNIVERSAL FORM	
+				// KONDISI ISIAN SALAH
+				 // username and password are invalid
+
+				$data['err']		= md5(1);
+				if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+				else header("location:".base_url("users/login_univ/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+				
+			}
+		}
+		else
+		{
+			// KONDISI ISIAN SALAH
+			// LOGIN UNIVERSAL FORM
+			
+			$data['err']		= md5(1);
+			if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+			else header("location:".base_url("users/login_univ/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+		}
+		
+		// kalau salah ke page mana 
+	}
+
+    function processing_login($login_first=false){
+		
+        $new_login_attemp = $this->attemp++;
+        $username = $this->input->post("username_lg",TRUE);
+        $password = md5($this->input->post("password_lg"));
+
+        if(!$login_first) $page 	 = $this->input->post("page",TRUE);
+        else {
+            $dest = explode('-',$this->input->post("dest"));
+            $page = base_url($dest[1]."/".$dest[0]);
+        }
+
+        $this->form_validation->set_rules('username_lg','Username','required|xss_clean');
+        $this->form_validation->set_rules('password_lg','Password','required|xss_clean');
+        $taw = "<p>";
+        $tak = "</p>";
+
+        if(!$login_first) {
+            // TAMPILAN
+            $data['title'] = "Registration";
+            $data['template'] = "template";
+            $data['js_top']	   = "js_top";
+			$data['js_under']	   = "js_top";
+            $data['css'] = "css";
+            $data['meta'] = "meta";
+
+            $data['rwnation'] = $this->nation_model->get_nationality();
+            $data['rwuser'] = $this->user_model->get_pelaut();
+            /* end TAMPILAN */
+        }
+        /* kondisi klo username ada tp pass salah */
+        $str_cu = "select * from pelaut_ms where username = '$username'";
+        $q_cu   = $this->db->query($str_cu);
+        $f_cu 	  = $q_cu->row_array();
+
+        /* kondisi klo username ada and pass bener */
+        $str_ca = "select * from pelaut_ms where username = '$username' and password = '$password'";
+        $q_ca   = $this->db->query($str_ca);
+        $f_ca   = $q_ca->row_array();
+
+        //$data['show_modal'] 	 = 1;
+        //$data['err'] 			= md5(1);
+        $data['u']			  = !empty($f_cu) ? "t" : "f";
+        $data['a']			  = !empty($f_ca) ? "t" : "f";
+
+        if($this->form_validation->run() == TRUE)
+        {
+            $check 		= $this->user_model->login($username,$password); // check username active dan password benar dan password
+            $check_user   = $this->user_model->check_user($username); // check user active
+            $check_nauser = $this->user_model->check_nauser($username); // check user tidak active
+
+            //print_r($check_nauser); exit;
+
+            // KONDISI USERNAME DAN PASSWORD BENAR
+            if(!empty($check[0]))
+            {
+                $this->attemp=0;
+                if($check['user'] == "pelaut")
+                {
+                    $dt = array('id_user' => $check[0]['pelaut_id'],
+                        'username' => $check[0]['username'],
+                        'email' => $check[0]['email'],
+                        'user' => $check['user'],
+                        'nama' => $check[0]['nama_depan']." ".$check[0]['nama_belakang']);
+
+                    $nama_user = $check[0]['nama_depan']." ".$check[0]['nama_belakang'];
+
+                    $this->session->set_userdata($dt);
+                    if($login_first) echo "success//<div class='alert alert-success'>Welcome to Informasea $nama_user//$page</div>"; //user active, username salah pass salah; //user active, username benar pass benar
+                    else header("location:".$page);
+
+                }
+                /*else if($check['user'] == "agent")
+                {
+
+                    $dt = array('id_user' => $check[0]['agent_id'],'username' => $check[0]['username'], 'email' => $check[0]['email'], 'user' => $check['user'], 'nama' => $check['nama']);
+                    $this->session->set_userdata($dt);
+                    ob_start();
+                    header("location:".base_url("agent"));
+                }
+                else if($check['user'] == "company")
+                {
+                    $dt = array('id_user' => $check[0]['id_perusahaan'],'username' => $check[1]['username'], 'email' => $check[1]['email'], 'user' => $check['user'], 'nama' => $check['perusahaan']);
+                    $this->session->set_userdata($dt);
+
+                    header("location:".base_url("company"));
+
+
+                }*/
+                else
+                {
+                    // username and password are invalid
+
+                    //$data['show_modal'] = 1;
+                    $data['err']		= md5(1);
+
+                    if($login_first) echo "warning//<div class='alert alert-warning'>Sorry you're not register in informasea</div>";
+                    else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+                }
+            }
+
+            // KONDISI USERNAME ACTIVE BENAR tetapi PASSWORD SALAH
+            else if(!empty($check_user))
+            {
+                $data['err'] = md5(1);
+
+                $this->load->helper('cookie');
+                $this->load->model('photo/photo_mdl');
+
+                $photo = $this->photo_mdl->get_photo_pp($check_user['username']);
+                $cover = $this->photo_mdl->get_photo_cover($check_user['username']);
+
+                $ss = explode(".",$photo['nama_gambar']);
+                $url = img_url("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1]);
+
+                if(empty($photo) || !is_file(pathup("photo/$username/profile_pic/".$ss[0]."_thumb.".$ss[1])))
+                {
+
+                    $url = base_url("assets/img/img_default.png");
+                }
+
+                $url_cover = img_url("photo/$username/cover/".$cover['nama_gambar']);
+
+                if(empty($cover) || !is_file(pathup("photo/$username/cover/".$cover['nama_gambar'])))
+                {
+
+                    $url_cover = base_url("assets/img/blur-background09.jpg");
+                }
+
+                $cookies = array(
+                    array(
+                        'name'   => 'name',
+                        'value'  => $check_user['nama_depan']." ".$check_user['nama_belakang'],
+                        'expire' => '86500',
+                    ),
+                    array(
+                        'name'   => "photo",
+                        'value'  => $url,
+                        'expire' => '86500',
+                    ),
+                    array(
+
+                        'name'   => "username",
+                        'value'  => $check_user['username'],
+                        'expire' => '86500',
+                    ),
+
+                    array(
+                        'name'   => "cover",
+                        'value'  => $url_cover,
+                        'expire' => '86500'
+                    )
+                );
+
+                // HARUSS REDIRECTTT !!!
+
+                foreach($cookies as $cookie){
+                    $this->input->set_cookie($cookie);
+                }
+
+                // HARUSS REDIRECTTT !!!
+                if($login_first) echo "warning//<div class='alert alert-warning'>The Username or Password you entered is incorrect</div>";
+                else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+
+
+            }
+
+            // KONDISI USERNAME belom ACTIVE dan PASSWORD benar atau SALAH
+            else if(!empty($check_nauser))
+            {
+                $data['err'] = md5(2);
+
+                //echo "check_nauser"; exit;
+                $url = base_url("assets/img/img_default.png");
+                $url_cover = base_url("assets/img/blur-background09.jpg");
+
+                $cookies = array(
+                    array(
+                        'name'   => 'name',
+                        'value'  => $check_nauser['nama_depan']." ".$check_nauser['nama_belakang'],
+                        'expire' => '86500',
+                    ),
+
+                    array(
+                        'name'   => "photo",
+                        'value'  => $url,
+                        'expire' => '86500',
+                    ),
+
+                    array(
+
+                        'name'   => "username",
+                        'value'  => $check_nauser['username'],
+                        'expire' => '86500',
+                    ),
+
+                    array(
+                        'name'   => "cover",
+                        'value'  => $url_cover = base_url("assets/img/blur-background09.jpg"),
+                        'expire' => '86500'
+                    )
+                );
+
+                // HARUSS REDIRECTTT !!!
+
+                foreach($cookies as $cookie){
+                    $this->input->set_cookie($cookie);
+                }
+
+                // HARUSS REDIRECTTT !!!
+                header("location:".base_url("users/formactivation/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+            }
+
+            // KONDISI USERNAME dan PASSWORD SALAH
+            else if(empty($check_user) && empty($check[0]) && empty($check_nauser))
+            {
+
+                // username and password are invalid
+
+                $data['err']		= md5(1);
+                if($login_first) echo "failed//<div class='alert alert-danger'>The Username or Password you entered is incorrect</div>";
+                else header("location:".base_url("users/login/?sm=1&err=$data[err]&c=2&login_attemp=$new_login_attemp&u=$data[u]&a=$data[a]"));
+            }
+        }
+        else
+        {
+            $data['err'] = md5(1);
+
+            $user = $this->uri->segment(3);
+
+            $data['head']	 = "head";
+            $data['title']	= "Login as Seaman";
+            $data['css']	  = "css"; //css tambahan, di head
+            $data['meta']	 = "login/meta"; // meta tambahan, di head
+            $data['js_top']   = "js_top"; // js tambahan, di head
+
+            $data['navbar']   = "navbar-login";
+            $data['template'] = "login/login.php";
+
+            $data['footer']   = "footer";
+            $data['js_under'] = "js_under";
+
+            $data['desc']     = validation_errors();
+            if($login_first) echo "not valid//<div class='alert alert-danger'>".$data['desc']."</div>";
+            else $this->load->view('register',$data);
+
+
+        }
+
+    }
+	// delete cookie 
+	public function change_cusername()
+	{
+		$this->load->helper('cookie');
+		//$this->session->sess_destroy();
+		$cookies = array(
+			array(
+			  'name'   => 'name',
+			  'value'  => ""
+			  //'domain' => base_url(),
+			  //'path'   => '/',
+			  //'prefix' => 'userinformasea_',
+			  //'secure' => TRUE
+			),
+			
+			array(
+			  'name'   => "photo",
+			  'value'  => ""
+			  //'domain' => base_url(),
+			  //'path'   => '/',
+			  //'prefix' => 'userinformasea_',
+			  //'secure' => TRUE
+			),
+			
+			array(
+			
+			  'name'   => "username",
+			  'value'  => ""
+			  //'domain' => base_url(),
+			  //'path'   => '/',
+			  //'prefix' => 'userinformasea_',
+			  //'secure' => TRUE
+			
+		
+			)
+		);
+  
+		
+		foreach($cookies as $cookie){
+			delete_cookie($cookie['name']);
+			unset($cookie['name']);
+			setcookie($cookie['name'],NULL,-1,"/");
+			
+		}	
+		
+		$this->load->helper('list_error_users_helper');
+		
+		
+		$login_attemp = $this->input->get("login_attemp",true); // int
+		$new_login_attemp = $login_attemp + 1;
+		
+		//$data['show_modal'] 	 = 1;
+		$data['err'] 			= md5(1);
+		$data['u']			  = !empty($f_cu) ? "t" : "f";
+		$data['a']			  = !empty($f_ca) ? "t" : "f";
+		
+		header("location:".base_url("users/login/?login_attemp=$new_login_attemp"));
+		
+	}
+	
+	public function cajax_username()
+	{
+		$username = $this->input->post("username");
+		
+		$cajax_username = $this->user_model->cajax_username($username);
+		
+		echo $cajax_username;
+		
+	}
+	
+	public function cajax_email()
+	{
+		$email = $this->input->post("email");
+		
+		$cajax_email = $this->user_model->cajax_email($email);
+		
+		echo $cajax_email;
+		
+	}
+	
+	//cek username dan email
+	public function check_username()
+	{
+		$taw = "<li>";
+		$tak = "</li>";
+		
+		$name_post	  = $this->input->post('username_reg');
+		$username 	   = $this->user_model->just_username($name_post);
+		
+		$email_post	 = $this->input->post('email');
+		$email 		  = $this->user_model->check_email();	
+		
+		if($name_post == "" && $email_post == "") {
+			$info['username'] = "$taw username can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$info['email'] 	= "$taw email can't be empty $tak"; // kosongkan karena akan dijalankan saat pertama kali load form 
+			$nilai = "false";
+		} else {
+			if (empty($username)) {
+				$info['username'] = "";
+				$nilai['username'] = "true"; 
+				//echo "kondisi 1 jalan <br> ";
+			} else {
+				$info['username'] = "$taw this username has been used $tak ";
+				$nilai['username'] = "false";
+				//echo "kondisi 2 jalan <br> ";
+			}
+			
+			if (empty($email)) {
+				$info['email'] = "";
+				$nilai['email'] = "true"; 
+				//echo "kondisi 3 jalan <br> ";
+			} else {
+				$info['email'] = "$taw this email has been used $tak";
+				$nilai['email'] = "false";
+				//echo "kondisi 4 jalan <br> ";
+			}
+			
+			//print_r($nilai); exit;
+		}
+		
+		$arr = array(
+		  'info'=>array('username'=>$info['username'],'email' => $info['email']),
+		  'nilai'=>array('username'=>$nilai['username'],'email' => $nilai['email'])
+		);
+		
+		return $arr;
+	}
+	
+	public function logout()
+	{
+		$user 			= $this->session->userdata("user");
+		$user_company 	= $this->session->userdata("user_company");
+
+		if ($user_company == "company") {
+			$data 	= array(
+					'session_id'	=> NULL,
+					'ip_address'	=> NULL,
+					'user_agent'	=> NULL,
+					'last_activity'	=> NULL,
+					'user_data'		=> NULL,
+					'id_perusahaan' => NULL,
+					'username_company'		=> NULL,
+					'email_perusahaan'		=> NULL,
+					'user_company'			=> NULL,
+					'nama_perusahaan'		=> NULL,
+					'contact_person'		=> NULL);
+			$this->session->unset_userdata($data);
+			header("location:".base_url('home'));
+
+		}elseif ($user == "pelaut") {
+
+			$this->attemp=0;
+			$a  = $this->user_model->logout(); // memasukkan data yang logout
+			
+			$dt = array('id_user' =>NULL,'username' => NULL, 'email' =>NULL, 'user' => NULL, 'nama' => NULL);
+			$this->session->unset_userdata($dt);
+			
+			$this->load->helper('cookie');
+			//$this->session->sess_destroy();
+			$cookies = array(
+				array(
+				  'name'   => 'name',
+				  'value'  => ""
+				  //'domain' => base_url(),
+				  //'path'   => '/',
+				  //'prefix' => 'userinformasea_',
+				  //'secure' => TRUE
+				),
+				
+				array(
+				  'name'   => "photo",
+				  'value'  => ""
+				  //'domain' => base_url(),
+				  //'path'   => '/',
+				  //'prefix' => 'userinformasea_',
+				  //'secure' => TRUE
+				),
+				
+				array(
+				
+				  'name'   => "username",
+				  'value'  => ""
+				  //'domain' => base_url(),
+				  //'path'   => '/',
+				  //'prefix' => 'userinformasea_',
+				  //'secure' => TRUE
+				)
+			);
+	  
+			foreach($cookies as $cookie){
+				delete_cookie($cookie['name']);
+				unset($cookie['name']);
+				setcookie($cookie['name'],NULL,-1,"/");
+			}
+			//$this->session->sess_destroy();
+			header("location:".base_url("home"));
+		}
+	}
+	
+	function send_activation_code()
+	{
+		$this->send_email($user);
+		$this->change_cusername(); // sesudah kirim email, hapus dahulu cookie nya 
+		
+		header("location:".base_url("users/login"));
+		
+	}
+	
+	function send_email($user)
+	{
+		
+		if(empty($user))
+		{
+			$username = $this->input->post("username_lg");
+	
+			$user = $this->user_model->check_nauser($username);
+			
+			
+			$data['nama']		= $user['first_name']." ".$user['last_name'];
+			$data['username']	= $user['username'];
+			$data['password']	= $user['password'];
+			$data['email']	   = $user['email'];
+			$data['str_url'] 	 = 
+			base_url("users/users_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+			
+		}
+		else
+		{
+			$data['nama']		= $user['first_name']." ".$user['last_name'];
+			$data['username']	= $user['username'];
+			$data['password']	= md5($user['password']);
+			$data['email']	   = $user['email'];
+			$data['str_url'] 	 = 
+			base_url("users/users_process/activate/?a=$user[activation]&x=1&u=$data[username]&p=$data[password]&email=$data[email]");
+		}
+		
+		// buat email 
+		$this->load->library('email');
+		
+		// set email config
+		$config['mailtype'] = "html";
+		$this->email->initialize($config);
+		//
+		//exit('email_jalan');
+		
+		$this->email->from('admin@informasea.com', 'Admin');
+		$this->email->to($user['email']); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('informasea.com Confirmation Account');
+		
+		
+		
+		$content = $this->load->view('users/email2',$data,true);
+		$this->email->message($content);
+		
+		$contenti = $this->load->view('users/email',$data,true);
+		$this->email->set_alt_message($contenti);	
+	
+		$this->email->send();
+		
+		
+		//echo $this->email->print_debugger();
+		
+	}
+	
+	function activate()
+	{
+		// di proses dihalaman email 
+		
+		//authentification
+		$this->authentification->open_access();
+		
+		$a = $this->input->get('a',true);
+		$e = $this->input->get('email',true);
+		$x = $this->input->get('x',true);
+		$u = $this->input->get('u',true);
+		$p = $this->input->get('p',true);
+		
+		// check di database
+		$f = $this->user_model->check_activation();
+		 
+		if(!empty($f))
+		{
+			$this->user_model->update_activation($e);
+			
+			// halaman login dengan header pengguna
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	public function register_process()
+	{
+		$g_captcha_response = $_POST['g-recaptcha-response'];
+		
+		$json=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6LcFQgkTAAAAALuuCpbziR8xjiFvaCuY2sg9jTol&response=".$g_captcha_response."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		
+		$response = json_decode($json, true);
+		//var_dump($response);
+		
+		//echo $response['success']; exit;
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST' && $response['success'] == true)
+		{
+		  
+		  $this->load->library('form_validation');
+		  $this->form_validation->set_error_delimiters('<li >', '</li> ');
+		  
+		  // Array ( [username_reg] => [first_name] => [last_name] => [email] => [reemail] => [password_reg] => [re_password] => ) 
+		  
+		  $username  		= strtolower($this->input->post('username_reg',true));
+		  $first_name	  = $this->input->post('first_name',true);
+		  $last_name	   = $this->input->post('last_name',true);
+		  $email		   = $this->input->post('email',true);
+		  $re_email		= $this->input->post('re_email',true);
+		  $password        = $this->input->post('password_reg',true);
+		  $re_password     = $this->input->post('re_password',true);
+		  
+		  //validation_error cuma nangkap error dari yg ini aja.
+		  $this->form_validation->set_rules('username_reg','Username','required|alpha|xss_clean');
+		  $this->form_validation->set_rules('first_name','First Name','required|xss_clean');
+		  $this->form_validation->set_rules('last_name','Last Name','required|xss_clean');
+		  $this->form_validation->set_rules('email','Email','required|valid_email|matches[re_email]|xss_clean');
+		  $this->form_validation->set_rules('password_reg','Password','required|matches[re_password]|xss_clean');		
+			  
+		  $check = $this->check_username();
+		  
+		  // KONDISI REGISTER SALAH
+		  if($this->form_validation->run() == FALSE || $check['nilai']['username'] == "false" || $check['nilai']['email'] == "false") 
+		  {
+			  //exit('$this->form_validation->run() == FALSE || $check[nilai][username] == "false" || $check[nilai][email] == "false"');
+			  
+			  $data['head']	 = "head";
+			  $data['title']	= "Register";
+			  $data['css']	  = "css"; //css tambahan, di head
+			  $data['meta']	 = "meta"; // meta tambahan, di head
+			  $data['js_top']   = "js_top"; // js tambahan, di head
+			  $data['js_under'] = "js_under";
+ 			  
+			  //include
+			  //$data['navbar']   = "";		
+			  $data['rwnation'] = $this->nation_model->get_nationality();
+			  $data['rwuser'] = $this->user_model->get_pelaut();
+			  
+			  //$check = $this->check_username();
+			  
+			  if($user == "agentsea")
+			  {
+				  $data['template'] = "register-agentsea";
+			  }
+			  else
+			  {
+				  $data['template'] = "template";
+			  }
+			  
+			  $data['footer']   = "footer";
+			  $data['js_under'] = "js_under";
+			  
+			  //$check = $this->check_username();
+			  $data['info'] = $check['info'];
+			  
+			  $data['ve']	= validation_errors();
+			  
+			  $this->load->view('register',$data);		
+		  } 
+		  
+		  // KONDISI ISIAN BENAR
+		  
+		  else {
+			 // echo "isian benar"; echo "<br>";
+			 // exit('test mo ...');
+			  
+			  $this->user_model->register();	
+			  
+			  // ambil data yang ada di database
+			  $str_user = "select * from pelaut_ms where username = '$username' ";
+			  $q_user   = $this->db->query($str_user);
+			  $f_user   = $q_user->row_array(); 
+			  
+			  $data_user = array(
+			  	"username"	 => $username,
+			  	"first_name"   => $first_name,
+				"last_name"	=> $last_name,
+				"email"		=> $email,
+				"password"	 => $password,
+				"activation"   => $f_user['activation']
+			  );
+			  
+			  // kirim email, activation code
+			  $this->send_email($data_user);
+			 	
+			  $data['title']    = "Registration";
+			  $data['template'] = "template";
+			  $data['css']   = "css";
+			  $data['meta']  = "meta";
+			  $data['footer']   = "footer";
+			  
+			  //$data['rwnation'] = $this->nation_model->get_nationality();
+			  //$data['rwuser'] = $this->user_model->get_pelaut();
+			  
+			  //$check = $this->check_username();
+			  $data['info'] 	 = $check['info'];
+			  $data['js_top']	   = "js_top";
+			  $data['js_under']	   = "js_top";
+			  
+			  $data['success']  = "<div class='alert alert-success'> Congratulations, you already registered at informasea.com. we're already send confirmation data to your email at <a href='#'>$email</a>. please confirm the activation code to your email to complete registration </div>";
+ 			  
+			  $this->load->view('register',$data);
+		  }
+		}
+		else
+		{
+			$data['title'] = "Registration";
+			$data['template'] = "template";
+			$data['css']   = "css";
+			$data['meta']  = "meta";
+			
+			//$data['rwnation'] = $this->nation_model->get_nationality();
+			//$data['rwuser'] = $this->user_model->get_pelaut();
+			
+			//$check = $this->check_username();
+			$data['ve'] 			= "you must click the recaptha checklist to complete the registration";
+			$data['js_top']	    = "js_top";
+			$data['js_under']	  = "js_top";
+			$data['footer']   		= "footer";
+		
+			
+			$this->load->view('register',$data);
+		}
+		
+		
+	}
+	
+	function __destruct()
+	{
+		//echo "</pre>";
+		
+	}
+	
+	
+}

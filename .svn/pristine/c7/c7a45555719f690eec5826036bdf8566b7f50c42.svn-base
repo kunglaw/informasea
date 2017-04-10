@@ -1,0 +1,61 @@
+<!-- image croppic 
+http://www.croppic.net/
+
+-->
+
+<?php 
+	$username = $this->session->userdata("username");
+	$this->load->helper("image_thumb_helper");
+	// output function
+	/*$a = array(
+	0=>TRUE,
+	"file_name" => $dataphoto['file_name'],
+	"file_size" => $dataphoto['file_size'],
+	"file_type" => $dataphoto['file_type'],
+	"file_title" => $_FILES['picture']['name'],
+	"type" => "resume"); // untuk info di timeline 
+	// output function */ 
+	$dimension = getimagesize(pathup("photo/$username/$type/$a[file_name]")); // INGET INI GANTI 
+	
+	$new_dimension = resize_dimension($dimension[0],$dimension[1]); 
+	//print_r($a);echo "<hr>";
+?>
+
+<div id="image-croppic-temp">
+	<i class="info-ajax">image-croppic-temp.php</i>
+    <p>Click and Drag the Picture to Crop the selection Picture : </p>
+	<img src="<?php echo img_url("photo/$username/$type/$a[file_name]"); ?>" id="target" alt="[Jcrop Example]" width="<?php echo ceil($new_dimension['width']); ?>px" height="<?php echo ceil($new_dimension['height']); ?>px" />
+    
+    <form id="coords" class="coords" onsubmit="return false;">
+
+    <div class="inline-labels" <?php echo "hidden='true' style='display:none'" ?>>
+    <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
+    <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+    <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+    <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+    <label>WCrop <input type="text" size="4" id="wcrop" name="wcrop" /></label>
+    <label>HCrop <input type="text" size="4" id="hcrop" name="hcrop" /></label>
+    <label>Height <input type="text" size="4" id="height" name="height" /></label>
+    <label>Width <input type="text" size="4" id="width" name="width" /></label>
+    <label>ratio X1 <input type="text" size="4" id="ratio_x" name="ratio_x" /></label>
+    <label>ratio Y1 <input type="text" size="4" id="ratio_y" name="ratio_y" /></label>
+    <label>Name <input type="text" value="<?php echo $a["file_name"]; ?>" name="file_name" id="file_name" /></label>
+    <label>Size <input type="text" value="<?php echo $a["file_size"]; ?>" name="file_size" id="file_size" /></label>
+    <label>Type <input type="text" value="<?php echo $a["file_type"]; ?>" name="file_type" id="file_type" /></label>
+    <label>Type Feature <input type="text" value="<?php echo $a["type"]; ?>" name="type" id="type" /></label>
+    <label>File Title <input type="text" value="<?php echo $a["file_title"]; ?>" name="file_title" id="file_title" /></label>
+    <label>File Description <input type="text" value="<?php echo $a["file_description"]; ?>" name="file_description" id="file_description" /></label>
+    </div>
+    
+    <p class="row container">
+    <br />
+    <button class="btn btn-default" type="button" id="back-btn"  >Back</button>
+    <button type="submit" class="btn btn-success" id="submit-btn" onclick="change_status()"  >Done</button>
+    
+    </p>
+    
+  </form>
+    
+</div>
+
+<?php 

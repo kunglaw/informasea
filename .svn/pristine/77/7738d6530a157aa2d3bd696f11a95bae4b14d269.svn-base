@@ -1,0 +1,126 @@
+<?php $username = $this->session->userdata("username"); 
+      $profile = $resume['profile']; 
+	  $pelaut  = $resume['pelaut']; ?>
+      
+<br />
+ <table class="table table-bordered table-hover table-striped" style="width:100%">
+    <tr>
+      <td width="30%">Name / Gender </td>
+      <td width="54%"><?php echo $pelaut['nama_depan']." ".$pelaut['nama_belakang'] ?> / <?php echo $pelaut['gender']; ?></td>
+      <td width="80%" rowspan="5" valign="middle" >
+        <?php
+            $this->load->model('photo/photo_mdl');
+            $resume_pic = $this->photo_mdl->get_photo_resume();
+            
+            if(!empty($resume_pic))
+            {
+                $ss = explode(".",$resume_pic['nama_gambar']);
+                $url = img_url("photo/$username/resume/$ss[0]"."_thumb.".$ss[1]);
+                
+            }
+            else
+            {
+                $url = base_url("assets/user_img/noprofilepic_thumb.png");
+            }
+        ?>
+      <div class="matpic" id="matpic" style="margin-bottom:5px; margin-right:5px;">
+      <img src="<?php echo $url ?>" alt="" style="width:113px ; height:151px;"/>
+        <div class='matdesc'>
+            <!-- description content -->
+      
+           <p class='matdesc_cont'>
+              
+              <a class="label label-primary" href="#?type=resume_pic" id="mamat-btn">
+                  <span class="glyphicon glyphicon-camera"></span>
+              </a>
+              <!-- <script>
+                  $("#kempet-btn").click(function(){
+                      
+                      $.ajax({
+                          type: "POST",
+                          data:"x=1&type=profile_pic",
+                          url:"<?php echo base_url("photo/form_upload_photo_profile");?>",
+                          success:function(data)
+                          {
+                              $("#mamat-modal").html(data);
+                          }
+                              
+                      })
+                      
+                  });
+             </script>-->
+           </p>
+      
+           <!-- end description content -->
+          </div>
+        </div>            
+       
+        <!-- <a href="#" class="mamat-btn" >Edit Photo Resume </a> -->
+        <script>
+            $(".mamat-btn, #mamat-btn").click(function(){
+                
+                $.ajax({
+                    type: "POST",
+                    data:"x=1&type=resume",
+                    url:"<?php echo base_url("photo/form_upload_photo_resume");?>",
+                    success:function(data)
+                    {
+                        $("#mamat-modal").html(data);
+                    }
+                        
+                })
+                
+            });
+        
+        </script>
+       <div id="mamat-modal">
+       
+       </div>                      
+      </td>
+    </tr>
+    <tr>
+      <td>Nationality / Status </td>
+      <td><?php echo $pelaut['kebangsaan']; ?> / <?php echo $pelaut['status_perkawinan']; ?></td>
+    </tr>
+    <tr>
+      <td>Place / Date of Birth </td>
+      <td ><?php echo $pelaut['tempat_lahir']; ?> / <?php echo date_format_str($pelaut['tanggal_lahir']); ?></td>
+    </tr>
+    <tr>
+      <td>Religion</td>
+      <td ><?php echo $pelaut['agama']; ?></td>
+    </tr>
+    <tr>
+      <td>Height / Weight </td>
+      <td><?php echo $profile['height']; ?> cm / <?php echo $profile['weight']; ?> Kg</td>
+    </tr>
+    
+    <tr>
+      <td>Clothes Size / Shoes Size</td>
+      <td colspan="2"><?php echo $profile['clothes_size']; ?> / <?php echo $profile['shoes_size']; ?></td>
+    </tr>                
+    
+    <tr>
+      <td>Address</td>
+      <td colspan="2"><?php echo $pelaut['alamat']; ?></td>
+    </tr>
+    <tr>
+      <td>Phone / Handphone</td>
+      <td colspan="2"><?php echo $pelaut['telepon']." / ".$profile['handphone']; ?></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td colspan="2"><?php echo $pelaut['email']; ?></td>
+    </tr>
+    <tr>
+      <td>Last Education</td>
+      <td colspan="2"><?php echo $profile['last_education']?></td>
+    </tr>
+    <tr>
+      <td>Next of kin </td>
+      <td colspan="2"><?php echo $pelaut['keluarga_terdekat']; ?></td>
+    </tr>
+    
+    
+    
+  </table>

@@ -1,0 +1,249 @@
+<?php // js_under , list-photo, photo , module photo?>
+
+<script type="text/javascript">
+    // $(document).ready(function(){
+
+    // });
+
+    var activeTab = null;
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      activeTab = e.target;
+      console.log(activeTab);
+      if($(activeTab).attr('href') == "#resume") {
+        $('#right-widget').addClass('hidden-lg');
+        $('#main-profile').attr('class', 'col-md-12');
+      } else {
+        $('#right-widget').removeClass('hidden-lg');
+        $('#main-profile').attr('class', 'col-md-9');
+      }
+    });
+
+    /*function changeLayout() {
+        $('#right-widget').addClass('hidden-md');
+    }*/
+
+    if($('#resume-tab').hasClass('active')) {
+        alert('done deal!');
+    }
+
+    $(function () {
+        $(window).scroll(sticky_relocate);
+        sticky_relocate();
+    });
+</script>
+
+ <?php
+ 
+	  $username_url = $this->uri->segment(2);
+	  $this->load->model('seatizen/seatizen_model');
+	  $check_username = $this->seatizen_model->check_seatizen($username_url);
+	  
+	  if(empty($check_username))
+	  {
+		  $username = $this->session->userdata("username");
+	  }
+	  else
+	  {
+		  $username = $username_url;  
+	  }
+  ?>
+  <script>
+	  // LOAD PHOTO
+	  $(document).ready(function(e) {
+		  get_photo_timeline(); 
+		  get_photo(); // get list photo
+		  get_album();		  	
+	  });
+  </script>
+  
+  <script>
+	
+	function delete_picture(id_pptr)
+	{
+//		var jawab = alert('Testing');
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/photo_ajax/delete_photo")?>",
+			success: function(data){
+				
+				//alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+	}
+	
+	function make_profile_picture(id_pptr)
+	{
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/photo_ajax/make_profile_pic")?>",
+			success: function(data){
+				
+				alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+	}
+	
+	function delpa(id_photo)
+	{ 
+		//alert("item ="+id_photo);
+		
+		var title = "Delete Photo";
+		var description = "Are You sure want to delete this Photo ? ";
+		var type = "del_photo";
+		//var success = delete_picture(id_photo);
+		
+		$.ajax({
+			
+			type:"POST",
+			url:"<?php echo base_url("photo/photo_ajax/modal_alert"); ?>",
+			data:"x=1&item="+id_photo+"&title="+title+"&description="+description+"&type="+type,
+			success:function(data)
+			{
+				//alert(data);
+				$(".modal-alert-photo").html(data);
+			}
+		});
+	}
+
+	
+	function make_resume_picture(id_pptr)
+	{
+
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/photo_ajax/make_resume_pic")?>",
+			success: function(data){
+				
+				alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+			
+	}
+	
+	/*$(document).ready(function(e) {
+	  
+	  $(".subpic").hover(function(){
+		  
+	  	$(this).find(".description").toggle();
+		$(this).find("a .list-pic").toggle();
+	  
+	  });
+	});*/
+
+  </script>
+  
+  <script>
+	  $("#upload-btn").click(function(){
+		  
+		  $.ajax({
+			  
+			  url:"<?php echo base_url("photo/photo_ajax/form_upload") ?>",
+			  type:"POST",
+			  data:"x=1",
+			  error: function(){
+				  
+				  
+				  alert("error happening");
+				  
+			  },
+			  success: function(data){
+				  
+				  $("#modal-form").html(data);
+				  //alert(data);
+			  }
+			  
+		  });
+		  
+		  //$("#picture-input").click();
+	  });
+	  
+	  
+	  
+	  function get_photo()
+	  {
+		  
+		  $.ajax({
+			  
+			  url:"<?php echo base_url("photo/photo_ajax/get_photo") ?>",
+			  type:"POST",
+			  data:"x=1",
+			  error: function(){
+				  
+				  
+				  alert("terjadi kesalahan");
+				  
+			  },
+			  success: function(data){
+				  
+				  $("#pphotos div").html(data);
+				  //alert(data);
+			  }
+			  
+			  
+		  });	
+	  }
+	  
+	  function get_photo_timeline()
+	  {
+		  
+		  $.ajax({
+			  
+			  url:"<?php echo base_url("photo/photo_ajax/get_photo_timeline") ?>",
+			  type:"POST",
+			   data:"x=1",
+			  error: function(){
+				  
+				  
+				  alert("terjadi kesalahan");
+				  
+			  },
+			  success: function(data){
+				  
+				   $("#ptimeline div").html(data);
+				  //alert(data);
+			  }
+			  
+			  
+		  });	
+	  }
+	  
+	  function get_album()
+	  {
+		  $.ajax({
+			  
+			  url:"<?php echo base_url("photo/photo_ajax/get_album") ?>",
+			  type:"POST",
+			  data:"x=1",
+			  error: function(){
+				  
+				  
+				  alert("terjadi kesalahan di album");
+				  
+			  },
+			  success: function(data){
+				  
+				  $("#palbums div").html(data);
+				  //alert(data);
+			  }
+			  
+			  
+		  });	
+			  
+	  }
+  </script>
+

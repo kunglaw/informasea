@@ -1,0 +1,158 @@
+<?php // load more , menu vacantsea, module vacantsea ?>
+<script>
+	$(".load_data").click(function(){
+		
+		var vacantsea_id = $(this).attr("id");
+		var jml_setting = $("#setting").attr("class");
+		// alert(vacantsea_id);
+		// tambahan kalau misalkan user klik search
+		var keyword = $("#keyword").val();
+		var sallary = $("#sallary").val();
+		var ship_type = $("#ship_type").val();
+		var get_id_department = $("#department").val();
+		var get_rank = $("#rank_id").val();
+		var coc_class = $("#coc_class").val();
+		var page = $("#page").val(); // trigger yang menyatakan dia harus ke get_list_vacantsea atau ke search vacantsea*/
+		
+		var url_action = "<?php echo base_url("vacantsea/get_list_vacantsea_plus") ?>";
+		if(page != "")
+		{
+			url_action = "<?php echo base_url("vacantsea/search_vacantsea_plus") ?>"
+		}
+		// alert(url_action+" = "+keyword+" = "+sallary+" = "+ship_type+" = "+get_id_department+" - "+page+"-"+vacantsea_id);
+		//alert(url_action);
+		//alert($("form#parameter-paging").serialize());
+		
+				
+		if(vacantsea_id != 9999){
+		
+			$.ajax({
+				type: "POST",
+				url: url_action,
+				// data: "page="+page+"&keyword="+keyword+"&sallary="+sallary+"&ship_type="+ship_type+"&department="+get_id_department+"&rank_id="+get_rank+"&coc_class="+coc_class+"&vacantsea_id="+ vacantsea_id +"&jml_setting="+jml_setting + "&x=1&"+$("form#parameter-paging").serialize(),
+				beforeSend:  function() {
+					
+					$('span.load_data').append('<img src="<?php echo base_url("assets/img/facebook_style_loader.gif"); ?>" />');
+				},
+				data: "page="+page+"&keyword="+keyword+"&sallary="+sallary+"&ship_type="+ship_type+"&department="+get_id_department+"&rank_id="+get_rank+"&coc_class="+coc_class+"&vacantsea_id="+ vacantsea_id +"&jml_setting="+jml_setting + "&x=1&"+$("form#parameter-paging").serialize(),
+				success: function(html){
+					$(".style_fb").remove();
+					$("div#list_vacantsea").append(html); //ganti
+					
+				}
+			});
+	  
+		}
+		return false;
+	});
+</script>
+
+   <?php
+   $this->load->model("rank_model");   	
+   $this->load->model('company/company_model');
+  
+   //foreach($job as $row){
+   
+   ?>   
+    <!-- <div class="panel panel-default" id="panel-vacantsea">
+    <div class="panel-body"> -->
+    <?php
+	
+	foreach($job_plus as $row){
+		 $rank = $this->rank_model->get_rank_detail($row['rank_id']);
+		 
+		 
+		 // echo "Hallo";
+	?>
+         <div class="row-tml container">
+        	<div id="profile-pic" class="">
+            	<a href="#"> <img src="<?php echo base_url("assets/ulogo/".$this->company_model->get_logoimage($row['id_perusahaan'])) ?>" alt="" id="img-profile-company" class="img-rounded" style="border:1px solid #CCC" height="54" width="102" /> </a>
+            </div>
+            
+        	<div class="" id="" style="">
+            	<p class="mini-margin-6"><b><a href="#" style="line-height:12px !important;"> <?php echo ucfirst($row["perusahaan"])  ?> </a> </b></p>
+                <p class="mini-margin-6"><b><?php echo isset($row['rank_id']) ? $rank['rank'] : ""; ?></b></p> 
+            </div>
+            
+       	  </div><!-- row-tml -->
+          
+         <div id="" class="row" style="margin:20px 0 0 0">
+          <p><b><a href="<?php echo $this->vacantsea_model->url_segment_db($row['vacantsea_id']);?>"> <?php  echo $row['vacantsea']; ?> </a></b></p>
+          <div><?php echo $annual_sallary ?></div>
+          <p><?php 	echo $row['description'];   ?></p>
+          <span class="pull-left" >Posted : <?php echo date_format_simple($row['create_date']); ?></span>
+          <?php $applicant = "<span class='pull-right'><a href='#'>See $jml_applicant Applicant</a></span>"; 
+		  
+		  if($jml_applicant > 0)
+		  {
+			  echo $applicant;
+		  }
+		  
+		  ?>
+          	<div class="clearfix"></div>
+            
+          </div><!-- content-tml -->
+          <hr /> 
+          
+    <?php
+
+	}
+	
+	?>
+      <!-- </div> panel body -->
+    <!-- </div> -->
+    <?php
+   //}	
+	?>
+          
+        <?php // paging
+	 $v = 0;
+	 // echo count($job_plus);
+	 if(count($job_plus) >= 1)
+	 {
+	 	// echo $row['vacantsea_id']." == ";
+	 	if($page!="")
+	 		$v = $this->vacantsea_model->check_sisa_list_search($row['vacantsea_id']);
+	 	else
+	 		$v = $this->vacantsea_model->check_sisa_list($row['vacantsea_id']);
+
+	 	// echo $v;
+	 }
+	 if($v > 0){
+	 ?>
+     <!--
+     1. id = $row['vacantsea_id'].
+     2. dikirim ke ajax, ditampung dlm var vacantesa_id.
+     3. kirim ke controller
+     
+     -->
+      <a id="<?php echo $row['vacantsea_id']; ?>" href="#" class="load_data" >
+    
+        <span class="style_fb" id="style_fb">Show More <img src="<?php echo base_url("assets/img/arrow1.png"); ?>" /> </span> 
+        <input type="hidden" id="setting" class='10'> <!-- ganti class="  " kalo mau ganti jumlah vacantsea yg tampil-->
+        <form id="parameter-paging">
+          <input type="hidden" value="<?php echo !empty($keyword) ? $keyword : "" ?>" name="keyword" id="keyword" />
+          <input type="hidden" value="<?php echo !empty($sallary) ? $sallary : "" ?>" name="sallary" id="sallary" />
+          <input type="hidden" value="<?php echo !empty($ship_type) ? $ship_type : "" ?>" name="ship_type" id="ship_type" />
+          <input type="hidden" value="<?php echo !empty($department_id) ? $department_id : "" ?>" name="department" id="department" />
+          <input type="hidden" value="<?php echo !empty($rank_id) ? $rank_id : "" ?>" name="rank_id" id="rank_id" />
+          <input type="hidden" value="<?php echo !empty($coc_class) ? $coc_class : "" ?>" name="coc_class" id="coc_class" />
+          
+          <!-- untuk dapat dilihat prosesnya kemana -->
+          <input type="hidden" value="<?php echo !empty($page) ? $page : "" ?>" name="page" id="page" />
+        </form>
+      
+      </a>
+     <?php
+	 }
+	 else
+	 {?>
+        
+   
+        <span>There is no data </span>
+      
+        
+		 
+	 <?php 
+	 }
+     ?> 

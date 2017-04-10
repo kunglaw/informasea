@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Friendship </title>
+</head>
+
+<body>
+<form action="<?php echo base_url("seaman/friendship/"); ?>" name="" method="post">
+	<label for="id_pelaut">Id Pelaut : </label>
+	<input type="text" name="id_pelaut">
+    <input type="submit" value="Go on .." />
+
+
+
+</form>
+<div style="margin-bottom:10px; border:10px solid blue; width:400px;">
+	<p><b><?php echo "nama : ".$self['nama_depan']." ".$self['nama_belakang'];//nama ?></b></p>
+    <p><?php echo "email : ".$self['email'];//email ?></p>
+    <p><?php echo "kebangsaan : ".$self['kebangsaan'];//kebangsaan ?></p>
+</div>
+<?php
+//print_r($arr_teman);
+if(!empty($arr_teman)){
+	foreach($arr_teman as $key => $value)
+	{
+		$kk = $this->friendship_model->detail_friend($value);
+		
+		//foreach($kk as $row){
+	?>
+	<div id="teman" style="border:solid 1px black; width:400px; padding:10px;">
+		<p><b><?php echo "nama : ".$kk['nama_depan']." ".$kk['nama_belakang'];//nama ?></b></p>
+		<p><?php echo "email : ".$kk['email'];//email ?></p>
+		<p><?php echo "kebangsaan : ".$kk['kebangsaan'];//kebangsaan ?></p>
+	</div>
+	<?php
+		//}
+	}
+}
+else{
+	
+	echo "Forever Alone ... ";	
+	
+}
+	
+?>
+</body>
+</html>

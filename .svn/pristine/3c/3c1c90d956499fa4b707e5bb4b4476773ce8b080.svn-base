@@ -1,0 +1,15 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed ');
+
+class company_process extends MX_Controller{		
+
+	function __construct()
+	{
+
+		parent::__construct();
+	}
+
+
+
+
+}
+

@@ -1,0 +1,432 @@
+<?php
+class Test extends CI_Controller{
+	
+	function __construct()
+	{
+		
+		parent::__construct();
+		//$this->authentification_model->close_access();
+		
+		if($_POST['search'])
+		{
+			$huruf = $this->input->post("huruf");
+			$angka = $this->input->post("angka");
+			
+			
+			
+			if(empty($huruf))
+			{
+				$url_hasil = "/$angka";	
+			}
+			else if(empty($angka))
+			{
+				$url_hasil = "/$huruf";	
+			}
+			else
+			{
+				$url_hasil = "/$huruf/$angka";		
+			}
+			
+			
+			redirect("test/test_pageurl".$url_hasil);	
+			
+		}
+	}
+	
+	function check_session()
+	{
+		$username = $this->session->userdata("username");
+		$nilai = "";
+		
+		if($username == "")
+		{
+			$nilai = "";
+		}
+		else
+		{
+			$nilai = "active";	
+		}
+		
+		echo $nilai;
+	}
+	
+	function index()
+	{
+		// kalau mau cepet tampil. kesini 
+		$this->load->view("test/test_server");
+		$this->view_modal_alert();
+	}
+	
+	function view_modal_alert()
+	{
+		// halaman utama untuk melakukan testing
+		
+		$data['title'] = "Testing Page";
+		$data['header'] = "Modal Alert for All";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test-alert";
+		$this->load->view('index',$data);
+		
+	}
+	
+	function test_pageurl()
+	{
+		$data['url'] = $this->uri->uri_string();
+		$this->load->view("dummy/form_url",$data);	
+	}
+	
+	function test_download()
+	{
+		$this->load->helper('download');
+		
+		$data = file_get_contents("../infrasset/photo/noprofilepic.bmp"); ;
+		$name = 'mawut.bmp';
+		
+		force_download($name, $data); 
+				
+		$data['title'] = "Testing Download";
+		$data['header'] = "DOWNLOAD CUK!!";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test-download";
+		$this->load->view('index',$data);	
+	}
+	
+	function check_resume()
+	{
+		$this->load->model('seaman/resume_model'); // profile_resume_model and resume file
+		$this->load->model('profile_resume_model');
+		$this->load->model('competency_model');
+		$this->load->model('document_model');
+		$this->load->model('experience_model');
+		$this->load->model('proficiency_model');
+		
+		$data['title'] = "Testing Check Resume ";
+		$data['header'] = "Check Resume ";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test-check-resume";
+		$this->load->view('index',$data);	
+	}
+	
+	function modal_alert()
+	{
+		$this->load->helper("url_segment_helper");
+		$arr = json_arr_row("");
+		$data = $arr;
+		
+		//print_r($data);
+		$this->load->view("test/test-autocomplete-modal",$data);
+		//$this->load->view('');	
+	}
+	
+	function jquery()
+	{
+		$data['title'] = "Testing for Jquery AJAX";
+		$data['header'] = "Testing for Jquery AJAX";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/jquery-ajax";
+		$this->load->view('index',$data);	
+	}
+	
+	function welcome()
+	{
+		$this->load->view("test/test-content");	
+	}
+	
+	function test_url()
+	{
+		$data['title'] = "Testing Url Image";
+		$data['header'] = "Image Url for All";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test_url_image";
+		$this->load->view('index',$data);
+	}
+	
+	function view_session()
+	{
+		$this->load->library('session');
+		$arr = $this->session->all_userdata();
+		
+		$data['title'] = "session";
+		$data['header'] = "view all session";
+		$data['template'] = "content/dummy_page/template";
+		//$data['halaman_detail'] = "test/test-alert";
+		$data['description'] = $arr;
+		
+		echo "<pre>";
+		print_r($data); echo"</pre>"; exit;
+				
+		$this->load->view('index',$data);		
+	}
+		
+	function imagepage()
+	{
+		$data['title'] = "Testing Page";
+		$data['header'] = "Upload Image";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = 'test/create-image';
+		//$data['description'] = $arr;
+		$this->load->view('index',$data);
+	}
+	
+	function autocomplete()
+	{
+		$data['title'] = "autocomplete";
+		$data['header'] = "Autocomplete";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = 'test/autocomplete';
+		
+		$this->load->view("index",$data);	
+	}
+	
+	function form_upload_photo()
+	{
+		$this->load->view("photo/form_upload_photo");	
+	}
+	
+	function data_ship()
+	{
+		$this->vessel_model->get_ship_json();	
+	}
+	
+	/*function send_mail()
+	{
+		$this->load->library('email');
+
+		$this->email->from('postmaster@localhost', 'dimas');
+		$this->email->to('alhusna901@gmail.com'); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject('Email Test');
+		$this->email->message('Testing the email class.');	
+		
+		$this->email->send();
+		
+		echo $this->email->print_debugger();
+	}*/
+	
+	function ship_json()
+	{
+		$this->load->model("vessel_model");
+		//$this->vessel_model->get_ship_json();	
+		
+		$this->load->view("head");
+		$html  = "<hr> <input type='text' value='' name='ship' id='ship' >";
+		$html .= "";
+		$html .= "<script> 
+					
+					$(document).ready(function(){
+						
+						$('#ship').autocomplete({
+							
+							source:'".base_url("test/data_ship")."'	
+							
+						})	
+						
+						
+					})
+						
+		
+				</script>";
+	    echo $html;
+		$this->load->view("javascript");
+	}
+	
+	function clean_all()
+	{
+		echo "<h2> Be Carefull about this Program </h2><hr>";
+		// Remember to activate this only for test
+		$u = $this->input->get("u");
+		$p = $this->input->get("p");
+		if($u == "alhusna_99" && $p = "999999")
+		{
+		  $str_hapus_dt_tml = "truncate timeline";
+		  $this->db->query($str_hapus_dt_tml);
+		  echo "<p> Delete all timeline successfull </p>";
+		  $files = glob('assets/timeline/*'); // get all file names
+		  foreach($files as $file){ // iterate files
+			if(is_file($file))
+			  unlink($file); // delete file
+			  echo "<p> Delete 1 item photo timeline successfull </p>";
+		  }
+		  
+		  $str_hapus_dt_photo = "truncate photo_pelaut_tr";
+		  $this->db->query($str_hapus_dt_photo);
+		  echo "<p> Delete all photo data successfull </p>";
+		  
+		  $files = glob('assets/timeline/*'); // get all file names
+		  foreach($files as $file){ // iterate files
+			if(is_file($file))
+			  unlink($file); // delete file
+			  echo "<p> Delete 1 item photo album successfull </p>";
+		  }
+		}
+		else
+		{
+			show_404();
+		}
+		
+	}
+	
+	function delete_all_image()// jika tidak ada di timeline
+	{
+		echo "<h2> Hapus Photo yang tidak ada timeline nya </h2>";
+		
+		$str = "select * from photo_pelaut_tr a,timeline b where a.nama_gambar = b.photo ";
+		$q = $this->db->query($str);	
+		$f = $q->result_array();
+		
+		//print_r($f);
+		
+		// Photo yang ada timeline nya 
+		$iptml = 0;
+		foreach($f as $row_tml)
+		{
+			//print_r($row_tml); echo "<hr>";
+			$pttml[] = $row_tml;
+			$nama_gmbrtml[] = $row_tml['nama_gambar'];  	
+			$iptml++;	
+		}	
+		echo "<h3> Photo yang ada timeline nya  : </h3>";
+		print_r($nama_gmbrtml);
+		echo "<hr>";
+		echo "<h2>".$iptml."</h2>";
+		
+		echo "<hr>";
+		
+		$str2 = "select * from photo_pelaut_tr";
+		$q2 = $this->db->query($str2);	
+		$f2 = $q2->result_array();
+		
+		foreach($f2 as $row_photo)
+		{
+			if(!in_array($row_photo['nama_gambar'],$nama_gmbrtml))
+			{
+				
+				$str_delete = "delete from photo_pelaut_tr where id_pptr = '$row_photo[id_pptr]'";
+				$q = $this->db->query($str_delete);
+				//echo "<img src='".base_url("assets/photo/$row_photo[username]/big/$row_photo[nama_gambar]")."' width='100' height='100' >";
+			}
+		}
+		
+	}
+	
+	function create_image()
+	{
+		
+	 
+	  //$username = $this->session->userdata("username");
+	  $upload_path = $this->input->post("upload_path");
+	  $this->load->library('image_lib');
+	  $this->load->library('upload');
+	  //$this->load->helper('image_thumb');
+	  
+	  $extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+	  // print_r($_FILES)
+	  
+	  $configupload['upload_path'] = $upload_path; // ubah 
+	  $configupload['file_name'] = $_FILES['picture']['name'];
+	  $configupload['allowed_types'] = "gif|jpg|png|jpeg|bmp";
+	  $configupload['max_size']	=  1024 * 1024 * 2; // 2MB;
+	  //echo $_FILES['picture']['size']; exit;
+	  //$configupload['max_width']  = '1024';
+	  //$configupload['max_height']  = '1024';
+	  
+	  //print $configupload['upload_path']; 
+	  
+	  $photo = 'picture'; // name dari form file
+	  $this->upload->initialize($configupload);
+	  $this->upload->do_upload($photo);
+	  $dataphoto = $this->upload->data();
+	  print_r($dataphoto); print "<br>";
+	  //print_r($dataphoto);
+	  
+	  $error_upload = $this->upload->display_errors('<p> Upload : ', '</p>');
+	  // exit;
+	   
+	  if(empty($error_upload))
+	  { 
+	      //$xg = explode(".",$dataphoto["file_name"]);// echo "<br>";
+		  
+		  $config['image_library'] = "gd2";
+		  $config['source_image'] = $upload_path."/$dataphoto[file_name]";
+		  $config['new_image']	= "$upload_path/$dataphoto[file_name]";
+		  $config['create_thumb'] = TRUE;
+		  $config['thumb_marker'] = "_small";
+		  //$config['quality'] = '85%';
+		  $config['maintain_ratio'] = FALSE;
+		  $config['width'] = 40;
+		  $config['height'] = 40;
+		  
+		  print_r($config);
+		  
+		  $this->image_lib->initialize($config);
+		  $this->image_lib->resize();
+		  
+		 // echo "lalala"; exit;
+		  
+		  
+		  //$xgm = explode(".",$dataphoto["file_name"]);// echo "<br>";
+		  
+		  /* Medium or Thumnail */
+		  $this->image_lib->clear();
+		  $conf['image_library'] = 'gd2';
+		  $conf['source_image'] = "$upload_path"."/$dataphoto[file_name]";
+		  $conf['new_image']	= "$upload_path/$dataphoto[file_name]";
+		  $conf['create_thumb'] = TRUE;
+		  $conf['thumb_marker'] = "_thumb"; 
+		  //$config['quality'] = '85%';
+		  $conf['maintain_ratio'] = FALSE;
+		  $conf['width'] = 150;
+		  $conf['height'] = 150;
+		  
+		  print_r($conf);
+		  
+		  $this->image_lib->initialize($conf);
+		  $this->image_lib->resize();
+
+		  print_r(array(TRUE,$dataphoto['file_name'],$_FILES['picture']['size'],$_FILES['picture']['type']) );		  
+		  //image_resize_photo($dataphoto['file_name']);
+						//0			1                        2                        3
+		  return array(TRUE,$dataphoto['file_name'],$_FILES['picture']['size'],$_FILES['picture']['type']); // output function
+	  
+	  }
+	  else
+	  {
+		  return array("yooo man",$error_upload);
+	  }
+	  
+	  header("location:".base_url("test/imagepage"));
+			
+			
+	}
+	
+	function resize_image()
+	{	
+		$username = $this->session->userdata("username");
+		$this->load->helper("image_thumb_helper");
+		$this->load->helper('username_folder_helper');
+		make_username_folder_pt($username);
+		//image_small_pp("C9C43B349F7B8BB5E42C1E40495D0EDF20150121164759.jpeg");
+		//image_big_pp("C9C43B349F7B8BB5E42C1E40495D0EDF20150121164759.jpeg");
+		//image_thumb_pp("C9C43B349F7B8BB5E42C1E40495D0EDF20150121164759.jpeg");
+	}
+	
+	function create_folder()
+	{
+		$this->load->helper('username_folder_helper');
+		//make_username_folder_pt("jaja");
+		//make_username_folder_tml("jaja");
+		
+			
+		
+	}
+	
+	function __destruct()
+	{
+		
+		//echo "<!-- end -->";	
+	}
+	
+	
+}

@@ -1,0 +1,88 @@
+<?php
+	// controller seatizen, module seatizen;
+	
+	class seatizen extends MX_Controller{
+		
+		function __construct()
+		{
+			
+			parent::__construct();
+			$this->authentification_model->close_access();
+			// authentification
+			//$this->session->all_userdata(); exit;
+			$username = $this->session->userdata('username');
+			$user = $this->session->userdata("user");
+			
+			// akses : seaman, guest
+			
+			//if($user == "agent")
+//			{
+//				header("location:".base_url("agent"));
+//			}
+//			else if($user == "company")
+//			{
+//				header("location:".base_url("company"));	
+//				
+//			}
+			
+			$this->load->model('seatizen_model');
+			$this->load->model('users/user_model');
+				
+			
+		}
+		
+		function index()
+		{
+			
+			$data['title'] = "seatizen";
+			
+			//$data['css'] = "head";
+			$data['template'] = "template";
+			
+			
+			//$data['seatizen'] = $this->seatizen_model->seatizen_list();
+			//print_r($data['seatizen']); exit;
+			
+			$this->load->view('index',$data);
+			
+		}
+		
+		function profile()
+		{
+			$data['title'] = "seatizen";
+			$data['template'] = "seaman/profile/template";
+			
+			$this->load->view('index',$data);
+			
+			
+		}
+		
+		function seatizen_list()
+		{	
+			if($this->input->post('x') != 1)
+			{
+			header("location:".base_url());
+			}
+			$data['seatizen'] = $this->seatizen_model->list_seatizen_lim();	
+			$this->load->view('seatizen_list',$data);
+			
+				
+		}
+		
+		function get_seatizen_list_plus()
+		{			
+			//echo "oooiii";
+			$data['seatizen_plus'] = $this->seatizen_model->list_seatizen_lim_plus();
+			$data['uri'] = $this->input->post('uri'); 
+			
+			$this->load->view('seatizen_list_plus',$data); 
+			
+		}
+		
+		
+		
+		
+		
+	}
+
+?>

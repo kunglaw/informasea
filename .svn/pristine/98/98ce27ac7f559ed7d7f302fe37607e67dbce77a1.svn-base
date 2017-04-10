@@ -1,0 +1,47 @@
+<?php //my account panel ?>
+<?php 
+$username_url = $this->uri->segment(2); 
+if($username_url == "")
+{
+	$username_url = $this->session->userdata("username");
+}
+
+$this->load->model('resume/resume_model');
+$this->load->model('department_model');
+$this->load->model('rank_model');
+
+
+$reserve = $this->authentification->reserve($username_url); 
+$seatizen = $this->user_model->get_detail_pelaut($username);
+$seatizen_resume = $this->resume_model->get_profile_resume($seatizen['pelaut_id']);
+$rank = $this->rank_model->get_rank_detail($seatizen_resume['rank']);
+$department = $this->department_model->get_detail_department($seatizen_resume['department'])
+?>
+<div class="widget-box my-account">
+    <div class="widget-box-header">
+        <div class="text-gray widget-box-title">My Account</div>
+        
+        <?php if($reserve){  ?>
+          <div class="text-link widget-box-seemore">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          </div>
+        <?php } ?>
+        
+        <div style="clear: both"></div>
+    </div>
+    <p><span class="text-link subtitle">Date of birth</span><br><?php echo date("d M Y",strtotime($seatizen['tanggal_lahir'])); ?>
+    </p>
+
+    <!-- <p><span class="text-link subtitle">Email</span><br>eldorado@marcopolo.com
+    </p> -->
+    <p><span class="text-link subtitle">Department</span><br><?=$department['department'] ?>
+    </p>
+
+    <p><span class="text-link subtitle">Rank</span><br><?=$rank['rank'] ?>
+    </p>
+
+    <p><span class="text-link subtitle">Nationality</span><br>Indonesia
+    </p>
+
+    
+</div>

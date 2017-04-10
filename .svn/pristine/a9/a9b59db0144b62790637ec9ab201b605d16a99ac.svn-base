@@ -1,0 +1,167 @@
+
+<span class="modal-alert-photo"></span>
+<?php $this->load->helper("text");
+	$username = $this->session->userdata("username");
+	
+	if(empty($photo))
+	{
+		echo "You have no Photo yet";
+	}
+	
+	foreach($photo as $row){
+	
+	$nama_gambar = explode(".",$row['nama_gambar']);
+?>
+	
+    <?php
+		if($row['id_album'] == 0)
+		{
+			$row['album'] = "My Photo";	
+		}
+		
+		$str_path = "photo/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+		$url = pathup($str_path);
+		$img_url = img_url($str_path);
+		if(!is_file($url))
+		{
+			$str_path = "photo/$username/resume/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+			$url = pathup($str_path);
+			$img_url = img_url($str_path);
+
+			if(!is_file($url))
+			{
+				
+				$str_path = "photo/$username/cover/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+				$url = pathup($str_path);
+				$img_url = img_url($str_path);
+				if(!is_file($url))
+				{
+					$str_path = "photo/$username/profile_pic/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+					$url = pathup($str_path);
+			        $img_url = img_url($str_path);
+				}
+			}
+		}
+	?>
+    
+    <div class="subpic" id="subpic" style="margin-bottom:5px; margin-right:5px;">
+    <a href="<?php echo base_url("photo/detail/".strtolower($nama_gambar[0]).""); ?>">
+      <img src="<?php echo $img_url ; ?>" style="width:150px; height:150px;" >
+    </a>
+      
+      
+      <div class="dropdown list-pic">
+        <a href="#" class="dropdown-toggle btn btn-sm btn-default" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+        	<span class="glyphicon glyphicon-list-alt" id=""></span>
+        </a>
+        
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Download</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="javascript:make_profile_picture(<?php echo $row['id_pptr']?>)">Make Profile Picture</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="javascript:make_resume_picture(<?php echo $row['id_pptr']?>)">Make Resume Photo</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" onclick="javascript:delpa(<?php echo $row['id_pptr']?>)">Delete</a></li>
+        </ul>
+      </div>
+      
+      <div class='description'>
+              <!-- description content -->
+              <p class='description_content'><?php echo character_limiter($row['album'],10); ?></p>
+              <!-- end description content -->
+      </div>
+      </div>
+    </div>	
+<?php
+	}
+
+?>
+
+<script>
+function delete_picture(id_pptr)
+	{
+		//alert("kampret");
+//		var jawab = alert('Testing');
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/delete_photo")?>",
+			success: function(data){
+				
+				//alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+	}
+	
+	function make_profile_picture(id_pptr)
+	{
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/make_profile_pic")?>",
+			success: function(data){
+				
+				alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+	}
+	
+	function delpa(id_photo)
+	{ 
+		//alert("item ="+id_photo);
+		
+		var title = "Delete Photo";
+		var description = "Are You sure want to delete this Photo ? ";
+		var type = "del_photo";
+		//var success = delete_picture(id_photo);
+		
+		$.ajax({
+			
+			type:"POST",
+			url:"<?php echo base_url("photo/modal_alert"); ?>",
+			data:"x=1&item="+id_photo+"&title="+title+"&description="+description+"&type="+type,
+			success:function(data)
+			{
+				//alert(data);
+				$(".modal-alert-photo").html(data);
+			}
+		});
+	}
+
+	
+	function make_resume_picture(id_pptr)
+	{
+
+		$.ajax({
+			
+			type:"POST",
+			data:"x=1&id_pptr="+id_pptr,
+			url:"<?php echo base_url("photo/make_resume_pic")?>",
+			success: function(data){
+				
+				alert(data);
+				get_photo(); // get list photo
+				
+			}
+			
+		});
+			
+	}
+	
+	/*$(document).ready(function(e) {
+	  
+	  $(".subpic").hover(function(){
+		  
+	  	$(this).find(".description").toggle();
+		$(this).find("a .list-pic").toggle();
+	  
+	  });
+	});*/
+var CollapsiblePanel1 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel1");
+</script>

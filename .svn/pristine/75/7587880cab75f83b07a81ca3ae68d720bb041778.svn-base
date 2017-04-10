@@ -1,0 +1,79 @@
+<?php // js_top, module timeline ?>
+
+<script>
+    function get_list_comment(id_timeline)
+    {
+        $.ajax({
+
+            type : "POST",
+            url : "<?php echo base_url("timeline/comment_tml/get_comment"); ?>", // nanti diganti
+            data:"id_timeline="+id_timeline+"&x=1",
+            success : function(data)
+            {
+                $("#list_comment_timeline_"+id_timeline).html(data);
+            }
+        });
+
+    }
+	
+	function post_comment(id_timeline)
+	{
+		//alert($("#form_comment_<?php echo $id_timeline; ?>").serialize());
+		$.ajax({
+			
+			type:"POST",
+			url:"<?php echo base_url("timeline/comment_tml/insert_comment"); ?>",
+			data:$("#form_comment_"+id_timeline).serialize(),
+			success:function(data){
+				
+				//alert($("#form_comment_<?php echo $id_timeline; ?>").serialize());
+				if(data == "")
+				{ 
+				  //alert("true ... ");
+				  get_list_comment(id_timeline);
+				  //alert("lalalala");
+				  $("#post_content_"+id_timeline).val("");
+				}
+				else
+				{
+				 
+				  $("#alert_modal").html(data);	
+				}
+				
+			}
+			
+			
+		});
+		
+		
+	}
+
+    function del_tml(id_tml,dturl,url)
+    {
+        $.ajax({
+            type:"POST",
+            data:dturl+"&id_tml="+id_tml,
+            url:url,
+            success: function(data){
+                //alert(data);
+                $(".tml-modal-alert").html(data);
+            }
+        });
+    }
+
+    function update_timeline(id_timeline)
+    {
+        $.ajax({
+
+            type:"POST",
+            url:"<?php echo base_url("timeline/timeline_update");?>",
+            data:"username=<?php echo $this->session->userdata("username"); ?>&id_timeline="+id_timeline+"&x=1",
+            success:function()
+            {
+                //$("form").reset();
+                alert("success update ");
+            }
+        });
+    }
+</script>
+

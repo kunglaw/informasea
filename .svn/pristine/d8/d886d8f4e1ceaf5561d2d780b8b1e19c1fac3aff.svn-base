@@ -1,0 +1,7 @@
+
+<div id="image-crop-temp">
+	<i class="info-ajax"> kesini </i>
+   
+</div>
+
+<link href="<?php echo base_url("assets/plugin/jcrop/css/jquery.Jcrop.min.css"); ?>" type="text/css" rel="stylesheet" />

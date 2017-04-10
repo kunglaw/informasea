@@ -1,0 +1,103 @@
+<!-- form view resume , form awal-->
+<?php
+$this->load->model('photo/photo_mdl');
+$resume_pic = $this->photo_mdl->get_photo_resume();
+$username = $this->session->userdata("username");
+//print_r($resume_pic);
+?>
+<script>
+$("#picture-inp").change(function(){
+	$("#form-upload-photo").submit();
+});
+
+$("#upload-btn").click(function(){
+	
+	$.ajax({
+		
+		url:"<?php echo base_url("photo/form_upload")?>",
+		type:"POST",
+		data:"x=1",
+		error: function(){
+			
+			
+			alert("error happening");
+			
+		},
+		success: function(data){
+			
+			$("#modal-form").html(data);
+			//alert(data);
+		}
+		
+	});
+	
+	//$("#picture-input").click();
+});
+
+		var options = {
+  
+		  target : "#form-upload",
+		   //type:   "POST",        // 'get' or 'post', override for form's 'method' attribute
+		  data:"x=1", 
+		  
+		  beforeSubmit:function(formData, jqForm, options){ return true; },
+		  success:function(responseText, statusText, xhr, $form){
+			  //alert(responseText);
+		  }
+	  
+		 }
+			
+		$("#form-upload-photo").ajaxForm(options);
+		//alert(options.target+" "+options.data);
+
+</script>
+<span id=""></span>
+<div>
+	<?php
+        if(!empty($resume_pic))
+        {
+			$ss = explode(".",$resume_pic['nama_gambar']);
+            $url = img_url("photo/$username/resume/$ss[0]"."_thumb.".$ss[1]);
+			$edit_anchor = "id='edit-anchor'";
+            
+        }
+        else
+        {
+            $url = base_url("assets/user_img/noprofilepic_thumb.png");
+			$edit_anchor = "";
+        }
+    ?>                        
+    <div class="form-group">
+          <label for="" style="display:block">Current Photo </label>
+         <a href="#" title="Edit Photo" <?php echo $edit_anchor ?> >
+            <img src="<?php echo $url ?>" alt="" style="width:113px ; height:151px;"/> 
+         </a>                        
+    </div>
+    
+    <form action="<?php echo base_url("photo/upload_resume_pic") ?>" id="form-upload-photo" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+           <label for="" style="display:block">Photo </label>
+           <input type="file" name="picture" id="picture-inp" style="display:none" />
+           <input type="hidden" value="resume" name="type" id="type" />
+           <input type="button" id="browse" class="btn btn-success" value="Choose Photo">
+           <!-- <input type="submit" value="submit" class="btn btn-success" name="" hidden="true" /> -->
+           <p id="nama-gambar"></p>
+      </div>
+   
+      
+      <div class="form-group">
+          <label for="" style="display:block">description </label>
+          <input type="text" value="<?php echo !empty($resume_pic['description']) ? $resume_pic['description'] : "" ?>" name="description" id="description" class="form-control" style="width:80%">
+      </div>                            
+     
+      </form>
+    </div>
+
+<script>
+$(document).ready(function(e) {
+    // click picture input
+	$("#browse").click(function(){ $("#picture-inp").click(); });
+
+});
+	
+</script>

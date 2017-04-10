@@ -1,0 +1,204 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed');
+
+class authentification {
+	
+	function __construct()
+	{
+		
+	}
+	
+	function underconst_access()
+	{
+		// untuk mengetahui settingan dari function ini,
+		// silahken ke config/authentification.php -> $config[underconst] 
+		
+		$CI =& get_instance();
+		$underconstruction = $CI->config->item("underconst");
+		
+		if($underconstruction["set"] == TRUE)
+		{
+			$username_company = $CI->session->userdata("username_company");
+			$username_agent   = $CI->session->userdata("username_agent");
+			$username		 = $CI->session->userdata("username");
+			
+			$page 			 = $CI->uri->segment(1); // controller dari codeigniter
+			$current_url	  = current_url(); // url yang sedang aktif 
+			
+			$underconts_user = $underconstruction["user"];
+			$underconts_url  = $underconstruction["url"];
+			
+
+			if(in_array($username,$underconts_user["pelaut"]) || in_array($username_company,$underconts_user["agentsea"]) || in_array($username_agent,$underconts_user["agent"]))
+			{
+				
+				
+			}
+			// kondisinya jika session yang aktif bukan yang ada di $configunderconst["user"]
+			else
+			{
+				header("location:".base_url("under_const"));
+			}
+		}
+	}
+	
+	function underconst_login()
+	{
+		// khusus untuk loginnya, underconstruction
+			
+		
+	}
+	
+	function close_access()
+	{
+		
+		// kalau dia login_pelaut ke page register, maka lempar ke dashboard 
+		// kalau dia login_pelaut ke page dashboard, maka tetap register
+		
+		// close_access
+		// kalau dia unregistered / logout ke page register, tetap register  
+		// kalau dia unregistered / logout ke page dashboard, maka lempar ke register
+		
+		// close access
+		
+		$CI =& get_instance();
+		$user = $CI->session->userdata("user");
+		
+		if(empty($user))
+		{
+			if($user != "pelaut")
+			{
+				header("location:".base_url("users"));
+			}
+			
+			header("location:".base_url("users"));	
+		}
+		
+	
+	}
+	
+	
+	function open_access()
+	{
+		$CI =& get_instance();
+		$user = $CI->session->userdata("user");
+		
+		// open access
+		// kalau dia login_pelaut ke page register, maka lempar ke dashboard 
+		// kalau dia login_pelaut ke page dashboard, maka tetap register
+		
+		// kalau dia unregistered / logout ke page register, tetap register  
+		// kalau dia unregistered / logout ke page dashboard, maka lempar ke register 
+		
+		// pasang di controller users
+		
+		if(!empty($user))
+		{
+			if($user == "pelaut")
+			{
+				header("location:".base_url("dashboard"));
+			}
+			header("location:".base_url("dashboard"));	
+		}
+		
+		
+	}
+	
+	// INGAAA .. INGAA ini untuk memfilter progress ajax
+	function ajax_access()
+	{
+		//$this->close_access();
+		
+		$CI =& get_instance();
+		$x = $CI->input->post("x");
+		if($x != 1)
+		{
+			show_404();
+		}
+	}
+	
+	// mengecek apakah user login atau tidak 
+	function logged_in()
+	{
+		$CI =& get_instance();
+		$user = $CI->session->all_userdata();	
+		
+		if(empty($user))
+		{
+			return FALSE;	
+		}
+		else if(!empty($user))
+		{
+			return TRUE;
+		}
+	}
+	
+	// user yang berhak mengakses segala suatu fitur yang ada di informasea berdasarkan session 
+	function reserve()
+	{
+		$CI =& get_instance();
+		
+		$username_url  = $CI->uri->segment(2);		
+		$username_sess = $CI->session->userdata("username");
+		
+		if($username_url == $username_sess)
+		{
+			return true;	
+		}
+		else
+		{
+			return false;	
+		}
+		
+	}
+	
+	// mengecek di url = $this->uri->segment(2);
+	function username_exists($username)
+	{
+		$CI =& get_instance();
+		
+		$str = "select * from pelaut_ms where username = '$username' ";
+		$q   = $CI->db->query($str);
+		$f   = $q->row_array();
+		
+		if(!empty($f))
+		{
+			return true;	
+		}
+		else
+		{
+			return false;	
+		}
+			
+	}
+	
+	// function controller atau apapun yang tidak boleh diakses
+	function forbidden()
+	{
+		$CI =& get_instance();	
+		
+		header("location:".base_url("custom404"));
+	}
+	
+	function company_loggedin()
+	{
+		$CI =& get_instance();
+		
+		$username_company_sess = $CI->session->userdata("username_company");
+		
+		if($username_company_sess != "")
+		{
+			return true;
+		}
+		else
+		{
+			return false;	
+		}
+		
+		
+			
+			
+	}
+	
+	
+	
+}

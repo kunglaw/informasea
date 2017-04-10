@@ -1,0 +1,14 @@
+<?php
+ // list _error 
+	function list_login_error($num)
+	{
+		if($num == md5(1))
+		{
+			$message = "Username or Password are Invalid";
+		}
+		
+		return $message;
+			
+		
+	}
+?>

@@ -1,0 +1,41 @@
+<?php
+$username  = $this->uri->segment(2);
+$get_vacantsea  = $this->company_model->vacantsea("where username='$username' order by create_date desc limit 5");
+
+foreach ($get_vacantsea->result_array() as $key) {
+   $logo           = img_url("company/default/maersk_logo.jpg");
+?>
+<div class="list-group-item">
+    <div class="media">
+        <div class="media-left text-center">
+            <img src="<?=$profil_pic;?>" alt="company logo"
+                 class="logo-container thumbnail block " width="115" height="115">
+            <button class="btn btn-filled btn-full block">
+                Apply
+            </button>
+            <div class="text-gray applicants ft-12">3 Applicants</div>
+        </div>
+        <div class="media-body">
+            <div class="float-left media-heading medium">
+                <a href="#" class="text-link"><h4><?=$key['perusahaan'];?></h4></a>
+            </div>
+            <div class="float-right subtitle text-gray">Posted: <?php echo date('l, F d Y', strtotime($key['create_date']));?></div>
+            <div style="clear: both"></div>
+            <div class="subtitle text-gray"><?=$key['navigation_area'];?></div>
+            <div class="subtitle custom-h4"><?=$key['rank'];?></div>
+            <?php
+                if (!empty($key['annual_sallary'])) {
+                   echo "<div class='subtitle text-gray'>Annual Salary:</div>";
+                   echo "<h4 class='text-link custom-h4'>".$key['sallary_curr']." ".number_format($key['annual_sallary'])."</h4>"; 
+                }
+            ?>
+            <div class="subtitle text-gray">Position:</div>
+            <a href="#" class="subtitle text-link"><h4 class="custom-h4"><?=$key['vacantsea'];?></h4></a>
+
+            <p><?=$key['description'];?></p>
+        </div>
+    </div>
+</div>
+<?php
+}
+?>

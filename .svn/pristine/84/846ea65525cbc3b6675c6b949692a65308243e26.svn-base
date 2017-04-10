@@ -1,0 +1,68 @@
+<span class="clearfix"></span>
+<?php
+foreach ($get_vacantsea->result_array() as $key) {
+   $logo    = img_url("company/default/maersk_logo.jpg");
+?>
+<div class="list-group-item">
+    <div class="media">
+        <div class="media-left text-center">
+            <img src="<?=$profil_pic;?>" alt="company logo"
+                class="logo-container thumbnail block " width="115" height="115">
+                <?=$btn_applicant;?>
+                <?//=$btn_edit_vacant;?>
+        </div>
+
+        <div class="media-body">
+            <div class="float-left media-heading medium">
+                <a href="#" class="text-link"><h4><?=$key['perusahaan'];?></h4></a>
+            </div>
+            <div class="float-right subtitle text-gray"> 
+                <?php
+                    $date1          =$key['create_date'];
+                    $date2          =$key['expired_date'];
+                    $datetime1      = new DateTime($date1);
+                    $datetime2      = new DateTime($date2);
+                    $difference     = $datetime1->diff($datetime2);
+                    $expired_date   = date('F d, Y', strtotime($key['expired_date']));
+                ?>
+                Posted: <?php echo date('F d, Y', strtotime($key['create_date']));?><br />
+                <span class="title-expired" title="<?=$expired_date;?>"><b>End: 
+                    <?php 
+                    if ($difference->days <= "0") {
+                        echo "-";
+                    }else{
+                        echo $difference->days." Hari Lagi"; 
+                    }?></b></span>
+            </div>
+            <div style="clear: both"></div>
+            <div class="subtitle text-gray"><?=$key['navigation_area'];?></div>
+            <div class="subtitle custom-h4"><?=$key['rank'];?></div>
+            <?php
+                if (!empty($key['annual_sallary'])) {
+                   echo "<div class='subtitle text-gray'>Annual Salary:</div>";
+                   echo "<h4 class='text-link custom-h4'>".$key['sallary_curr']." ".number_format($key['annual_sallary'])."</h4>"; 
+                }
+            ?>
+            <div class="subtitle text-gray">Position:</div>
+            <a href="<?=base_url("vacantsea/detail/".$key['vacantsea_id']);?>" class="subtitle text-link" target="_blank"><h4 class="custom-h4"><?=$key['vacantsea'];?></h4></a>
+            <p><?=$key['description'];?></p>
+        </div>
+
+    </div>
+</div>
+<?php
+}
+?>
+<div class="pagination" style="float:right; margin-top:3%">
+    <ul>
+    <?php echo $this->pagination->create_links(); ?>
+    </ul>
+</div>
+<?php
+  // $date1="2015-07-20";
+  // $date2="2015-07-30";
+  // $datetime1 = new DateTime($date1);
+  // $datetime2 = new DateTime($date2);
+  // $difference = $datetime1->diff($datetime2);
+  // echo $difference->days;
+  ?>

@@ -1,0 +1,82 @@
+<?php
+
+	$username 			= $this->uri->segment(2);
+
+	$type_user 			= $this->session->userdata("type_user");
+
+
+
+	//cek type_user
+
+	if($type_user == "company"){
+
+		$btn_edit 	= "<span style='cursor:pointer' class='glyphicon glyphicon-edit sub-header-right' aria-hidden='true' data-toggle='modal' data-target='#MyModal'></span>";	
+
+	}else{
+
+		$btn_edit 	= "";
+
+	}
+
+
+
+?>
+
+		<!-- <div class="col-md-9"> -->
+
+			<?php
+				//$data['btn_dashboard']	 = $btn_dashboard;
+
+			?>
+
+			<?php //$this->load->view("header",$data); ?>
+
+			<!-- <div role="tabpanel">
+
+			  <!-- Nav tabs --
+
+			  <div id="sticky-anchor"></div>
+
+			  <div class="widget-box" id="sticky">
+
+			  
+
+			  <?php //$this->load->view("menu"); ?>
+
+              
+
+				</div> -->
+
+			  <!-- Tab panes -->
+
+			  <div class="tab-content">
+
+			    <div role="tabpanel" class="tab-pane active box" id="home">
+
+			    	<div class="about">
+
+			    		<h4 class="text-gray sub-header-left">Profile</h4>
+
+			    		<?=$btn_edit;?>
+
+			    	</div><br />
+
+			    	<?php 
+
+			    	include('include/profile-list-item.php'); 
+
+			    	include('include/edit-profile.php');
+
+			    	?>
+
+
+
+			    </div>
+
+			    
+
+			  </div>
+
+			</div>
+
+		<!-- </div> -->

@@ -1,0 +1,220 @@
+<?php if(!defined('BASEPATH')) exit('no direct script access allowed ');
+
+class Resume extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();
+		
+		// yang boleh mengakses ini hanya user type :
+		// - Company 
+		// - Agent
+		// - Pelaut yang punya resume itu sendiri
+		$this->authentification->close_access();
+		
+		
+		$this->load->model('resume_model');
+		$this->load->model('photo/photo_mdl');
+		
+		$this->load->helper('nonull');
+		
+		
+	}
+	
+	function index()
+	{
+		// http://localhost/informasea/seaman/resume
+
+		// untuk label 
+		$data['date_issued_lbl']  = "Issued date";
+		$data['date_expired_lbl'] = "Expiry date";
+		$data['sign_on_lbl']	  = "Sign On";
+		$data['sign_off_lbl']	 = "Sign Off";
+		
+		//jalankan beberapa model 
+		$this->load->model('vessel_model'); // vessel model
+		$this->load->model("rank_model");
+		$this->load->model('department_model');
+		$this->load->model("coc_model");
+		
+		//echo $this->session->userdata('id_pelaut'); 
+		//print_r($this->session->all_userdata());
+		
+		$data['title'] 	= "Resume";
+		$data['meta'] 	 = "resume/meta";
+		$data['css'] 	  = "resume/css";
+		$data['js_top']   = "resume/js_top";
+		$data['template'] = 'resume/template';
+		$data['js_under'] = "resume/js_under";
+ 		
+		$data['resume'] = $this->resume_model->get_resume();
+		
+		$this->load->view('index',$data);
+		
+	}
+	
+	function cv_print(){
+
+		$data['date_issued'] = "Issued Date";
+		$data['date_expired'] = "Expiry Date";
+		// $data['title'] 	= "Resume";
+		// $data['meta'] 	 = "resume/meta";
+		// $data['css'] 	  = "resume/css";
+		// $data['js_top']   = "resume/js_top";
+		// $data['template'] = 'resume/template';
+		// $data['js_under'] = "resume/js_under";
+		$id_se = $this->session->userdata('id_user');
+		$this->load->model('seatizen/seatizen_model');
+		//$data['pelaut'] = $this->seatizen_model->get_detail_pelaut_by_id($id_se);
+		$this->load->model('vessel_model');
+		$this->load->model('department_model');
+		$this->load->model('rank_model');
+		$this->load->model('coc_model');
+		$data['resume'] = $this->resume_model->get_resume();
+
+
+		$this->load->view('resume/print_resume',$data);
+	}
+
+	function cv_preview(){
+
+		$this->load->view('resume/preview_resume',$data);
+	}	
+
+
+	function resume_upload()
+	{
+		$id_pelaut = $this->session->userdata("id_user");
+		$data['template'] = 'resume-upload/template';
+		$data['title'] = "Resume Upload";
+		$data['css']   = "resume-upload/resume-upload-css";
+		$data['file_resume'] = $this->resume_model->list_upload_resume($id_pelaut); 
+		$this->load->view('index',$data);
+	}
+	
+	
+	
+	function get_coc_class()
+	{
+		
+		$this->load->model("coc_model");
+		
+		$id 		   = $this->input->post("department_id");
+		$id_coc_class = $this->input->post("id_coc_class"); 
+		
+		$coc = $this->coc_model->get_coc_bydept($id);
+		
+		if(!empty($coc))
+		{
+		  foreach($coc as $row)
+		  {
+			  $scc = "";
+			  
+			  if($id_coc_class == $row['id_coc_class'])
+			  {
+				  $scc = "selected='selected'";	
+			  }
+			  
+			  echo "<option value='$row[id_coc_class]' $scc >$row[coc_class]</option>";
+		  }
+		}
+		else
+		{
+			echo "<option value='0' > none </option>";
+			
+		}
+	}
+	
+	function get_rank()
+	{
+		$this->load->model("rank_model");
+		
+		$id 	  = $this->input->post("department_id");
+		$id_rank = $this->input->post("id_rank"); 
+		
+		$rank = $this->rank_model->get_rank_bydept($id);
+
+		
+		if(!empty($rank))
+		{
+		  foreach($rank as $row)
+		  {
+			  $sr = "";
+			  if($row['rank_id'] == $id_rank ){
+				$sr = "selected='selected'";  
+			  }
+			  echo "<option value='$row[rank_id]' $sr >$row[rank]</option>";
+		  }
+		}
+		else
+		{
+			echo "<option value='0' >- Other -</option>";
+			
+		}
+	}
+	
+	function resume_data() // semua resume data dijalankan disini 
+	{
+		
+		$this->load->model("resume_data");
+		//print $this->resume_data->get_json_ship(); exit;		
+		
+		$function_post = $this->input->post("function");
+		$function_get = $this->input->get("function");
+		//print $this->resume_data->get_json_ship();
+		
+		$function = !empty($function_post) ? $function_post : $function_get;
+		
+		//$function = $this
+		
+		if($function == "ship_json")
+		{	
+			print $this->resume_data->get_json_ship();
+		}
+		else if($function == "ship_type_json")
+		{
+			print $this->resume_data->get_json_ship_type();	
+			
+		}
+		else if($function == "rank_json")
+		{
+			return $this->resume_data->get_json_rank();	
+		}	
+		
+		/* ===================================================== */
+		if($function == "get_ship_type")
+		{
+			return $this->resume_data->get_ship_type();
+		}
+		else if($function == "get_ship")
+		{
+			return $this->resume_data->get_ship();	
+		}
+		else if($function == "get_ship_bytype")
+		{
+			//$type_id = $this->input->post("type_id");
+			return $this->resume_data->get_ship_bytype();
+		}
+		else if($function == "get_ship_type_byvi")
+		{
+			return $this->resume_data->get_ship_type_byvi();	
+		}
+	}
+	
+	function load_data_profile()
+	{
+		$this->load->model('vessel_model'); // vessel model
+		$this->load->model("rank_model");
+		$this->load->model('department_model');
+		$this->load->model("coc_model");
+		$data['resume'] = $this->resume_model->get_resume();
+		$this->load->view('resume/ajax-data-profile',$data);	
+	}
+	
+	function __destruct()
+	{
+		//echo "<!-- end class -->";	
+	}
+	
+	
+}

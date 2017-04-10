@@ -1,0 +1,191 @@
+<?php //experience, halaman friend teman page friends, profile, module user ?>
+<div class="tmp_modal">
+<?php // ajax dimari  ?>
+</div>
+
+<div class="box">
+
+  <div class="box-header">
+      <h3 class="box-heading header-text">Friends</h3>
+      
+      <span class="clearfix"></span>
+  </div>
+  
+  <div class="box-content">
+    <div class="jajamama"></div>
+    
+      <?php
+	  
+		$id_perusahaan = $this->session->userdata('id_perusahaan');
+		$id_user=  $this->session->userdata('id_user');
+		$data_user = $this->user_model->get_detail_pelaut_byid($id_user);
+		$array_pribadi = $data_user['array_teman'];
+		$array_pribadi = explode("|",$array_pribadi);
+		$list_request = explode("|",$data_user['friend_request']); 
+		$list_terima = explode("|",$data_user['receive_request']);
+		if($id_user != ""){
+			$id_perusahaan = '';
+		} else{
+			$id_perusahaan;
+		}
+		$friends = $detail_pelaut['array_teman'];
+    	if($friends == ''){
+    		echo " No friend ";
+    	}else{
+	
+		$friends = explode("|",$detail_pelaut['array_teman']);    		
+    	}
+	if(!empty($friends) OR $friends != ''){ 
+		foreach($friends as $row){ 
+			$a = $this->user_model->get_detail_pelaut_byid($row);
+			$c = $this->resume_model->get_profile_resume($row);
+
+			$s = $this->rank_model->get_rank_detail($c['rank']);
+	
+			$url_gambar = check_profile_seaman($a['username']);
+			
+			$info_tambahan = isset($s['rank']) ? $s['rank'] : "";
+			if($a['rank'] == 0)
+			{
+			  $info_tambahan = $a['city']." , ".$a['kebangsaan']; 
+			  
+			  if($a['kebangsaan'] == "" && $a['city'] == "")
+			  {
+				  
+				 $info_tambahan = $a['gender'];  
+			  }
+			  
+			  else if($a['city'] == "")
+			  {
+				  
+				  $info_tambahan = $a['kebangsaan'];	
+			  }
+			  
+			}
+		
+		?>
+        <div class="col-md-4 seatizen-item-container" >
+            <div class="media  <?php echo ($col == 1) ? 'box' : 'seatizen-item'; ?>">
+                <div class="pull-left medium-img-container" href="#">
+                    <img class="media-object img-responsive" src='<?php echo $url_gambar; ?>' alt="user-image">
+                </div>
+                <div class="media-body">
+                    
+                    
+					<?php if(!empty($s['rank'])){ ?> 
+                    <div class="subtitle text-link seatizen-role">
+                    	<i class="fa fa-certificate"></i>
+						<?php echo $s['rank']?>
+                    </div>
+                    <?php } ?>
+                    
+                    <div class="">
+                    	<a href="<?=base_url("profile/$a[username]/resume")?>" class="text-link">
+							<?php echo "".$a['nama_depan']." ".$a['nama_belakang'].""; ?>
+
+                        </a>
+                    </div>
+                    <div class="subtitle text-gray seatizen-years"><?php echo ucfirst($info_tambahan)  ?></div>
+                    <input type="hidden" id="id_teman_<?php echo $a['pelaut_id']; ?>" value="<?php echo $a['pelaut_id']; ?>">
+			
+                    <?php 
+              if(empty($id_perusahaan) OR $id_user != '') { 
+
+                 if(in_array($a['pelaut_id'],$array_pribadi)){
+                   	//echo "wei";
+                   	$visFriend = false;
+                    $visDelFriend = true;
+                    $visRequest = false;
+                    $visConfirm = false; 
+
+                 } else if(in_array($a['pelaut_id'],$list_request)){ 
+                    $visFriend = false;
+                    $visDelFriend = false;
+                    $visRequest = true;
+                    $visConfirm = false;
+                    
+                } else if(in_array($a['pelaut_id'],$list_terima)){
+                    $visFriend = false;
+                    $visDelFriend = false;
+                    $visRequest=  false;
+                    $visConfirm = true;
+             	} else if($a['pelaut_id'] == $id_user){
+             		$visFriend = false;
+             		$visDelFriend = false;
+             		$visRequest = false;
+             		$visConfirm =false;
+             	} else{
+             	    $visFriend = true;
+                    $visDelFriend = false;
+                    $visRequest = false;
+                    $visConfirm = false;
+             }
+
+                    ?>
+
+
+             <div class="btn-group dropup">
+                <button type="button" class="btn btn-2x btn-info pull-left btn-custom-font dropdown-toggle"
+                id="btnconfirm_<?php echo $a['pelaut_id']; ?>" data-toggle="dropdown">
+                   Confirm
+                </button>
+                <ul class="dropdown-menu" role="menu" style="z-index:1000;">
+                    <li style="z-index:1000;"><a href="#" onclick="terima_teman(<?php echo $a['pelaut_id']; ?>)"> Add as Friends </a> </li>
+                  <li style="z-index:1000;"><a href="#" onclick="batal_terima(<?php echo $a['pelaut_id']; ?>)"> Cancel Request </a> </li>
+                </ul> 
+            </div>
+            
+            <button class="btn btn-filled pull-left btn-custom-font" onclick="addFriend(<?php echo $a['pelaut_id']; ?>)" id="btnaddfriend_<?php echo $a['pelaut_id'];?>"><i class="fa fa-plus"></i> Add as Friend</button>
+		     
+          <div class="btn-group dropup">
+             <button class="btn btn-success pull-left btn-custom-font dropdown-toggle" data-toggle="dropdown" id="btnwaiting_<?php echo $a['pelaut_id']; ?>"> Waiting .. </button>
+             <ul class="dropdown-menu" role="menu">
+                <li><a onclick="batalrequest(<?php echo $a['pelaut_id']; ?>)"> Cancel Request </a> </li> 
+             </ul>
+          </div>
+         
+         <div class="btn-group dropup">
+                <button href="#" class="btn btn-2x btn-danger pull-left btn-custom-font dropdown-toggle" data-toggle="dropdown" id="btndelfriend_<?php echo $a['pelaut_id']; ?>">  Friend </button>
+                  <ul class="dropdown-menu" role="menu">
+                     <!-- <li><a href="#" data-toggle="modal" data-target="#modalDelete"> <i class="fa fa-minus"> </i> UnFriend </a> </li> -->
+                     <li><a onclick="javascript:deletefriend(<?php echo $a['pelaut_id']; ?>)"> <i class="fa fa-minus"> </i> UnFriend </a> </li>
+                  </ul>
+        </div>
+
+
+                   <!-- <button class="btn btn-filled pull-left btn-custom-font"><i class="fa fa-plus"></i> Add as Friend</button> -->
+                	<?php }else {  ?>
+                   <a class="btn btn-filled pull-left btn-custom-font" href="<?php echo base_url("profile/".$a['username']."/resume") ?>"> View Resume </a>
+         	
+
+                		<?php } ?>
+
+
+                  <!--  <?php if($isRatingEnabled) { ?>
+                        <div class="star-rating pull-right" style="display: inline-block">
+                            <span class="fa fa-star" data-rating="1"></span>
+                            <span class="fa fa-star" data-rating="2"></span>
+                            <span class="fa fa-star" data-rating="3"></span>
+                            <input type="hidden" name="whatever" class="rating-value" value="3">
+                        </div>
+                    <?php } ?> -->
+                    <div class="clearfix">
+                    </div>
+                </div>
+            </div>
+        </div>
+       <?php
+       $id_a = $a['pelaut_id'];
+       ?>
+ <script>
+tes('<?php echo $id_a; ?>','<?php echo $visFriend; ?>','<?php echo $visRequest; ?>','<?php echo $visDelFriend; ?>','<?php echo $visConfirm; ?>');
+</script>
+        <?php
+		}
+	} 
+		?>
+        <span class="clearfix"></span>
+	</div>
+</div>
+
+<?php $this->load->view("include/suggested_friends"); ?>

@@ -1,0 +1,31 @@
+[28-Sep-2015 14:24:03 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 14:24:11 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 14:24:25 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 14:25:11 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 14:29:44 Asia/Jakarta] PHP Fatal error:  Call to a member function userdata() on a non-object in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 18
+[28-Sep-2015 15:41:46 Asia/Jakarta] PHP Fatal error:  Call to a member function userdata() on a non-object in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 18
+[28-Sep-2015 16:26:42 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:26:43 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:41:26 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:41:28 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:41:49 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:54:41 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:54:50 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:55:00 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:56:39 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:56:53 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 16:57:25 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:14:05 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:17:12 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:17:32 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:20:10 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:21:14 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:24:34 Asia/Jakarta] PHP Fatal error:  Using $this when not in object context in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 82
+[28-Sep-2015 17:35:15 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:35:19 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:35:29 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 81
+[28-Sep-2015 17:52:08 Asia/Jakarta] PHP Fatal error:  Call to a member function userdata() on a non-object in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 18
+[28-Sep-2015 17:52:57 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 18
+[28-Sep-2015 18:24:27 Asia/Jakarta] PHP Fatal error:  Call to undefined function get_instance() in /home/infr6975/public_html/alpha/iflychat/iflychatuserdetails.php on line 18
+[29-Sep-2015 10:44:39 Asia/Jakarta] PHP Parse error:  syntax error, unexpected '$iflychat_userinfo' (T_VARIABLE) in /home/infr6975/public_html/informasea/iflychat/iflychatuserdetails.php on line 84
+[29-Sep-2015 10:44:41 Asia/Jakarta] PHP Parse error:  syntax error, unexpected '$iflychat_userinfo' (T_VARIABLE) in /home/infr6975/public_html/informasea/iflychat/iflychatuserdetails.php on line 84

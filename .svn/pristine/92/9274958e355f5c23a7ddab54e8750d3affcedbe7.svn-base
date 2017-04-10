@@ -1,0 +1,450 @@
+<?php
+class Test extends CI_Controller{
+	
+	function __construct()
+	{
+		
+		parent::__construct();
+		//$this->authentification_model->close_access();
+		
+	}
+	function check_session()
+	{
+		$username = $this->session->userdata("username");
+		$nilai = "";
+		
+		if($username == "")
+		{
+			$nilai = "";
+		}
+		else
+		{
+			$nilai = "active";	
+		}
+		
+		echo $nilai;
+	}
+	
+	function tracker()
+	{
+		// test tracker
+		
+		$id_seatizen = $this->session->userdata("pelaut_id");
+		$id_agentsea = $this->session->userdata("id_perusahaan");
+		
+		$id_seatizen = !empty($id_seatizen) ? $id_seatizen : 1;
+		$id_agentsea = !empty($id_agentsea) ? $id_agentsea : 1;
+		
+		track_agentsea("test_track_agentsea");
+		track_seatizen("test_track_seatizen");
+		track_seatizen_login($id_seatizen);
+		track_agentsea_login($id_agentsea);
+		
+		$this->output->enable_profiler(TRUE);
+		$this->output->set_profiler_sections($sections);
+		
+	}
+	
+	function get_hostname()
+	{
+		 echo gethostname();	
+		
+	}
+	
+	function logout()
+	{
+		session_start();
+		$this->session->sess_destroy();
+		session_destroy();	
+	}
+	
+	function index()
+	{
+		// kalau mau cepet tampil. kesini 
+		$this->load->view("test/test_server");
+		$this->view_modal_alert();
+	}
+	
+	function test_404()
+	{
+		show_404();	
+	}
+	
+	function email_agentsea_template($dt)
+	{
+		$this->load->config("email");
+		$config = $this->config->item($dt["user"]);
+		
+		$data["config"]	 = $config;
+		$data["email_to"]   = $dt["email_to"];
+		$data["str_url"]    = base_url("home");
+		
+		$content_email  = $this->load->view("users/email/email-activation-agentsea",$data,true);
+		$content_email .= $this->load->view("users/email/email-activation-seatizen",$data,true);	
+		
+		return $content_email;
+	}
+	
+	
+	function new_email_template()
+	{
+		$this->load->config("email");
+		$config = $this->config->item("alhusna901");
+		
+		$data["config"]	 = $config;
+		//$data["email_from"] = "info@informasea.com";
+		$data["email_to"]   = "email@email.com";
+		$data["str_url"]    = "#";
+		
+		$this->load->view("users/email/email-activation-seatizen",$data);
+		$this->load->view("users/email/email-activation-agentsea",$data);
+	}
+	
+	function test_config()
+	{
+		$data['title'] 	   = "just dummy text here";
+		$data["template"]	= "dummy/dummy-text-new";
+		
+		$constant = array(BASE_URL,IMG_URL,ASSET_URL);
+		$config   = array(base_url(),img_url(),asset_url());
+		
+		$default_img = array("di_agentsea"=>DEFAULT_IMG_LIST_AGENTSEA,
+		"di_seaman"=>DEFAULT_IMG_LIST_SEAMAN,
+		"dti_agentsea"=>DEFAULT_IMG_DT_AGENTSEA,
+		"dti_seaman"=>DEFAULT_IMG_DT_SEAMAN,
+		"dtc_agentsea"=>DEFAULT_IMG_COVER_AGENT,
+		"dtc_seaman"=>DEFAULT_IMG_COVER_SEAMAN);
+		
+		$arr	  = array("constant" => $constant,"config"=>$config,"default_img"=>$default_img);
+		$data['arr'] = $arr;
+		
+		$this->load->view("index",$data);	
+		
+	}
+	
+	function test_email()
+	{
+		
+		echo "<h2> Send Email Template </h2>";
+		echo "<p> this is a system can send a template email for test </p>";
+		echo "<hr>";
+		
+		echo "<form method='post' action='".base_url("test/test_email_process")."'>";
+		
+		echo "<label> Email to </label> <br> ";
+		echo "<input type='email' name='email' value='' style='width:200px'> ";
+		echo "<input type='submit' value='Submit Email' >";
+		echo "</form>"; 
+	}
+	
+	function test_email_process()
+	{
+		if(isset($_POST))
+		{
+			$this->load->library("my_email");
+			$this->load->library("form_validation");
+			
+			$email = $this->input->post("email");
+			
+			$this->form_validation->set_rules('email',"Email",'required|valid_email');
+			
+			if( $this->form_validation->run() == TRUE)
+			{
+				
+				
+				$email_from  = "alhusna901@informasea.com"; 
+				$ex 	      = explode("@",$email_from);
+				$user		= $ex[0];
+				
+				$dt_template = array("user"=>$user,"email_to"=>$email);
+				
+				$content_email = $this->email_agentsea_template($dt_template);
+			
+				$content = array(
+				
+					"subject" => "test class email",
+					"subject_title" => "informasea.com",
+					"to" => $email,
+					"message" => $content_email, // message ini bukan path, jadi bukan load view
+					"alt_message" => "ini adalah atl message",
+					"mv" => FALSE,
+					"amv" => FALSE
+					
+				);
+				
+				// alhusna901 adalah salah satu config dari email.php di folder config
+				// ini bisa diganti berdasarkan settingan di config/email.php
+				$this->my_email->send_email($user,$content);
+				
+				
+				echo $this->email->print_debugger();
+			}
+			else
+			{
+				echo validation_errors();
+			}
+		}
+		
+	}
+	
+	function test_mail_second()
+	{
+		$this->load->library('email');
+		
+		$config['protocol']     = 'ssmtp';
+		$config['smtp_host']    = 'ssl://ssmtp.gmail.com';
+		$config['smtp_port']    = 587;
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'alhusna901@gmail.com';
+		$config['smtp_pass']    = 'coolmangenius';
+		$config['charset']      = 'utf-8';
+		$config['newline']      = "\r\n";
+		$config['mailtype']     = 'text'; // or html
+		$config['validation']   = TRUE; // bool whether to validate email or not
+		
+		$this->email->initialize($config);
+
+		$this->email->from('alhusna901@gmail.com', 'Kunglaw Ady');
+		$this->email->to('ariesdimasy@gmail.com');
+		
+		$this->email->subject('Email Test');
+		$this->email->message('Testing the email class.');
+		
+		$this->email->send();
+		
+		echo $this->email->print_debugger();
+	}
+	
+	function view_modal_alert()
+	{
+		// halaman utama untuk melakukan testing
+		
+		$data['title'] = "Testing Page";
+		$data['header'] = "Modal Alert for All";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test-alert";
+		$this->load->view('index',$data);
+		
+	}
+	
+	function test_pageurl()
+	{
+		$data['url'] = $this->uri->uri_string();
+		$this->load->view("dummy/form_url",$data);	
+	}
+	
+	function test_download()
+	{
+		$this->load->helper('download');
+		
+		$data = file_get_contents("../infrasset/photo/noprofilepic.bmp"); ;
+		$name = 'mawut.bmp';
+		
+		force_download($name, $data); 
+				
+		$data['title'] = "Testing Download";
+		$data['header'] = "DOWNLOAD CUK!!";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test-download";
+		$this->load->view('index',$data);	
+	}
+	
+	function test_loading_state()
+	{
+		$data['title']    = "loading state";
+		$data['template'] = "dummy/loading-state";
+		
+		$this->load->view("index",$data);	
+	}
+	
+	function test_date()
+	{
+		
+		echo date("Y-m-d H:i:s");	
+	}
+	
+	function test_token()
+	{
+		$this->load->library("token");
+		$this->load->helper("date");
+		
+		
+		$token = $this->token->generate(64);
+		
+		$now = date("Y-m-d H:i:s");
+		$make_time = date();
+		
+		$data = array("no_token"=>"oiRD0rlehJiulGsl7DhK9vbxwaY1jxxtbIu2A84nKAU4Bqnt9sPnufvaVRcrNSag","expiry_date <"=>"$now");
+		
+		/* $data_insert = array("page"=>"test","email"=>"alhusna901@gmail.com","type_user"=>"pelaut",
+		"no_token"=>$token); */
+		
+		//$insert_token = $this->token->insert_token($data_insert) or die(mysql_error());
+		
+		echo "<pre>";
+		
+			$str = "SELECT * FROM token_tbl order by create_date DESC";
+			$q = $this->db->query($str);
+			$f = $q->result_array();
+			print_r($f);
+		
+		
+		echo "</pre>";
+		
+		print_r($data);
+		
+		echo "<br> ";
+		
+		$check_token = $this->token->check_token($data);
+		print_r($check_token); 
+	}
+	
+	function modal_alert()
+	{
+		$this->load->helper("url_segment_helper");
+		$arr = json_arr_row("");
+		$data = $arr;
+		
+		//print_r($data);
+		$this->load->view("test/test-autocomplete-modal",$data);
+		//$this->load->view('');	
+	}
+	
+	function show_modal()
+	{
+		$data['title'] = $this->input->post("title");
+		$data['desc'] = $this->input->post("desc");
+		
+		$this->load->view("content/modal/alert",$data);	
+	}
+	
+	
+
+	function test_url()
+	{
+		$data['title'] = "Testing Url Image";
+		$data['header'] = "Image Url for All";
+		$data['template'] = "content/dummy_page/template";
+		$data['halaman_detail'] = "test/test_url_image";
+		$this->load->view('index',$data);
+	}
+	
+	function view_session()
+	{
+		$this->load->library('session');
+		$arr = $this->session->all_userdata();
+		
+		$data['title'] = "session";
+		$data['header'] = "view all session";
+		$data['template'] = "content/dummy_page/template";
+		//$data['halaman_detail'] = "test/test-alert";
+		$data['description'] = $arr;
+		
+		echo "<pre>";
+		print_r($data); echo"</pre>"; exit;
+				
+		$this->load->view('index',$data);		
+	}
+	function form_upload_photo()
+	{
+		$this->load->view("photo/form_upload_photo");	
+	}
+	
+	function test_delete()
+	{
+		$data_del = array("nama"=>"dimas");
+		//$this->db->where($data_del)
+		$del = $this->db->delete("test",$data_del);
+		
+		echo "test delete ... ";	
+		
+	}
+
+	
+	/* function clean_all()
+	{
+		echo "<h2> Be Carefull about this Program </h2><hr>";
+		// Remember to activate this only for test
+		$u = $this->input->get("u");
+		$p = $this->input->get("p");
+		if($u == "alhusna_99" && $p = "999999")
+		{
+		  $str_hapus_dt_tml = "truncate timeline";
+		  $this->db->query($str_hapus_dt_tml);
+		  echo "<p> Delete all timeline successfull </p>";
+		  $files = glob('assets/timeline/*'); // get all file names
+		  foreach($files as $file){ // iterate files
+			if(is_file($file))
+			  unlink($file); // delete file
+			  echo "<p> Delete 1 item photo timeline successfull </p>";
+		  }
+		  
+		  $str_hapus_dt_photo = "truncate photo_pelaut_tr";
+		  $this->db->query($str_hapus_dt_photo);
+		  echo "<p> Delete all photo data successfull </p>";
+		  
+		  $files = glob('assets/timeline/*'); // get all file names
+		  foreach($files as $file){ // iterate files
+			if(is_file($file))
+			  unlink($file); // delete file
+			  echo "<p> Delete 1 item photo album successfull </p>";
+		  }
+		}
+		else
+		{
+			show_404();
+		}
+		
+	} */
+	
+	/* function delete_all_image()// jika tidak ada di timeline
+	{
+		echo "<h2> Hapus Photo yang tidak ada timeline nya </h2>";
+		
+		$str = "select * from photo_pelaut_tr a,timeline b where a.nama_gambar = b.photo ";
+		$q = $this->db->query($str);	
+		$f = $q->result_array();
+		
+		//print_r($f);
+		
+		// Photo yang ada timeline nya 
+		$iptml = 0;
+		foreach($f as $row_tml)
+		{
+			//print_r($row_tml); echo "<hr>";
+			$pttml[] = $row_tml;
+			$nama_gmbrtml[] = $row_tml['nama_gambar'];  	
+			$iptml++;	
+		}	
+		echo "<h3> Photo yang ada timeline nya  : </h3>";
+		print_r($nama_gmbrtml);
+		echo "<hr>";
+		echo "<h2>".$iptml."</h2>";
+		
+		echo "<hr>";
+		
+		$str2 = "select * from photo_pelaut_tr";
+		$q2 = $this->db->query($str2);	
+		$f2 = $q2->result_array();
+		
+		foreach($f2 as $row_photo)
+		{
+			if(!in_array($row_photo['nama_gambar'],$nama_gmbrtml))
+			{
+				
+				$str_delete = "delete from photo_pelaut_tr where id_pptr = '$row_photo[id_pptr]'";
+				$q = $this->db->query($str_delete);
+				//echo "<img src='".base_url("assets/photo/$row_photo[username]/big/$row_photo[nama_gambar]")."' width='100' height='100' >";
+			}
+		}
+		
+	} */
+	
+	function __destruct()
+	{
+		
+		//echo "<!-- end -->";	
+	}
+	
+	
+}

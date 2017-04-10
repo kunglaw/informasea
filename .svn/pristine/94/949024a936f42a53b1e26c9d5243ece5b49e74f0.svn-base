@@ -1,0 +1,12 @@
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+
+	class Notifications_model extends CI_Model {
+
+			function get_notif_all(){
+				$username = $this->session->userdata('username');
+				$str = "SELECT * FROM notification_tr WHERE to_user = '$username' ORDER BY datetime DESC";
+				$q = $this->db->query($str);
+				$f = $q->result_array();
+				return $f;
+			}
+	}

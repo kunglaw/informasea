@@ -1,0 +1,60 @@
+<?php // content center , menu seatizen, module seatizen ?>
+
+<div id="content" class="col-md-6">
+          
+    <div id="list_seatizen">
+    	<div class="panel panel-default"> 
+        	<div class="panel-body">
+
+        
+        	</div>
+         </div>
+    </div>
+    
+    <script>
+		
+		function get_list_seatizen()
+		{
+			
+			$.ajax({
+				
+				
+				type : "POST",
+				url : "<?php echo base_url("seatizen/seatizen_list"); ?>",
+				data:"x=1",
+				success : function(data)
+				{
+					$("#list_seatizen .panel .panel-body").html(data);	
+				}
+			});
+		}
+		
+		
+		$(document).ready(function(e) {
+			
+			
+			get_list_seatizen();
+			
+        });
+		
+		
+	</script>
+    
+   <!-- 
+    <div class="panel panel-default"> 
+     
+      <div class="panel-body">
+        <?php //$this->load->view('dummy/dummy_text')?>
+      </div>
+    </div>
+    
+    <div class="panel panel-default"> 
+      
+      <div class="panel-body">
+        <?php //$this->load->view('dummy/dummy_text')?>
+      </div>
+    </div>-->
+    
+  
+</div>
+

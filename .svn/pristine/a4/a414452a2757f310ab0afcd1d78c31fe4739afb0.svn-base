@@ -1,0 +1,28 @@
+<?php
+	
+	if(!defined('BASEPATH')) exit ('No direct script access allowed');
+	
+	if ( ! function_exists('alert'))
+	{
+	  function alert($text = "")
+	  {
+		  return "<script type='text/javascript'> alert('$text'); </script>";
+	  }
+	}
+	
+	if(!function_exists("profiler"))
+	{
+		function profiler()
+		{
+			$this->output->enable_profiler(TRUE);
+			$this->output->set_profiler_sections($sections);
+			
+		}
+	}
+	
+	function set_developer_mode()
+	{
+		error_reporting(E_ALL);
+	}
+	
+?>

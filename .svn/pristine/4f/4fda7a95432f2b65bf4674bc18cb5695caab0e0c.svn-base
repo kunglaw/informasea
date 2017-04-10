@@ -1,0 +1,445 @@
+<div class="tmp_modal">
+		<?php // ini untuk ajax page looohh ?>                
+</div>
+
+<?php
+  $profile 		= $resume['profile'];
+  $pelaut	     = $resume['pelaut'];
+  $competency 	 = $resume['competency'];
+  $proficiency  	= $resume['proficiency'];
+  $experience 	 = $resume['experience'];
+  $document	   = $resume['document'];
+
+  //print_r($profile);
+  
+  //$this->load->view("menu_myjob.php");
+  
+?>    
+
+<div class="container-resume block">
+    <h4 class="header-text">Curicullum vitae</h4>
+
+    <div class="subtitle pull-left text-gray">Basic Info ("Address","Phone Number",and "Email" will be hidden from
+        others)
+    </div>
+    
+   	<br />
+    
+    <div class="clearfix"></div>
+    <div class="bio-resume block">
+        <div class="media">
+            <div class="pull-left">
+                <img class="img-responsive media-object" src="assets/img/img_default.png" alt="Image">
+            </div>
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table-responsive">
+                            <tr>
+                                <td style="width: 150px">Name</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['nama_depan']." ".$pelaut['nama_belakang'] ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['gender']; ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Nationality</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['kebangsaan']; ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['status_perkawinan']; ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Place/Date of Birth</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['tempat_lahir']; ?>, <?php echo date_format_str($pelaut['tanggal_lahir']); ?></td>
+                            </tr>
+                            <tr>
+                                <td>Religion</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['agama']; ?> </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table-responsive">
+                            <tr>
+                                <td style="width: 150px">Height/Weight</td>
+                                <td>:</td>
+                                <td>  <?php echo $profile['height']; ?> cm / <?php echo $profile['weight']; ?> kg</td>
+                            </tr>
+                            <tr>
+                                <td>Clothes size/Shoes size</td>
+                                <td>:</td>
+                                <td>  <?php echo $profile['clothes_size']; ?> / <?php echo $profile['shoes_size']; ?> </td>
+                            </tr>
+                            <!-- <tr>
+                                <td>Address</td>
+                                <td>:</td>
+                                <td> <?php //echo $pelaut['alamat']; ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Phone/Handphone</td>
+                                <td>:</td>
+                                <td> <?php //echo $pelaut['telepon']." / ".$pelaut['handphone']; ?> </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td> <?php //echo $pelaut['email']; ?> </td>
+                            </tr> -->
+                            <tr>
+                                <td>Next of kin</td>
+                                <td>:</td>
+                                <td> <?php echo $pelaut['keluarga_terdekat']?> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   <br />
+   
+    <div class="clearfix"></div>
+    <table class="table table-bordered hover">
+        <thead>
+          <th>
+              COC Class
+          </th>
+          <th>
+              Rank
+          </th>
+          <th>
+              Vessel Type
+          </th>
+          <th>
+              Expected Sallary
+          </th>
+        </thead>
+        <tbody>
+          <td>
+          	<?php
+                  $coc = $this->coc_model->get_coc_detail($profile['coc_class']);
+                  
+                  echo $coc['coc_class'];
+                
+            ?>
+          </td>
+          <td>
+          	<?php
+                 
+			  $rank = $this->rank_model->get_rank_detail($profile['rank']);
+			  $vessel_type = $this->vessel_model->get_ship_type_detail($profile['vessel_type']);
+			  echo $rank['rank']." / ".$vessel_type['ship_type'];
+			  
+			?>
+          </td>
+          <td>
+          	<?php echo $profile['last_education']?>
+          </td>
+          <td>
+          	<span style="font-weight:bold;color:#0C0"> 
+                <?=$profile['exp_sallary_curr']." ".number_format($profile['expected_sallary'])." / ".$profile['sallary_range']?> 
+            </span>
+          </td>
+        </tbody>
+    </table>
+    
+    
+    <div class="data-table-document">
+        <div ><h3>  Document and Medical Record </h3></div>
+        
+        <br />
+        
+        <div class="clearfix"></div>    
+        <br />
+        <table class="table table-bordered hover">
+            <thead>
+            <th>Type</th>
+            <th>Number</th>
+            <th>Place</th>
+            <th>Date of Issue</th>
+            <th>Date of Expired</th>
+            
+            </thead>
+            <tbody>
+            
+            <?php foreach($document as $row) {
+                  if ($row['type_document'] == "document") {
+                      $date_issued = date_format_str($row['date_issued']);
+                      $date_expired = date_format_str($row['date_expired']);
+    
+            ?>
+                  <tr>
+                    <td><?php echo $row['type'] ?></td>
+                    <td><?php echo $row['number'] ?> </td>
+                    <td><?php echo $row['place'] ?> </td>
+                    
+                    <td><?php echo $date_issued ?></td>
+                    <td><?php echo $date_expired ?></td>
+                    
+                  </tr>
+            <?php 	
+                    } 
+                }
+            ?>
+            </tbody>
+        </table>
+        
+         <br>
+           
+            <br>
+            <?php //$this->load->view('form-add-experience')?>
+                <br />
+                <table class="table table-bordered hover" style="font-size:12px">
+                    <thead style="font-weight:bold; " class="bg-primary">
+                    <tr>
+                        <td width="">Type</td>
+                        <td width="">Number </td>
+                        <td>Place</td>
+
+                        <td><?=$date_issued_lbl?></td>
+                        <td><?=$date_expired_lbl?></td>
+
+                       
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+
+
+                    foreach($document as $row) {
+                        if ($row['type_document'] == "medical" || $row['type_document'] == "medical_cert") {
+                            $date_issued = date_format_str($row['date_issued']);
+                            $date_expired = date_format_str($row['date_expired']);
+
+                            ?>
+                            <tr>
+                                <td><?php echo $row['type'] ?></td>
+                                <td><?php echo $row['number'] ?> </td>
+                                <td><?php echo $row['place'] ?> </td>
+
+                                <td><?php echo $date_issued ?></td>
+                                <td><?php echo $date_expired ?></td>
+                                
+                            </tr>
+                            
+
+                        <?php
+                        }
+                    }
+                    ?>
+                    </tbody>
+
+                </table>
+        
+    </div>
+    
+    <?php /* <div class="pull-left">Medical Report</div>
+    <button class="pull-right btn btn-filled btn-sm">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add
+    </button>
+    <div class="clearfix"></div>
+    <table class="table">
+        <thead>
+        <th>
+            Type
+        </th>
+        <th>
+            Number
+        </th>
+        <th>
+            Place
+        </th>
+        <th>
+            Date of Issue
+        </th>
+        <th>
+            Date of Expired
+        </th>
+        <th>
+            Action
+        </th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Passport</td>
+            <td>877876</td>
+            <td>Jakarta</td>
+            <td>-</td>
+            <td>May 27 1991</td>
+            <td>
+                <a href="#"><span class="fa fa-edit text-link"></span></a>
+                <a href="#">
+                    <span>
+                        <i class="fa fa-times"></i>
+                    </span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+	*/ ?>
+    
+    <div id="data-table-competency" class="jarak">
+        <div>
+            <h3> COC and endorsement </h3> <span> (the "Number" of document will be hidden from others) </span>
+            <br />
+        </div>
+        
+        <div class="clearfix"></div>
+          <br />
+        <table class="table table-bordered hover">
+            <thead>
+            <th>
+                Certificate of Competency
+            </th>
+            <th>
+                No License
+            </th>
+            <th>Place & <?=$date_issued_lbl?></th>
+                <th><?=$date_expired_lbl?></th>
+                
+               
+            </thead>
+            <tbody>
+             <?php
+             foreach($competency as $row){
+                 
+                 if($row['grade_license'] != "Certificate of Endorsement" && $row['type'] == "coc")
+                 {
+                     $e = "UNLIMITED";
+                 }
+                 else
+                 {
+                     $e = date_format_str($row['expired_date']);
+                 }
+                 
+             ?>
+              <tr>
+              <?php $n = ""; if($row['type'] == "cor"){ $n = $row['negara']; } ?>
+                <td><?php echo $row['grade_license']." ".$n ?></td>
+                <td><?php echo $row['no_license']?></td>
+                <!-- <td><?php echo $row['negara']?></td> -->
+                <td><?php echo $row['place_issued']." , ".date_format_str($row['date_issued']) ?></td>
+                <td><?php echo $e; ?></td>
+               
+              </tr>
+             <?php
+             }
+             ?>
+            </tbody>
+            </table>
+        </table>
+    </div>
+    
+    <div id="data-table-proficiency" class="jarak">
+      <div><h3> Certificate of proficiency </h3>
+      
+      <br />
+        
+      </div>
+      
+      <div class="clearfix" style="margin-bottom: 10px"></div>
+      <div class="clearfix"></div>
+      <table class="table table-bordered hover" >
+          <thead>
+            <tr>
+              
+              <th>Certificate</th>
+              <th>Number </th>
+              <th>Place Issued</th>
+              <th><?=$date_expired_lbl?></th>
+              
+            </tr>
+          </thead>
+          <tbody>
+              <?php
+              foreach($proficiency as $row2)
+              {
+              ?>
+                <tr>
+                  <td><?php echo $row2['sertifikat_stwc']; ?></td>
+                  <td><?php echo $row2['no_sertifikat']; ?></td>
+                  <td><?php echo $row2['place_issue']; ?></td>
+                  <td><?php echo date_format_str($row2['date_issue']); ?></td>
+                  
+                </tr>
+  
+              <?php
+              }
+              ?>
+              </tbody>    
+      </table>
+    </div>
+            
+            
+            
+    <div id="data-table-experience" class="jarak">  
+      <div><h3> Sea service record </h3>
+     	<br />
+      </div>
+      
+      <div class="clearfix" style="margin-bottom: 10px"></div>
+      <div class="clearfix"></div>
+      <table class="table table-bordered hover">
+          <thead>
+            <tr>
+              <th width="">Vessel Name</th>
+              <th width="">Vessel Type </th>
+              <th>Weight</th>
+              <th>Rank</th>
+              
+              <th>Company</th>               
+              <th width="20%">Periode</th>
+             
+            </tr>
+          </thead>
+          <tbody>
+                <?php
+                    $this->load->model("vessel_model");
+                    
+                    $vessel_model = $this->vessel_model;
+                
+                    foreach($experience as $row)
+                    {
+                        //$vessel_name = $vessel_model->get_ship_detail($row['ship_id']);
+                        $vessel_type = $vessel_model->get_ship_type_detail($row['ship_type_id']);
+                        $rank 		= $this->resume_model->get_rank_detail($row['rank_id']);
+                        
+                        $periode_from = date_format_str($row['periode_from']);
+                        $periode_to = date_format_str($row['periode_to']);
+                        $create_date = date_format_str($row['datetime']);
+                        $last_update = date_format_str($row['last_update']);
+                         
+                ?>
+                <tr title="Data update" data-toggle="popover" data-content="Create Date: <?php echo $create_date; ?> Last Update : <?php echo $last_update; ?> " id="data-update" data-placement="bottom" >
+                
+                  <td ><?php echo $row['ship_name'] ?> </td>
+                  <td ><?php echo $vessel_type['ship_type'] ?> </td>
+                  <td ><?php echo $row['weight']."  ".$row['satuan']  ?></td>
+                  
+                  <td><?php  echo $rank['rank'] ?> </td>
+                  
+                  <td><?php echo $row['company'] ?></td>
+                  
+                  <td ><?php echo $periode_from ?> ~ <?php echo $periode_to; ?></td>
+                 
+                </tr>
+                
+                </tr>
+                <?php
+                    }
+                ?>
+         </tbody>
+      </table>
+   	</div>
+</div>

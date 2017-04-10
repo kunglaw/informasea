@@ -1,0 +1,121 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: a
+ * Date: 29/06/2015
+ * Time: 12:00
+ */
+?>
+
+<script>
+$(document).ready(function () {
+   
+	getAllDepartmentList();
+		getAllShipList();
+		getAllNation();
+        $("#get_department_vacant").change(function(){
+			var data  = "s=&id_department="+ $("#get_department_vacant").val();
+			getAllRankList(data);	
+			getAllCocList(data);
+        });
+		
+
+        $("#frm-search-seatizen").submit(function (e) {
+			 	e.preventDefault();
+				var nation = $("#get_nation_seatizen").val();
+            var ship = $("#get_ship_vacant").val();
+            var dept = $("#get_department_vacant").val();
+            var rank = $("#get_rank_vacant").val();
+            var keyword = $("#keyseatizen").val();
+            var coc = $("#get_coc_class").val();
+            var salary = $("#salary_seatizen").val();
+            var url = "<?php echo base_url("index.php/seatizen/search")?>";
+            
+           //alert("id_ship ="+ ship + "&id_dept=" + dept +"&id_rank= "+ rank +"&id_coc=" + coc);
+     //       if((nation != "") && (ship != "") && (dept != "")){
+     //       	$.ajax({
+     //       		url:"<?php echo base_url("index.php/seatizen/getData") ?>",
+     //       		type:"POST",
+     //       		data:"id_nation="+nation+"&id_ship="+ship+"&id_dept="+dept+"&id_rank="+rank+"&id_coc="+coc,
+     //       		success:function(res){
+     //       			var hasil = String(res);
+
+     //       			hasil = hasil.split("&");
+     //       			hasil[0] = hasil[0].replace(/ /g,"-"); //nation
+     //       			hasil[1] = hasil[1].replace(/ /g,"-"); //ship
+     //       			hasil[2] = hasil[2].replace(/ /g,"-"); //department
+     //       			hasil[3] = hasil[3].replace(/ /g,"-"); //rank
+     //       			hasil[4] = hasil[4].replace(/ /g,"-"); //coc
+
+
+     //       			if((hasil[0] != "") && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "") && (hasil[4] != "")){
+     //       				url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+     //       			}else if(hasil[4] == ""){
+     //       				url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3];
+     //       			} else if(hasil[0] == ""){
+     //       				url+="/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+     //       			} else if((hasil[0] == "" ) && (hasil[4] == "")){
+     //       				url+="/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3];
+     //       			} else if((hasil[1] == "") && (hasil[4] == "")){
+     //       				url+="/"+hasil[0]+"/"+hasil[2]+"/"+hasil[3];
+     //       			} else if((hasil[1] == "") && (hasil[2] =="")){
+     //       				url+="/"+hasil[0];
+     //       			} else if((hasil[0] == "") && (hasil[1] == "")){
+     //       				url+="/"+hasil[2]+"/"+hasil[3]+"/"+hasil[4];
+     //       			} else if((hasil[0] == "") && (hasil[1] == "") && (hasil[4] == "")){
+     //       				url+="/"+hasil[2]+"/"+hasil[3];
+     //       			}
+
+
+     //                    url+="/"+(keyword != undefined ? keyword: "");
+                    
+
+     //                     //alert(url);
+     //                    window.location = url;
+
+     //       		}
+     //       	})
+
+     //       }
+
+
+		   // else
+        if((ship != "") || (dept != "")) {
+                $.ajax({
+                    url: "<?php echo base_url("index.php/seatizen/getData") ?>",
+                    type: "POST",
+                    data: "id_ship="+ ship + "&id_dept=" + dept +"&id_rank= "+ rank +"&id_coc=" + coc,
+                    success: function (res) {
+                       var hasil = String(res);
+                      //alert(hasil);
+                        hasil = hasil.split("&");
+						            hasil[0] = hasil[0].replace(/ /g,"-"); /* Ship */
+                        hasil[1] = hasil[1].replace(/ /g,"-"); /*Department*/
+                        hasil[2] = hasil[2].replace(/ /g,"-"); /*Rank*/
+						            hasil[3] = hasil[3].replace(/ /g,"-");/*coc*/
+                       // alert(url);
+                       	if((hasil[0] != "") && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] != "")) {
+                       		url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2]+"/"+hasil[3];
+                       	} else if((hasil[0] != "") && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] == "")){
+                       		url+="/"+hasil[0]+"/"+hasil[1]+"/"+hasil[2];
+                       	} else if((hasil[0] == "") && (hasil[1] != "") && (hasil[2] != "") && (hasil[3] == "")){
+                       		url+="/"+hasil[1]+"/"+hasil[2];
+                        	} else if((hasil[0] != "") && (hasil[1] == "")){
+                       		url+="/"+hasil[0];
+                       	} 
+
+                        url+="/"+(keyword != undefined ? keyword: "");
+                    
+
+                         //alert(url);
+                        window.location = url;
+                    }
+                });
+            }  
+            else {
+              window.location = url+="/"+(keyword != undefined ? keyword: "")
+            };
+//        alert(url);
+        });
+    });
+</script>

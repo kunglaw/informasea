@@ -1,0 +1,202 @@
+<?php // module photo , controller photo, function form_upload_photo_profile
+
+$username = $this->session->userdata("username");
+?>
+
+<div class="modal bs-example-modal-lg fade" id="mamat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="javascript:action_status()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Upload Cover</h4>
+      </div>
+      <div class="modal-body">               
+         
+		<script>
+            /*function ajax_rotate(direction)
+            {
+                url_action = "<?php echo base_url("photo/rotate"); ?>";
+                if(direction == "left")
+                {
+                    url_action = "<?php echo base_url("photo/rotate"); ?>";
+                }
+                
+                $.ajax({
+                    
+                    type:"POST",
+                    url:url_action,
+                    data:"x=1",
+                    success: function(){
+                        
+                        
+                    }
+                });
+                
+            }*/
+            
+			
+			
+            function get_photo()
+            {
+                
+                $.ajax({
+                    
+                    url:"<?php echo base_url("photo/get_photo")?>",
+                    type:"POST",
+                    data:"x=1",
+                    error: function(){
+                        
+                        
+                        alert("terjadi kesalahan");
+                        
+                    },
+                    success: function(data){
+                        
+                        $(".tab-content #photos div").html(data);
+                        //alert(data);
+                    }
+                    
+                    
+                });	
+            }
+            
+            function get_photo_timeline()
+            {
+                
+                $.ajax({
+                    
+                    url:"<?php echo base_url("photo/get_photo_timeline")?>",
+                    type:"POST",
+                    data:"x=1",
+                    error: function(){
+                        
+                        
+                        alert("terjadi kesalahan");
+                        
+                    },
+                    success: function(data){
+                        
+                        $("#photo_timeline div").html(data);
+                        //alert(data);
+                    }
+                    
+                    
+                });	
+            }
+			
+			function form_view_rpc()
+			{
+				$.ajax({
+					type:"POST",
+					url:"<?php echo base_url("photo/form_view_rpc") ?>",
+					data:"x=1&type=cover",
+					success: function(data)
+					{
+						$("#form-upload").html(data);
+					}
+					
+				});
+			}
+			
+			
+			
+	</script>
+      <?php // tiga input ini digunakan untuk action status javascript ?>
+      <input type="hidden" value="" id="jalur_fup" name="jalur_fup"/>
+      <input type="hidden" value="" id="type_fup" name="type_fup" />
+      <input type="hidden" value="" id="file_name_fup" name="file_name_fup" />
+      <input type="hidden" value="delete" id="status_fup" name="status_fup" />     
+      <div role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+         
+         
+         <li role="presentation" class="active" id="f-tab">
+           <a href="#form-upload" aria-controls="form" role="tab" data-toggle="tab">Form Upload</a>
+        </li>
+         <!-- <li role="presentation" class="" id="pt-tab">
+           <a href="#photo_timeline" aria-controls="albums" role="tab" data-toggle="tab">Timeline</a>
+        </li> --> 
+        <li role="presentation" id="photo-tab">
+           <a href="#photos" aria-controls="photos" role="tab" data-toggle="tab">Photos</a>
+        </li>                 
+    
+      </ul>
+      
+        <div class="tab-content">
+         
+          <div role="tabpanel" class="tab-pane active" id="form-upload">
+             
+          </div>
+         
+          <div role="tabpanel" class="tab-pane" id="photos">
+              <span id="info_photo"></span>
+              <div>
+               
+              
+              </div>
+          </div>
+          
+           <!-- <div role="tabpanel" class="tab-pane" id="photo_timeline" >
+             <span id=""></span>
+              <div>
+               siapa tau perlu 
+                  
+              </div>
+          </div>-->
+          
+          
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"> </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-primary" id="save-change-btn" status="delete"  onclick="action_status()">Save changes</button>
+    </div>
+    </div><!-- /.modal-content -->
+   </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+function action_status()
+{
+	//alert($("#test-aja").html());
+	var jalur = $("#jalur_fup").val();
+	var file_name = $("#file_name_fup").val();
+	var type = $("#type_fup").val();
+	var status = $("#status_fup").val();
+	
+	if(status == "delete")
+	{
+		$.ajax({
+			type:"POST",
+			url:"<?php echo base_url("photo/delete_crop")?>",
+			data:"x=1&file_name="+file_name+"&type="+type,
+			success: function(data){
+				location.reload();	
+				
+				
+			}
+			
+		});
+	}
+	else
+	{
+		location.reload();
+	}
+}
+$(document).ready(function(e) {
+	
+	get_photo_timeline(); 
+	get_photo(); // get list photo
+	form_view_rpc();
+	
+	$("#f-tab").click(function(){ form_view_resume(); })
+	
+    $("#mamat").modal({
+		backdrop:"static",
+		show:true
+		
+	});
+
+});
+</script>

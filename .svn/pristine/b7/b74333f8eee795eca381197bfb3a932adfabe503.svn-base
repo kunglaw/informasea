@@ -1,0 +1,23 @@
+<?php // template company ?>
+    <div class="container-fluid">
+        <div class="row">
+
+        	<?php
+        	if ($detail == "detail_company") {
+        		$this->load->view($content);
+        		$this->load->view("right_content");
+        	}elseif($search == "search") {
+                $this->load->view("search");
+                $this->load->view("right_content");
+            }else{
+        		$this->load->view("content");
+            	$this->load->view("right_content");
+        	}
+
+        	?>
+          
+
+
+        </div>
+    </div>
+<?php // end template ?>

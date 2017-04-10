@@ -1,0 +1,209 @@
+<style>
+	.jcrop-holder img {max-width: none !important}
+	/*untuk supaya selection area tidak 
+	see : 
+	 - https://code.google.com/p/jcrop/issues/detail?id=79
+	 - https://github.com/twbs/bootstrap/issues/1649
+	*/
+</style>
+<?php 
+	$username = $this->session->userdata("username");
+	$this->load->helper("image_thumb_helper");
+	// output function
+	/*$a = array(
+	0=>TRUE,
+	"file_name" => $dataphoto['file_name'],
+	"file_size" => $dataphoto['file_size'],
+	"file_type" => $dataphoto['file_type'],
+	"file_title" => $_FILES['picture']['name'],
+	"type" => "resume"); // untuk info di timeline 
+	// output function */ 
+	$dimension = getimagesize(pathup("photo/$username/$type/$a[file_name]")); // INGET INI GANTI 
+	
+	$new_dimension = resize_dimension($dimension[0],$dimension[1]); 
+	//print_r($a);echo "<hr>";
+?>
+<script src="<?php echo base_url("assets/plugin/jcrop/js/jquery.Jcrop.min.js"); ?>" ></script>
+
+<script src="<?php echo base_url("assets/plugin/jcrop/js/jquery.color.js")?>"></script>
+
+<script>	
+   jQuery(function($){
+	
+	<?php if($a['jalur'] == "upload"){ ?>
+		$("#jalur_fup").val("<?php echo !empty($a['jalur']) ? $a['jalur'] : "" ?>");
+		$("#type_fup").val("<?php echo $a['type']?>");
+		$("#file_name_fup").val("<?php echo $a['file_name']?>");
+	<?php } ?>
+	
+	$("#submit-btn").addClass("disabled");
+    var jcrop_api;
+	//var cropWidth = 100;
+	//var cropHeight = 100;
+
+    $('#target').Jcrop({
+	 
+      onChange:   showCoords,
+      onSelect:   showCoords,
+      onRelease:  clearCoords
+	  <?php if($type == "resume"){
+		  echo ",aspectRatio: 3/4,";
+		  echo "setSelect:   [50, 0, 300,300],";
+		  echo "allowResize: false";
+        
+	  }?>
+	  
+    },function(){
+      jcrop_api = this;
+    });
+
+    $('#coords').on('change','input',function(e){
+      var x1 = $('#x1').val(),
+          x2 = $('#x2').val(),
+          y1 = $('#y1').val(),
+          y2 = $('#y2').val();
+	  $("#submit-btn").removeClass("disabled");
+      jcrop_api.setSelect([x1,y1,x2,y2]);
+    });
+
+  });
+
+  // Simple event handler, called from onChange and onSelect
+  // event handlers, as per the Jcrop invocation above
+  function showCoords(c)
+  {
+    $('#x1').val(c.x);
+    $('#y1').val(c.y);
+    $('#x2').val(c.x2);
+    $('#y2').val(c.y2);
+    $('#wcrop').val(c.w);
+    $('#hcrop').val(c.h);
+	$('#height').val("<?php echo ceil($new_dimension['height']) ?>");
+    $('#width').val("<?php echo ceil($new_dimension['width']) ?>");
+	$('#ratio_x').val("<?php echo $new_dimension['width']/$dimension[0] ?>");
+    $('#ratio_y').val("<?php echo $new_dimension['height']/$dimension[1] ?>");
+	$("#submit-btn").removeClass("disabled");
+	
+	$("#file_name").val("<?php echo $a["file_name"]; ?>");
+	$("#file_type").val("<?php echo $a["file_type"]; ?>");
+	$("#type").val("<?php echo $a["type"]; ?>");
+	$("#file_size").val("<?php echo $a["file_size"]; ?>");
+	$("#file_title").val("<?php echo $a["file_title"]; ?>");
+	$("#file_description").val("<?php echo $a["file_description"]; ?>");
+  };
+  
+  function change_status()
+  {
+	 $("#status_fup").val("save"); 
+	 //alert("save...");
+	  
+  }
+  
+  function back_page()
+  {
+	  <?php
+	  if($a['type'] == "resume")
+	  {
+		 $ajax_action = base_url("photo/form_view_resume"); 
+	  }
+	  else if($a['type'] == "profile_pic")
+	  {
+		 $ajax_action =  base_url("photo/form_view_rpc");
+	  }
+	  ?>
+	  $.ajax({
+		type:"POST",
+		url:"<?php echo $ajax_action ?>",
+		data:"x=1",
+		success: function(data)
+		{
+			$("#form-upload").html(data);
+		}
+		
+	});
+	
+  };		
+
+  function clearCoords()
+  {
+    $('#coords input').val('');
+	$("#submit-btn").addClass("disabled");
+  };
+
+<?php
+	//filter dahulu
+	
+?>
+
+</script>
+<div id="image-crop-temp">
+	<i class="info-ajax"></i>
+    <p> How to use Cropping : </p>
+	<p>1. Click and Drag the Picture to Crop the selection Picture </p>
+    <p>2. Click Done button to finish cropping section. but you can select the frame picture again if you want </p>
+    <p>3. Click Save button to save the crop image </p>
+	<img src="<?php echo img_url("photo/$username/$type/$a[file_name]"); ?>" id="target" alt="[Jcrop Example]" width="<?php echo ceil($new_dimension['width']); ?>px" height="<?php echo ceil($new_dimension['height']); ?>px"/>
+        
+    <form id="coords" class="coords" onsubmit="return false;">
+
+    <div class="inline-labels" <?php echo "hidden='true' style='display:none'" ?>>
+      <label>X1 <input type="text" size="4" id="x1" name="x1" /></label>
+      <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+      <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+      <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+      <label>WCrop <input type="text" size="4" id="wcrop" name="wcrop" /></label>
+      <label>HCrop <input type="text" size="4" id="hcrop" name="hcrop" /></label>
+      <label>Height <input type="text" size="4" id="height" name="height" /></label>
+      <label>Width <input type="text" size="4" id="width" name="width" /></label>
+      <label>ratio X1 <input type="text" size="4" id="ratio_x" name="ratio_x" /></label>
+      <label>ratio Y1 <input type="text" size="4" id="ratio_y" name="ratio_y" /></label>
+      <label>Name <input type="text" value="<?php echo $a["file_name"]; ?>" name="file_name" id="file_name" /></label>
+      <label>Size <input type="text" value="<?php echo $a["file_size"]; ?>" name="file_size" id="file_size" /></label>
+      <label>Type <input type="text" value="<?php echo $a["file_type"]; ?>" name="file_type" id="file_type" /></label>
+      <label>Type Feature <input type="text" value="<?php echo $a["type"]; ?>" name="type" id="type" /></label>
+      <label>File Title <input type="text" value="<?php echo $a["file_title"]; ?>" name="file_title" id="file_title" /></label>
+      <label>File Description <input type="text" value="<?php echo $a["file_description"]; ?>" name="file_description" id="file_description" /></label>
+    </div>
+    
+    <p class="row container">
+    <br />
+    <button class="btn btn-default" type="button" id="back-btn"  >Back</button>
+    <button type="submit" class="btn btn-success" id="submit-btn" onclick="change_status()"  >Done</button>
+    
+    </p>
+    
+  </form>
+  <script>
+  function cropping()
+  {
+	$.ajax({
+		
+		type:"POST",
+		url:"<?php echo base_url("photo/crop_resume"); ?>",
+		data:"x=1&"+$("#coords").serialize(),
+		success: function(data){
+			
+			//alert(data);
+			$(".info-ajax").html(data);
+		}
+		
+	});
+  }
+  
+  $(".jcrop-keymgr").attr("hidden","true");
+  
+  $("#back-btn").click(function(){
+			  
+	back_page();	
+	
+  });
+			
+  
+  $("#coords").submit(function(){ cropping(); });
+  
+  
+  </script>
+
+</div>
+
+<link href="<?php echo base_url("assets/plugin/jcrop/css/jquery.Jcrop.min.css"); ?>" type="text/css" rel="stylesheet" />

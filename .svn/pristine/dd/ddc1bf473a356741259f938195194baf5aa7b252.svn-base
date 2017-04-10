@@ -1,0 +1,43 @@
+// JavaScript Document
+
+/* $(function() {
+	
+	$( "#tabs" ).tabs();
+	
+}); */
+
+/*$(document).ready(function(e){
+
+  /*$('#tab-menu li a').click(function (e) {
+	  
+	  var c = $("#tab-menu li").attr("id");
+	  
+	  //alert(c);
+	  
+	  //e.preventDefault();
+	  
+	  if(c == "seamanBtn")
+	  {
+		  $("#seaman-form").tab('show');
+	  }
+	  else if(c == "agentBtn")
+	  {
+		  $("#agent-form").tab('show');
+	  }
+	  else
+	  {
+		  $("#company-form").tab('show');
+		  
+	  }
+	
+   
+	
+  })
+
+
+});*/
+
+
+$(document).ready(function(e) {
+    
+});

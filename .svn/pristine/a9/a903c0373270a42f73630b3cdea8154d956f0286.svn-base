@@ -1,0 +1,613 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed');
+
+class photo_ajax extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();	
+		$this->load->model("photo/photo_mdl");
+	}
+	
+	private function template($page)
+	{
+		if($page == "photo")
+		{
+			$arr['ctrl']			= "photo";
+			$arr['title'] 		   = "Photo";
+			$arr['meta'] 	 		= "list-photo/meta";
+			$arr['css'] 	  		 = "list-photo/css";
+			$arr['js_top']   		  = "list-photo/js_top";
+			
+			$arr['header']   		  = "list-photo/header";
+			
+			$reserve = $this->authentification->reserve();
+			if($reserve==true)
+			{
+				$arr['navbar_profile']  = "navbar-profile";
+			}
+			else
+			{
+				$arr['navbar_profile']  = "navbar-profile-free";
+			}
+			$arr['template'] 		= 'list-photo/template';
+			$arr['js_under'] 		= "list-photo/js_under";
+		}
+		else if($page == "photo-person")
+		{
+			$arr['ctrl']			= "photo-person";
+			$arr['title'] 		   = "Photo";
+			$arr['meta'] 	 		= "list-photo-person/meta";
+			$arr['css'] 	  		 = "list-photo-person/css";
+			$arr['js_top']   		  = "list-photo-person/js_top";
+			
+			$arr['header']   		  = "list-photo-person/header";
+			
+			$reserve = $this->authentification->reserve();
+			if($reserve==true)
+			{
+				$arr['navbar_profile']  = "navbar-profile";
+			}
+			else
+			{
+				$arr['navbar_profile']  = "navbar-profile-free";
+			}
+			$arr['template'] 		= 'list-photo-person/template';
+			$arr['js_under'] 		= "list-photo-person/js_under";
+		}
+		
+		return $arr;
+	}
+	
+	// AJAX
+	function content_photo_person() // user lain
+	{
+		
+		$this->load->model("users/user_model");
+		$this->load->model("seatizen/seatizen_model");
+		$this->load->model("seaman/friendship_model");
+		
+		// check username_url dengan username_sess apakah sama 
+		$reserve = $this->authentification->reserve();
+		
+		$username_url = $this->uri->segment(2); // username dari url
+		$username_sess = $this->session->userdata("username");
+		
+		$check_username = $this->seatizen_model->check_seatizen($username_url);
+		
+		if(!empty($check_username))
+		{
+		  if($reserve == true)
+		  {
+			$data = $this->template("photo");
+			$data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+			$nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+			$data['username'] = $username_url;
+			$data['nama'] = $nama;
+			//print_r($pelaut);
+		  }
+		  else if($reserve == false)
+		  {
+			$data = $this->template("photo-person");
+			$data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+			$nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+			$data['username'] = $username_url;
+			$data['nama'] = $nama;
+			//print_r($pelaut);
+		  }
+		  
+		  $this->load->view('index',$data);
+		}
+		
+		else
+		{
+			show_404();
+		}
+		
+	}
+	
+	// AJAX
+	function company_photos()
+	{
+		$this->authentification->ajax_access();
+		
+		$id_perusahaan = $this->uri->segment(3);
+		$data['company_photo'] = $this->photo_mdl->get_company_photos($id_perusahaan);
+		return $data;
+	}
+	
+	// ======================== UNTUK CONTENT USER LOGIN ===========================
+	// AJAX 
+	function get_album() // self album 
+	{
+		$this->authentification->ajax_access();
+		
+		$username = $this->session->userdata("username");
+		  
+		$data['title'] = "";
+		$data['username'] = $username;
+		$data['album'] = $this->photo_mdl->album_photo($username);
+		$data['photo'] = $this->photo_mdl->select_last_photo($username);
+		$data['tml']   = $this->photo_mdl->select_last_phototml($username);
+			
+		$this->load->view("list-photo/list-album",$data);
+	}
+	
+	// AJAX
+	function get_photo()
+	{
+		$this->authentification->ajax_access();
+		
+		$username = $this->session->userdata("username");
+		  
+		$data['title'] = "";
+		$data['username'] = $username;
+		$data['photo'] = $this->photo_mdl->get_photo($username);
+		$this->load->view("list-photo/list-photo",$data);	
+		
+	}
+	
+	// AJAX
+	function get_photo_timeline()
+	{
+		$this->authentification->ajax_access();
+		
+		$username = $this->session->userdata("username");
+		
+		$data['photo'] = $this->photo_mdl->get_self_tml();
+		$data['username'] = $username;
+		$this->load->view("list-photo/list-photo-timeline",$data);			
+	}
+	
+	// ================================ END USER LOGIN =========================== 
+	
+	// ================================ PERSON ===================================
+	// AJAX
+	function get_photo_person() // user lain 
+	{
+		$this->authentification->ajax_access();
+		
+		$username = $this->input->post("username");
+		$username_exists = $this->authentification->username_exists($username);
+		
+		if($username_exists == true)
+		{
+		
+		  $this->load->model("seatizen/seatizen_model");
+		  $check_username = $this->seatizen_model->check_seatizen($username);
+		  
+		  $data['username'] = $username;
+		  $data['title'] = "";
+		  $data['photo'] = $this->photo_mdl->get_photo($username); // asalkan ada username
+		  $this->load->view("list-photo-person/list-photo-person",$data);
+		}
+		else
+		{
+			show_404();	
+		}
+		
+	}
+	
+	// AJAX
+	function get_photo_persontml() // user lain
+	{
+		$this->authentification->ajax_access();
+		
+		$username = $this->input->post("username");
+		$username_exists = $this->authentification->username_exists($username);
+		
+		if($username_exists == true)
+		{
+		
+		  $data['username'] = $username;
+		  $data['photo'] = $this->photo_mdl->get_person_timeline($username);
+		  $this->load->view("list-photo-person/list-photo-timeline-person",$data);
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	function get_album_person() // self album 
+	{
+		
+		$this->authentification->ajax_access();
+		
+		$username = $this->input->post("username");
+		
+		$username_exists = $this->authentification->username_exists($username);
+		
+		if($username_exists == true)
+		{
+		  
+		  $data['title'] = "";
+		  $data['username'] = $username;
+		  $data['album'] = $this->photo_mdl->album_photo($username);
+		  $data['photo'] = $this->photo_mdl->select_last_photo($username);
+		  $data['tml']   = $this->photo_mdl->select_last_phototml($username);
+		  
+		  $this->load->view("list-photo-person/list-album-person",$data);
+		}
+		else
+		{
+		  show_404();	
+		}
+	}
+		
+	
+	// =====================================================================================	
+	
+	// Proses upload Photo Resume
+	// AJAX
+	function upload_resume_pic()
+	{
+	
+		$username = $this->session->userdata("username");
+		$this->load->library('image_lib');
+		$this->load->library('upload');
+		$this->load->helper('image_thumb_helper');
+		$this->load->helper("username_folder_helper");
+		
+		// description 
+		$description = $this->input->post("description");
+		$type = $this->input->post("type");  
+		
+		/*extention*/
+		$extt = explode("/",$_FILES['picture']['type']);// echo "<br>";
+		//print_r($_FILES);
+		$ext = $extt[1];
+		$a = $this->db->query("SHOW TABLE STATUS FROM `infr6975_informaseadb2014` LIKE 'photo_pelaut_tr' ");
+		$b = $a->row_array();
+		$b['Auto_increment'];
+		
+		$configupload['upload_path'] = pathup("photo/$username/$type");
+		
+		$configupload['file_name'] = strtoupper(md5($b['Auto_increment'].$_FILES['picture']['name'])).date('YmdHis').".".$ext;
+		$configupload['allowed_types'] = "gif|jpg|png|jpeg";
+		$configupload['max_size']	=  1024 * 1024 * 10; // 10MB;
+		//echo $_FILES['picture']['size']; exit;
+		//$configupload['max_width']  = '1024';
+		//$configupload['max_height']  = '1024';
+		
+		//print $configupload['upload_path']; 
+		
+		$photo = 'picture'; // name dari form file
+		$this->upload->initialize($configupload);
+		
+		// buat foldernya dahulu
+		// dari username_folder_helper
+		make_username_folder_pt($username);
+		/*check folder selesai */
+		
+		$this->upload->do_upload($photo);
+		$dataphoto = $this->upload->data();
+		//print_r($dataphoto); exit;
+		
+		$error_upload = $this->upload->display_errors('<p class="alert alert-danger"> Upload : ', '</p>');
+		// exit;
+		
+		if(empty($error_upload))
+		{
+			$config['image_library'] = 'gd2';
+			$config['source_image'] = pathup("photo/$username/$type/$dataphoto[file_name]");
+			$config['maintain_ratio'] = TRUE;
+			
+			$hrd = resize_dimension($dataphoto['image_width'],$dataphoto['image_height']);
+			
+			$config['quality'] 	= $hrd['quality'];
+			$config['width'] 	  = $hrd['width'];
+			$config['height']	 = $hrd['height'];
+			
+			$this->image_lib->initialize($config);
+			
+			if ( ! $this->image_lib->resize())
+			{
+				$error_resize =  $this->image_lib->display_errors('<p> Image Lib : ','</p>');
+				return array(FALSE,$error_resize);
+			}
+			else
+			{
+				$this->image_lib->clear();
+				// dari image_thumb_helper
+				
+				image_small_fr($file_name = $dataphoto['file_name'],$destination = $type,$source = $type );
+				
+				/* Medium or Thumnail */
+				//image_thumb_fr($file_name = $dataphoto['file_name'],$destination = "resume",$source = "resume");
+				
+				$a = array(
+				0=>TRUE,
+				"file_name" => $dataphoto['file_name'],
+				"file_size" => $dataphoto['file_size'],
+				"file_type" => $dataphoto['file_type'],
+				"file_title" => $_FILES['picture']['name'],
+				"file_description" => $description,
+				"type" => "$type","jalur"=>"upload-btn"); // untuk info di timeline 
+				// output function
+				$this->image_crop_temp($a);
+				
+			}
+		}
+		else
+		{
+			return array(FALSE,$error_upload);
+		}
+	}
+	
+	// AJAX
+							 // $a , data2 photo yang diperlukan 
+	function image_crop_temp($a = "") // form 
+	{
+		$type = $this->input->post("type");
+		$file_name = $this->input->post("file_name");
+		
+		if(empty($file_name)) // dua inputan
+		{
+			$file_name = $a['file_name'];
+		}
+		
+		//var_dump($a);
+		
+		if(!empty($a)) // kalau dari upload_rpc_pic , upload button
+		{
+			
+			$data_a = array(
+			0=>TRUE,
+			"file_name" => $file_name,
+			"file_size" => $a['file_size'],
+			"file_type" => $a['file_type'],
+			"file_title" => $a["file_title"],
+			"file_description" => $a["file_description"],
+			"type" => $type,"jalur"=>"upload"); // untuk info di timeline
+			 
+			// output function
+			/*$a = array(
+			0=>TRUE,
+			"file_name" => $dataphoto['file_name'],
+			"file_size" => $dataphoto['file_size'],
+			"file_type" => $dataphoto['file_type'],
+			"file_title" => $_FILES['picture']['name'],
+			"type" => "resume"); // untuk info di timeline 
+			// output function */ 
+			
+		}
+		else if(empty($a))
+		{
+			$check_photo = $this->photo_mdl->check_photo($file_name);
+			$data_a = array(
+			0=>TRUE,
+			"file_name" => $file_name,
+			"file_size" => $check_photo['size_gambar'],
+			"file_type" => $check_photo['type_gambar'],
+			"file_title" => $check_photo["title"],
+			"file_description" => $check_photo["description"],
+			"type" => $type); // untuk info di timeline	
+			//print_r($check_photo); echo "<hr>";
+		}
+		
+		$data['a'] = $data_a;
+		$data['type'] = $type;
+		//print_r($data);
+		//$this->load->view("image-crop-temp",$data); //form untuk crop 
+		$this->load->view("image-cropic-temp",$data); //form untuk crop 
+		
+		
+	}
+	
+	// AJAX, form_upload_photo
+	function form_upload_photo_profile()
+	{
+		$x = $this->input->post("x");
+		// FORM AJAX
+		if($x == 1)
+		{
+		  $type = $this->input->post("type");
+		  //echo "x=$x & type=$type";
+		  //$this->load->model('photo/photo_mdl');
+		  $data['profile_pic'] = $this->photo_mdl->get_photo_pp();
+		  $this->load->view("form-upload-profile-picture",$data); 	
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	// AJAX
+	function form_upload_photo_cover()
+	{
+		$this->authentification->close_access();
+		$this->authentification->ajax_access();
+		
+		  $type = $this->input->post("type");
+		  //echo "x=$x & type=$type";
+		  //$this->load->model('photo/photo_mdl');
+		  $data['cover'] = $this->photo_mdl->get_photo_cover();
+		  $this->load->view("form-upload-cover",$data); 	
+		
+	}
+	
+	// AJAX
+	function form_upload_photo_resume()
+	{
+		$this->authentification->close_access();
+		$this->authentification->ajax_access();
+		
+		$this->load->view("form-upload-photo-resume"); 	
+			
+	}
+	
+	// AJAX
+	function make_profile_pic($id_pptr = "")
+	{ // dijalankan lewat ajax
+		
+		$this->authentification->close_access();
+		//$this->authentification->ajax_access();
+		
+		if($id_pptr == "")
+		{
+			$id_pptr = $this->input->post("id_pptr");	
+		}
+		
+		
+		$this->load->helper("image_thumb_helper");
+		
+		//$this->authentification->close_access();
+		$this->authentification->ajax_access();
+		// get data photo berdasarkan id
+		$photo = $this->photo_mdl->get_photo_id($id_pptr);
+		if(!empty($photo))
+		{
+		  $profile_pic = $this->photo_mdl->get_photo_pp();
+		  if(!empty($profile_pic))
+		  {
+			  // ubah profile pic menjadi gambar biasa
+			  $this->photo_mdl->update_pp_deselect($profile_pic['id_pptr']);	
+		  }
+		  $this->photo_mdl->update_profile_pic($id_pptr);
+		  image_big_pp($file_name = $photo['nama_gambar']);
+		  image_thumb_pp($file_name = $photo['nama_gambar']);
+		  image_small_pp($file_name = $photo['nama_gambar']);
+		  echo "Profile Picture has been edited ";
+		}
+		else
+		{
+			
+		}				
+		// update data photo
+		// gambar diresize
+		
+		
+		
+	}
+	
+	// AJAX
+	function make_resume_pic($id_pptr = "")
+	{
+		//$this->authentification->close_access();
+		$this->authentification->ajax_access();
+		
+		if($id_pptr == "")
+		{
+			$id_pptr = $this->input->post("id_pptr");	
+		}
+		
+		$x = $this->input->post("x");
+		$this->load->helper("image_thumb_helper");
+		
+		if($x == 1)
+		{
+			
+			// get data photo berdasarkan id
+			$photo = $this->photo_mdl->get_photo_id($id_pptr);
+			if(!empty($photo))
+			{
+				
+			  $resume_pic = $this->photo_mdl->get_photo_resume();
+			  
+			  if(!empty($resume_pic))
+			  {
+				  // ubah profile pic menjadi gambar biasa
+				  $this->photo_mdl->update_resume_deselect($resume_pic['id_pptr']);	
+			  }
+			  
+			  $this->photo_mdl->update_resume_pic($id_pptr);
+			
+			  image_big_pp($file_name = $photo['nama_gambar'],"resume");
+			  //echo "kampret"; exit;
+			  image_thumb_pp($file_name = $photo['nama_gambar'],"resume");
+			  image_small_pp($file_name = $photo['nama_gambar'],"resume");
+				
+			  echo "Resume Picture has been edited ";
+			}
+			else
+			{
+				echo "There is no Photo ";
+			}				
+			// update data photo
+			// gambar diresize
+		}
+		else
+		{
+			show_404();	
+		}
+	}
+	
+	function form_view_rpc()
+	{
+		$x = $this->input->post("x");
+		if($x == 1)
+		{
+			//$username = $this->session->userdata("username");
+			$type = $this->input->post("type"); // type feature = resume, profile_pic , cover
+			if($type == "profile_pic") // profile pic 
+			{
+				$data['dt_gambar'] = $this->photo_mdl->get_photo_pp();
+				$data['type'] = $type;
+				$data['form_action'] = base_url("photo/upload_resume_pic"); // nanti ganti nama function nya 
+				
+			}
+			else if($type == "resume")
+			{
+				$data['dt_gambar'] = $this->photo_mdl->get_photo_resume();
+				$data['type'] = $type;
+				$data['form_action'] = base_url("photo/upload_resume_pic");// nanti ganti nama function nya 
+			}
+			else if($type == "cover")
+			{
+				$data['dt_gambar'] = $this->photo_mdl->get_photo_cover();
+				$data['type'] = $type;
+				$data['form_action'] = base_url("photo/upload_resume_pic");// nanti ganti nama function nya 
+			}
+			
+			//print_r($data);
+			
+			/*else if($type == "cover")
+			{
+				$data['cover'] = $this->photo_mdl->get_photo_cover();	
+			}*/
+			$this->load->view("form-view-rpc",$data);
+		}
+		else
+		{
+			show_404();	
+		}	
+	}
+	
+	function form_upload()
+	{
+		$this->load->view("list-photo/form-upload-photo");
+	}	
+	
+	function modal_alert()
+	{
+		//$this->authentification->close_access();
+		$this->authentification->ajax_access();
+		
+		$item = $this->input->post("item");
+		$type = $this->input->post("type");
+		
+		$data['title'] = "Delete Photo";
+		$data['description'] = "Are you sure want to delete this photo ? ";
+		$data['dataarr'] = $this->input->post();
+		
+		$data['success'] = "alert('babi')";
+		if($type == "del_photo")
+		{
+			$data['success'] = "delete_picture($item);";
+		}
+		
+		//print_r($data);
+		$this->load->view('modal-alert',$data);	
+	}
+	
+	
+	function __destruct()
+	{
+		
+		
+	}
+	
+	
+	
+}

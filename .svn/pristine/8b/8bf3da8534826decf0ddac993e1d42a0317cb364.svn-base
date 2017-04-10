@@ -1,0 +1,77 @@
+<script>
+	var x= 1;
+
+
+		function cek(){
+			$.ajax({
+				url:"<?=base_url() ?>notifications/cek_notif",
+				cache:false,
+				success:function(msg){
+					var pisah = msg.split("|");
+					if(pisah[4] == "1"){
+
+					} else {
+						simpandataTerkirim(pisah[3]);
+					}
+
+					if(pisah[0] != 0){
+					$(".notifikasi").show();
+					$(".notifikasi").html(pisah[0]);
+				} else {
+					$(".notifikasi").hide();
+				}
+				}
+			});
+
+			var waktu = setTimeout("cek()",30000);
+
+		}
+
+
+		function simpandataTerkirim(data){
+			var code = "1";
+			$.ajax({
+				type:"POST",
+				url:"<?=base_url() ?>notifications/status",
+				success:function(message){
+
+				}
+			});
+		}
+
+
+		function baca_notif(id_notif){
+			$.ajax({
+				url:"<?=base_url()?>notifications/baca_notif",
+				cache:false,
+				data:"id_notif="+id_notif,
+				success:function(aa){
+					window.location.href="<?=base_url()?>"+aa;
+				}
+			})
+		}
+
+
+	$(document).ready(function(){
+$(".notifikasi").hide();
+		cek();
+							
+
+
+		$(".notifnya").click(function(){
+			$("#notif").toggle();
+
+			$.ajax({
+				url:"<?php echo base_url() ?>notifications/list_notif",
+				success:function(msg){
+					$(".dalemnotif").html(msg);
+				}
+			})
+
+		})
+
+	
+
+	})
+
+	</script>

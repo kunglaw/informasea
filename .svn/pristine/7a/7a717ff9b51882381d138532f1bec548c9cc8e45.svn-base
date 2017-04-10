@@ -1,0 +1,214 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+
+class Search_model extends CI_Model{
+	
+	function search($keyword = '')
+	{
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		
+				
+		$str_nation = "select * from nationality where name LIKE '%$keyword%' ";
+		$q_nation = $this->db->query($str_nation);
+		$f_nation = $q_nation->row_array();
+		
+		$str  = "SELECT vacantsea_id, vacantsea, description, id_nationality, 'vacantsea' AS category FROM vacantsea WHERE vacantsea LIKE '%$keyword%' OR description LIKE '%$keyword%' OR id_nationality = '$f_nation[id]'"; // vacantsea 
+		$str .= "union ";
+		$str .= "SELECT pelaut_id, CONCAT(nama_depan,' ',nama_belakang) AS name, alamat, kebangsaan, 'seaman' AS category FROM pelaut_ms WHERE CONCAT(nama_depan,' ',nama_belakang) LIKE '%$keyword%' OR alamat LIKE '%$keyword%' OR kebangsaan LIKE '%$keyword%'";
+		$str .= "union ";
+		$str .= "SELECT id_perusahaan, nama_perusahaan,description,nationality,'company' AS category FROM perusahaan where nama_perusahaan LIKE '%$keyword%' OR description LIKE '%$keyword%' OR nationality LIKE '%$keyword%'";
+
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		return $f;
+	}
+	
+	function search_vacantsea($keyword)
+	{
+		
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		$this->load->model("department_model");
+		$this->load->model("rank_model");
+		$this->load->model("coc_model");
+		$this->load->model("ship_model");
+		$this->load->model("nation_model");
+		
+		$dept_id = $this->department_model->get_detail_department_by_name($keyword);
+		$rank_id = $this->rank_model->get_rank_detail_by_rank($keyword);
+		$coc_id  = $this->coc_model->get_coc_by_name($keyword);
+		$ship_id = $this->ship_model->get_detail_ship_type_by_name($keyword);
+		$nation_id = $this->nation_model->get_detail_nationality($keyword);
+		
+		$str  = "select * from vacantsea where ";
+		$str .= "vacantsea LIKE '%$keyword%' OR ";
+		$str .= "perusahaan LIKE '%$keyword%' OR ";
+		$str .= "description LIKE '%$keyword%' OR ";
+		$str .= "department = '%$dept_id[department_id]%' OR ";
+		$str .= "rank_id = '$rank_id[rank_id]' OR ";
+		$str .= "ship_type = '$ship_id[ship_id]' OR ";
+		$str .= "navigation_area LIKE '%$keyword%' OR ";
+		$str .= "contract_dynamic LIKE '%$keyword%' OR ";
+		$str .= "requested_certificates LIKE '%$keyword%' OR ";
+		$str .= "requested_coc LIKE '%$keyword%' OR ";
+		$str .= "id_nationality = '$nation_id[id_nationality]' OR ";
+		$str .= "benefits LIKE '%$keyword%' OR ";
+		$str .= "experience LIKE '%$keyword%' "; 
+		
+		echo "<code>".$str."</code>"."<br>";
+		
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id" => $row["vacantsea_id"], "category" => "vacantsea"); 	
+		}
+		
+		return $hasil;
+		
+	}
+	
+	function search_seaman($keyword)
+	{
+		// Category Pelaut
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		//$this->load_>model("department_model");
+		$this->load->model("rank_model");
+		$this->load->model("coc_model");
+		
+		$rank_id = $this->rank_model->get_rank_detail_by_rank($keyword);
+		$coc_id = $this->coc_model->get_coc_by_name($keyword);
+		
+		$str  = "SELECT * FROM  pelaut_ms a LEFT JOIN profile_resume_tr b  ON a.pelaut_id = b.pelaut_id WHERE ";
+		$str .= "CONCAT(a.nama_depan,' ',a.nama_belakang) LIKE '%$keyword%' OR ";
+		$str .= "a.kebangsaan LIKE '%$keyword%' OR ";
+		$str .= "a.agama LIKE '%$keyword%' OR ";
+		$str .= "a.gender = '$keyword' OR ";
+		$str .= "a.tempat_lahir LIKE '$keyword' OR ";
+		$str .= "a.alamat LIKE '%$keyword%' OR ";
+		
+		$str .= "b.rank = '$rank_id[rank_id]' OR ";
+		$str .= "b.coc_class = '$coc_id[id_coc_class]' ";
+		
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id" => $row["pelaut_id"], "category" => "seaman"); 	
+		}
+		
+		return $hasil;
+		
+	}
+	
+	function search_proficiency($keyword = '')
+	{
+		// Category Pelaut
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		$str  = "select * from proficiency_tr where	";
+		$str .= "no_sertifikat LIKE '%$keyword%' OR sertifikat_stwc LIKE '%$keyword%' OR place_issue LIKE '%$keyword%' GROUP BY pelaut_id ";
+		//GROUP BY PELAUT
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id" => $row["pelaut_id"], "category" => "seaman"); 	
+		}
+		
+		return $hasil;
+			
+	}
+	
+	function search_experience($keyword = '')
+	{
+		// Category Pelaut
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		$strr = "select rank from rank where rank = '$keyword' ";
+		$qr = $this->db->query($strr);
+		$fr = $qr->row_array();
+		
+		$str  = "select * from experiences where	";
+		$str .= "rank_id = '$fr[rank_id]' OR ship_name LIKE '%$keyword%' OR company LIKE '%$keyword%' OR trade_area LIKE '%$keyword%' GROUP BY pelaut_id ";
+		
+		//GROUP BY PELAUT
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id" => $row["pelaut_id"], "category" => "seaman"); 	
+		}
+		
+		return $hasil;
+			
+	}
+	
+	function search_document($keyword = '')
+	{
+		// Category Pelaut
+		if($keyword == "")
+		{
+			$keyword = $this->uri->segment(2);
+		}
+		
+		$str  = "select * from document_tr where ";
+		$str .= "type LIKE '%$keyword%' OR number LIKE '%$keyword%' OR place LIKE '%$keyword%' OR type_document LIKE '%$keyword%' OR country LIKE '%$keyword%' GROUP BY pelaut_id ";
+		
+		//GROUP BY PELAUT
+		$q = $this->db->query($str);
+		$f = $q->result_array();
+		
+		foreach($f as $row)
+		{
+			$hasil[] = array("id" => $row["pelaut_id"], "category" => "seaman"); 	
+		}
+		
+		return $hasil;
+			
+	}
+	
+	function insert_keyword()
+	{
+
+		$keyword = $this->input->post("keyword");
+		
+		$page    = $this->input->post("page");
+		//$params  = 
+		$result  = count($this->search($keyword));
+		
+		$username = $this->session->userdata("username");
+		$ip_address = $_SERVER['REMOTE_ADDR'];
+		
+		$str  = "INSERT INTO keyword set 		 ";
+		$str .= "keyword 		= '$keyword'	,";
+		$str .= "page 			= '$page'		,";
+		$str .= "result			= '$result'		,";
+		$str .= "username		= '$username'	,";
+		$str .= "ip_address		= '$ip_address'	,";
+		$str .= "create_date	= now()			 ";
+		
+		$q = $this->db->query($str);
+	}
+}

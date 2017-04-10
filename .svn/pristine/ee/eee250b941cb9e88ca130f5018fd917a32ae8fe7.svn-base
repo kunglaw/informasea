@@ -1,0 +1,198 @@
+<?php // content detail , menu company, module company ?>
+
+<!--[if lte IE 8]>
+<div id="browser-upgrade-div" class="alert alert-warning browser-check-text"> browser tak mendukung  </div>
+<![endif]-->
+<div id="content-detail" class="col-md-9 col-lg-9 col-sm-9">
+
+	<!--<section class="container hidden-xs header-separator">
+        <img class="lg_banner" data-original="#" class="img-responsive" /> 
+    </section>	-->	
+    
+    
+
+<section class="container">
+    <div class="row">
+	<div class="col-lg-9 col-md-9 col-sm-9 col-sx-9" style="padding-left:0px !important; padding-right:0px !important;">
+    
+    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">					
+        <div class="panel panel-clean">
+            <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+           		<h3 class="h3-title"><i class="fa fa-edit icon_header"></i> PROFILE</h3>
+                <div class="unselectable wrap-text" id="job_description"> 
+                        <div class="table-responsive">
+                        <table class="table table-stripped">
+                            <tr>
+                                <td>Company Name</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['nama_perusahaan'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Nationality</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['nationality'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Website</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['website'] ?></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Contact Person</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['contact_person'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Telephone</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['no_telp'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Fax</td>
+                                <td>:</td>
+                                <td style="color:#0C0; font-weight:bold"><?php echo $company['fax'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td class="tbl-bold"><?php echo $company['email'] ?></td>
+                            </tr>
+                            
+                        </table>
+                        </div><!-- end table -->
+                 </div><!-- END QUALIFICATION -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+    <div class="panel panel-clean">
+        <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h3 class="h3-title"><i class="fa fa-list-alt icon_header"></i>COMPANY SNAPSHOT</h3>
+                         <table class="table table-stripped">
+                         	<tr>
+                                <td>Web</td>
+                                <td>:</td>
+                                <td><a href="#"><?php echo $company['website'] ?></a></td>
+                            </tr>
+                         	<tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td><a href=""><?php echo $company['email'] ?></a></td>
+                            </tr><!--
+                         	<tr>
+                                <td>Address</td>
+                                <td>:</td>
+                                <td>London Office :UCB House 3 George Street Watford, WD18 0BX</td>
+                            </tr>-->
+                         	<tr>
+                                <td>Phone No.</td>
+                                <td>:</td>
+                                <td><?php echo $company['no_telp'] ?></td>
+                            </tr>
+                         </table>   
+            </div>
+        </div>
+    </div>																
+    
+    <div class="panel panel-clean visible-lg visible-md visible-sm">
+        <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div id="gallery">
+                    <h3 class="h3-title"><i class="fa fa-camera-retro icon_header"></i> COMPANY PHOTO</h3>				
+                    <div class="gallery-main-wrap">					
+                         
+                            <div id="main-vid" data-youtube-id="mECVN3MVO3Q"></div>
+                            <div id="main-img" style="display: none;"></div> 
+                            <div id="main-img-caption" style="display: none;">
+                                    <svg height="55" width="100%">
+										<defs>
+											<linearGradient id="img-caption-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+												<stop offset="0%" style="stop-color:rgba(0,0,0,0);stop-opacity:0" />
+												<stop offset="100%" style="stop-color:rgba(0,0,0,0.65);stop-opacity:1" />
+											</linearGradient>
+										</defs>
+										<rect width="100%" height="100%" fill="url(#img-caption-grad)" />
+									</svg>
+                                <p id="main-img-caption-text"></p>
+                            </div>
+                   </div>
+                </div>
+            </div>
+            <div id="gallery-carousel" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ul class="gallery-thumb">
+                        <li><img data-original="#" data-video="#" title="Video" /></li> 
+     
+                        <li><img data-original="#" class="img-responsive" title="" src="<?php echo base_url("assets/img/mane-20141014095813_mc-ckimage.jpg") ?>" /></li>
+                        <li><img data-original="#" title="" /></li>
+                        <li><img data-original="#" title="" /></li>
+                </ul>
+            </div>
+        </div>
+    </div>								
+    
+    <div class="panel panel-clean">
+        <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3 id="overview" class="h3-title"><i class="fa fa-building-o icon_header"></i> COMPANY OVERVIEW</h3>			
+                <div class="company-overview wrap-text">
+                	<p id="company_overview" class="cmpy_desc_p"><?php echo $company['description'] ?></p>
+               </div>
+            </div>
+        </div>
+    </div>								
+    
+    </div>                                
+</div>
+</div>
+</section>
+
+
+  <section class="container">
+  <div class="row">
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+          <div class="panel panel-clean">
+              <div class="panel-body apply-now-panel">
+                  <div class="apply-now-wrap">
+                      <div class="row">
+                          <div id="apply-now-owa" class="col-lg-6 col-md-6 col-sm-5 col-xs-12 text-left apply-now-owa"></div>
+                          	<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 text-right apply-now-desc">	
+                              <a type="button" class="btn btn-link apply-now-save" target="_blank" href="#">Save this job</a>
+                         	</div>
+                          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-right apply-btn-wrap">
+                              <form action="#" method="post">
+                                  <input type="hidden" value="1434772" name="job_id" id="job_id" />
+                                  <input type="hidden" value="1435270" name="advertisement_id" id="advertisement_id" />
+                                  <input type="hidden" value="40" name="s" id="s" />
+                                  <input type="hidden" value="1" name="AdvertisementSource" id="AdvertisementSource" />
+                                  <input type="hidden" name="fr" id="fr" value="" />
+                                  <button id="apply_button" type="submit" class="btn btn-primary btn-lg apply-btn-padding " data-tracker="#">Apply Now</button>
+                                  
+                              </form>
+                          </div>	
+                                                  
+                      </div>
+                      <div class="row apply-now-bar-row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 apply-now-bar">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-0 text-left">
+                            <p id="posting_date" class="apply-now-bar-desc hidden-xs">Advertised: 07-November-2014</p>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-right">
+                            <p id="closing_date" class="apply-now-bar-desc">
+                                                        Closing on 27-November-2014</p>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div></div>
+  </section>
+
+</div>

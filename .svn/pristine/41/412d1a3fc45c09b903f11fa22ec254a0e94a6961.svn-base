@@ -1,0 +1,3 @@
+<?php foreach($rank as $row) { ?>
+   <option value="<?php echo $row['rank_id'] ?>"><?php echo $row['rank'] ?></option>
+<?php } ?>

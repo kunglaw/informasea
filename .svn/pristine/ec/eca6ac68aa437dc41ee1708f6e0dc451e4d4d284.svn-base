@@ -1,0 +1,51 @@
+<?php // content, timeline, controller profile, modules seaman  ?>
+<div id="main-profile" class="col-md-9">
+	<?php $dt_header['username'] = $username; ?>
+    <?php $this->load->view("header",$dt_header); ?>
+    
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <?php $dt_navbar['tml_active'] = "active"; ?>
+        <?php $this->load->view('navbar-profile',$dt_navbar)?>
+        <!-- Tab panes -->
+        
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="timeline">
+                <div class="row">
+                    <div class="col-md-4 hidden-xs">
+                        <?php $this->load->view('panel/myaccount-panel')?>
+                        
+                        <?php $this->load->view('panel/photo-panel') ?>
+                        
+                        <?php $this->load->view("include/list-friends.php")?>
+                    </div>
+                    <div class="col-md-8">
+                        
+                        <?php
+
+                          if($this->session->userdata("user") == "pelaut")
+                          {
+                              $this->load->view('timeline/write-post-block.php');
+                          }
+                        
+                        ?>
+                        
+                        <?php //$this->load->view('include/post-block.php'); ?>
+                        <?php $this->load->view('timeline/template-profile'); ?>
+                    </div>
+                </div>
+            </div>
+            <!-- 
+            <div role="tabpanel" class="tab-pane" id="account">...</div>
+            <div role="tabpanel" class="tab-pane" id="photos">
+                <?php //$this->load->view("include/gallery.php"); ?>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="friends">...</div>
+            <div role="tabpanel" class="tab-pane" id="resume">
+                <?php //$this->load->view("include/resume.php"); ?>
+            </div>
+            -->
+        </div><!-- tab-content -->
+        
+    </div>
+</div>

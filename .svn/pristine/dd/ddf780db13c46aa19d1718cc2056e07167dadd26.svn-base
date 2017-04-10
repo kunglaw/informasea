@@ -1,0 +1,35 @@
+- yang perlu di update untuk masing - masing client di folder server adalah
+  folder 
+  - informasea
+  - infrasset - sekiranya ada penambahan file baru untuk informasea
+  - mysql / phpmyadmin
+
+- dalam melakukan update, dimohon untuk tidak mengupdate secara bersamaan.
+lakukan secara antri, yaitu setelah masing-masing client sudah melakukan update
+
+
+- untuk folder config, tidak boleh sembarang maen copas.
+kalau misalkan ada perubahan pada file
+- config.php
+- routes.php
+
+JANGAN DITIBAN! sekali lagi JANGAN DITIBAN
+editlah penambahan script pada file tersebut secara langsung
+
+- untuk merubah file di folder Controller, Model usahakan memberikan // koment pada masing-masing
+baris script sekiranya itu penting untuk keterangan buat yang lain
+
+- saat melakukan update module/page usahakan check juga pada web di server juga
+page informasea di server : 192.168.0.106/informasea
+page mysql : 192.168.0.106/phpmyadmin
+pass to join homegroup : 9nA1o7RE5U
+
+
+- setelah mengupdate module masing-masing ke "server" , 
+usahakan copy juga module-module yang lain pada localhost masing - masing 
+
+catatan :
+peraturan akan selalu di update seiring dengan situasi dan kondisi yang berlaku
+
+thanks ,
+Dimas

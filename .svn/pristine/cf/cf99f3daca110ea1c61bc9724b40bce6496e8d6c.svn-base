@@ -1,0 +1,19 @@
+<?php // js under module users ?>
+
+<script>
+	$(document).ready(function() {
+		$('#footer').removeClass('footer-container-bg');
+		$("#username_info").hide();
+	});
+	
+	$("#username_reg").change(function(){
+
+		var username = $(this).val();
+		check_username(username);
+	});
+	
+	$("#email").change(function(){
+		var email = $(this).val();
+		check_email(email);
+	});
+</script>

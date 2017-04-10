@@ -1,0 +1,41 @@
+<?php //LEFT CoNTENT PROFILE ?>
+
+<div class="col-md-4">
+  <div id="left-bar" class="panel panel-default hidden-phone">
+      <div class="panel-body">
+        <?php 
+		  	$this->load->view('profile/left_profile');
+		  ?> 
+      </div>
+  </div> 
+  
+   <div class="list-group" style="margin:15px 0 0 0">
+    <a class="list-group-item active">
+     <b> <span class="glyphicon glyphicon-user"></span> &nbsp My Profile </b>
+    </a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;About </a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-picture"></span> &nbsp; Photo Album</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp; Friends</a>
+  </div>
+  
+  <div class="list-group" style="margin:15px 0 0 0">
+    <a class="list-group-item active">
+      <b> <span class="glyphicon glyphicon-briefcase"></span> &nbsp My Job </b>
+    </a>
+    <a href="<?php echo base_url("seaman/resume"); ?>" class="list-group-item"><span class="glyphicon glyphicon-list-alt"></span>&nbsp Resume</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;Applied Job</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;Interview Invitation</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;Resume Requests</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;Interview Schedule</a>
+  </div>
+  
+  <div class="list-group" style="margin:15px 0 0 0">
+    <a class="list-group-item active">
+      <b><span class="glyphicon glyphicon-asterisk"></span> &nbsp; My Activity </b>
+    </a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-info-sign"></span> &nbsp;Notifications</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-comment"></span> &nbsp;Messages</a>
+    <a href="#" class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span> &nbsp;Friend Request</a>
+  </div>
+ 
+</div><!-- col-md-4 -->

@@ -1,0 +1,126 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/*
+|--------------------------------------------------------------------------
+| LINK URL
+|--------------------------------------------------------------------------
+| 
+| 	Link url untuk img, file, url dll 
+*/
+define("BASE_URL","http://localhost/informasea");
+define("ASSET_URL","http://localhost/informasea_assets");
+define("IMG_URL",BASE_URL."/infrasset");
+define("FILE_URL",BASE_URL."/infrasset");
+
+/*
+|--------------------------------------------------------------------------
+| Profile Informasea
+|--------------------------------------------------------------------------
+|	
+| basic profile informasea
+|
+*/
+define("WEBSITE","Informasea");
+define("TITLE","informasea.com");
+define("COMPANY",""); // nama PT Informasea
+define("URL_WEBSITE","http://informasea.com");
+define("ADDRESS","Jl. Pinang Tangsel");
+define("TELP","");
+
+define("INFORMASEA_SLOGAN","Seafarers networking and Job portal");
+
+define("INFORMASEA_DESC","Informasea is ".INFORMASEA_SLOGAN.". For Shipping company, this is the place where you can manage and search the competent seaman to hire");
+define("META_DESCRIPTION","Informasea is ".INFORMASEA_SLOGAN.". For Shipping company, this is the place where you can manage and search the competent seaman to hire");
+
+define("CONTACT","info@informasea.com");
+define("LOGO_INFORMASEA",ASSET_URL."/img/img_logo_about.png");
+define("LOGO_INFORMASEA_ALT",ASSET_URL."img/img_logo_alt.jpg");
+define("FAVICON",ASSET_URL."/img/favicon.png");
+
+
+/*
+|--------------------------------------------------------------------------
+| File and Directory Modes
+|--------------------------------------------------------------------------
+|
+| These prefs are used when checking and setting modes when working
+| with the file system.  The defaults are fine on servers with proper
+| security, but you may wish (or even need) to change the values in
+| certain environments (Apache running a separate process for each
+| user, PHP under CGI with Apache suEXEC, etc.).  Octal values should
+| always be used to set the mode correctly.
+|
+*/
+define('FILE_READ_MODE', 0644);
+define('FILE_WRITE_MODE', 0666);
+define('DIR_READ_MODE', 0755);
+define('DIR_WRITE_MODE', 0777);
+
+/*
+|--------------------------------------------------------------------------
+| File Stream Modes
+|--------------------------------------------------------------------------
+|
+| These modes are used when working with fopen()/popen()
+|
+*/
+
+define('FOPEN_READ',							'rb');
+define('FOPEN_READ_WRITE',						'r+b');
+define('FOPEN_WRITE_CREATE_DESTRUCTIVE',		'wb'); // truncates existing file data, use with care
+define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE',	'w+b'); // truncates existing file data, use with care
+define('FOPEN_WRITE_CREATE',					'ab');
+define('FOPEN_READ_WRITE_CREATE',				'a+b');
+define('FOPEN_WRITE_CREATE_STRICT',				'xb');
+define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
+
+
+/*
+|--------------------------------------------------------------------------
+| Database connection
+|--------------------------------------------------------------------------
+|
+| this is database connection
+|
+*/
+
+define('DB_SETTING',"");
+define("DB_SETTING2","");
+
+
+/* define("PROFILE_PELAUT",base_url("seaman/resume"));
+define("PROFILE_AGENTSEA","");
+
+define("MENU_AGENTSEA",base_url("agentsea"));
+define("MENU_VACANTSEA",base_url("vacantsea"));
+define("MENU_SEATIZEN",base_url("seatizen"));*/
+
+/*
+|--------------------------------------------------------------------------
+| IMAGE
+|--------------------------------------------------------------------------
+|
+|
+*/
+//img_url("company/default/ic_landing_company.svg");
+
+define("DEFAULT_PHOTO_SMALL",ASSET_URL."/user_img/noprofilepic_small.png");
+define("DEFAULT_PHOTO_THUMBNAIL",ASSET_URL."/user_img/noprofilepic_thumb.png");
+define("DEFAULT_PHOTO_BIG",ASSET_URL."/user_img/noprofilepic.png");
+
+define("DEFAULT_IMG_PROFILE_SEAMAN",ASSET_URL."/img/ic_landing_seaman.svg");
+define("DEFAULT_IMG_RESUME_SEAMAN",ASSET_URL."/img/ic_landing_seaman.svg");
+
+define("DEFAULT_IMG_LOGO_AGENTSEA",ASSET_URL."/img/ic_landing_company.svg");
+define("DEFAULT_IMG_PROFILE_MANAGER",ASSET_URL."/img/ic_landing_company.svg");
+define("DEFAULT_IMG_PROFILE_AGENT",ASSET_URL."/img/ic_landing_company.svg");
+
+define("DEFAULT_IMG_COVER_SEAMAN",ASSET_URL."/img/img_ship.png");
+define("DEFAULT_IMG_COVER_AGENT",ASSET_URL."/img/cover.png");
+
+
+
+
+/* End of file constants.php */
+/* Location: ./application/config/constants.php */
+

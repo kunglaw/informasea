@@ -1,0 +1,112 @@
+<?php // template register agentsea ?>
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-6 text-white hidden-sm hidden-xs m-t-1">
+            <h1><span class="text-link">Welcome to</span> Informasea </h1>
+
+            <p>
+                Informasea is a place for you as a seaman to search Information for Vacantsea and networking. For
+                Shipping Agentsea, this is the place where you can manage and search the best competent seaman to
+                hire.</p>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= base_url("/assets/img/ic_register_search.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Search Vacantsea</h4></div>
+                    <p>
+                        You can use these galleries to insert tables, headers, footers, lists, cover pages, and
+                        other document building blocks. When you create pictures, charts, or diagrams, they also
+                        coordinate with your current document look.
+                    </p>
+                </div>
+            </div>
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= base_url("/assets/img/ic_register_social.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Social Network</h4></div>
+                    <p>
+                        Most controls offer a choice of using the look from the current theme or using a format that
+                        you specify directly. To change the overall look of your document, choose new Theme elements on
+                        the Page Layout tab.
+                    </p>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= base_url("assets/img/ic_register_managing.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Managing Schedule</h4></div>
+
+                    <p>
+                        Most controls offer a choice of using the look from the current theme or using a format that
+                        you specify directly.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-white m-t-1">
+            <div class="block">
+                <h2>Register as
+                    <button class="btn btn-transparent" onClick="javascript:location.href = '<?=base_url("users/register/seaman")?>' ">
+                    	SEAMAN</button>
+                    <button class="btn btn-filled" onClick="javascript:location.href = '<?=base_url("users/register/agentsea")?>' ">
+                    AGENTSEA</button>
+                </h2>
+            </div>
+
+            <form class="transparent register-form" action="" role="form" method="post" >
+                <div class="form-group">
+                	<label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                </div>
+               	<div class="form-group">
+                	<label for="username">Company Name</label>
+                    <input type="text" class="form-control" id="nama_perusahaan" name="nama_perusahaan" placeholder="Nama Perusahaan" 
+                    value="<?=set_value('nama_perusahaan');?>">
+                </div>
+                <div class="form-group">
+                	<label for="first_name">Contact Person</label>
+                    <input type="text" class="form-control" name="contact_person" id="contact_person" placeholder="Contact Person"
+                    value="<?=set_value('contact_person');?>">
+                </div>
+                
+                <div class="clearfix"></div>
+                <div class="form-group">
+                	<label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                	<label for="reemail">Re-Enter Email</label>
+                    <input type="email" class="form-control" id="reemail" name="reemail" placeholder="Re-enter mail">
+                </div>
+                <div class="form-group">
+                	<label for="password">Password</label>
+                    <input type="password" class="form-control" id="pasword" name="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                	<label for="re-password">Re-Enter Password</label>
+                    <input type="password" class="form-control" id="re-password" placeholder="Re-enter Password">
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LcFQgkTAAAAACqUmwpvnuFlJc9f8eqjkdRP7Tq2"></div>
+                <div class="pull-left" style="font-size: 12px">
+                	By Sign up this, you agree the 
+                	<a href="#" class="text-link">Term and Condition</a> Informasea
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-filled">Register</button>
+                </div>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</section>

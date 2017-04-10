@@ -1,0 +1,84 @@
+<?php $this->load->view('css'); 
+/*
+ *
+ * Created by PhpStorm.
+ * User: a
+ * Date: 12/06/2015
+ * Time: 20:38
+ */
+?>
+
+<div class="col-md-9 contactpage seatizen-list-container center-block">
+       <br>
+    <br>
+    <div class="container">
+        <h3> Your Notifications </h3>
+        <hr>
+    </div>
+<div class="container">
+  <div class="row" style="">
+        <div class="col-md-7">
+            <ul class="list-group">
+            <?php 
+             foreach($notif as $n){ 
+                $user = $this->user_model->get_detail_pelaut($n['from_user']);
+             $img = $this->user_model->get_profile_pic($user['pelaut_id']);
+                if($img){ 
+    $path_img = img_url("photo/".$row['username']."/profile_pic/".$b);
+    } else {
+        $path_img = asset_url("img/user.jpg");
+    }
+
+
+                ?>
+             <li class="list-group-item">
+                <a href="<?php echo $n['url']; ?>"> 
+              <?php echo $n['title_notif']; ?>  </a> <br>
+           <?php 
+            $now = new Datetime(date('Y-m-d H:i:s'));
+            $tgl = new Datetime($n['datetime']);
+            $a = $now->diff($tgl);
+            // echo "<b>"; print_r($a); echo "</b>";
+            // echo "<br>";
+                
+            if($a->y ==0 AND $a->m == 0){
+
+
+            if($a->d == 0){
+              
+                    if($a->h == 0){
+                      
+                        if($a->i == 0){
+                            echo $a->s ." seconds ago";
+                        } else{
+                            echo $a->i ." minutes ago";
+                        }
+
+                    }else {
+                        echo $a->h ." hours ago";
+                    }
+            } else if($a->d == 1){
+                echo "Yesterday";
+            } else {
+                echo $a->d ." days ago";
+            }
+             } else if($a->y != 0) {
+                echo $a->y ." years ago";
+             } else if($a->y == 0 AND $a->m != 0){
+                echo $a->m ." month ago";
+             }
+ 
+            ?></li>
+          <?php   } ?>
+         </ul>
+        </div>
+
+
+      </div>
+  </div>
+</div>
+
+<?php 
+    //echo $this->output->enable_profiler(TRUE);
+$this->load->view("js_under") ?>
+

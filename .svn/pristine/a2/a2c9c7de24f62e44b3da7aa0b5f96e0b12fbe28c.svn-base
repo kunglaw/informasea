@@ -1,0 +1,247 @@
+<?php  // content center , menu vacantsea, module vacantsea ?>
+
+
+<div id="content row" class="col-md-9" style="margin: 5px 0px 0px 10px">
+   
+   <script>
+	
+	$(document).ready(function(e) {
+        $("#get_id_department").change(function(){			
+			  $.ajax({
+				  url:"<?php echo base_url("vacantsea/rank_ajax") ?>",
+				  type: "POST",
+				  data:"id_department=" + $(this).val(),
+				  success: function(data) {
+					  
+						  $("#get_rank").html(data);
+					  }
+			  });		
+			
+			
+		});
+		
+		
+    });
+   </script>
+  	
+   <div class="panel panel-default" id="panel-vacantsea">
+     
+     <div class="panel-body">
+       	<form role="form" id="form-search-vacan" action="<?php echo base_url('vacantsea/searching') ?>" method='post'>
+        <!-- <div class="form-group">  -->
+            <!-- <label for="keyword"> Keyword   </label> -->
+            <?php 
+              $keyword = $keyword=="querykey" ? "":$keyword;
+
+             ?>
+            <div class="col-xs-4">
+            <input type="text" value="<?php echo $keyword ?>" name="keyword" class="form-control" placeholder="Company Name or Job Title" id="keyword"/>
+            </div>
+        <!-- </div> -->
+        <!-- <div class="form-group"> -->
+            <!-- <label for="sallary">Sallary  </label> -->
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select class="form-control" name="sallary" id="sallary">
+                <option value="">-Sallary-</option>
+                <option value="100-300">100 USD - 300 USD</option>
+                <option value="300-600">300 USD - 600 USD</option>
+                <option value="600-900">600 USD - 900 USD</option>
+                <option value="900">>900 USD</option>
+            </select>
+            </div>
+        
+        <!-- </div> -->
+        
+        <!-- <div class="form-group"> -->
+            <!-- <label for="ship_type"> Ship Type </label> -->
+           <!--  <select name="ship_type" id="ship_type">
+                <option value="">-Ship Type-</option>
+                <?php
+                //$selected = "";
+                foreach($ship_type as $row) { 
+                
+                ?>
+                   <option value="<?php echo $row['type_id'] ?>" <?php echo $selected = "" ?> ><?php echo $row['ship_type'] ?></option>
+                <?php 
+                } ?>
+            </select>         -->
+        <!-- </div> -->
+        
+        <!-- <div class="form-group"> -->
+            <!-- <label for="departement"> Departement </label> -->
+            <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select class="form-control" id="get_id_department" name="get_id_department">
+                <option value="">-Department-</option>
+                <?php foreach($department as $row) { ?>
+                <option value="<?php echo $row['department_id'] ?>"><?php echo $row['department'] ?></option>
+                <?php } ?>
+            </select>
+        </div> -->
+        <!-- </div> -->
+        
+        <!-- <div class="form-group"> -->
+            <!-- <label for="rank">Rank</label> -->
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select class="form-control" name="get_rank" id="get_rank">    
+                <option selected="selected" value="">-Rank-</option>
+                <!--AJAX "LIST_RANK.PHP" -->
+            </select>
+            </div>
+            <script>
+                $("#get_id_department").change(function(e)
+                { 
+                    var department_id = $(this).val(); 
+                    //alert(department_id);
+                    get_coc_class(department_id);
+                    get_rank(department_id); 
+                    
+                });
+                
+                $(document).ready(function(e) {
+                    var department_id = $("#get_id_department").val(); 
+                    //alert(department_id);
+                    get_coc_class(department_id);
+                    get_rank(department_id);
+                });
+                
+                function get_rank(department_id)
+                {
+                    $.ajax({
+                        
+                        type:"POST",
+                        url:"<?php echo base_url("vacantsea/get_rank"); ?>",
+                        data:"department_id="+department_id,
+                        success: function(data)
+                        {
+                    
+                            $("#get_rank").html(data);
+                        }
+                        
+                    });
+                }
+                
+                
+            </script>
+        <!-- </div> -->
+        
+        <!-- <div class="form-group"> -->
+            <!-- <label for="coc_class">COC Class</label> -->
+            <!-- <select name="coc_class" id="coc_class">
+                <option value="">-COC Class-</option>
+                <?php foreach($coc as $row) { ?>
+                <option value="<?php echo $row['id_coc_class'] ?>"><?php echo $row['coc_class'] ?></option>
+                <?php } ?>
+            </select> -->
+            <script>
+              function get_coc_class(department_id)
+              {
+                 // alert("test:"+department_id);
+                  $.ajax({
+                      
+                      type:"POST",
+                      url:"<?php echo base_url("vacantsea/get_coc_class"); ?>",
+                      data:"department_id="+department_id,
+                      success: function(data)
+                      {
+                          //alert(data);
+                          //alert(department_id);
+                          $("#coc_class").html(data);
+                      }
+                      
+                  });
+              }
+            
+            </script>
+        
+        <!-- </div> -->
+        
+        <!-- <div class="form-group pull-right"> -->
+            <input type="hidden" value="search_vacant" name="page"  />
+           <!--              
+            <button type="button" class="btn btn-success">
+              <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"> <b>Save</b></span>
+            </button>
+             -->
+            
+            <button type="submit" class="btn btn-primary" id="btn-search">
+              <span class="glyphicon glyphicon-search" aria-hidden="true" ><b>Search</b></span>
+            </button>
+        
+        <!-- </div> -->
+      </form>
+     </div>
+   </div>
+   
+   <!-- start list vacantsea -->
+   <div class="panel panel-default" id="panel-vacantsea">
+     
+     <div class="panel-body">
+      <div id="list_vacantsea">
+       	
+       </div> 
+     </div>
+   </div>
+</div>
+<script>
+var keyword;
+	function get_list_vacantsea() 
+	{
+		// var data = "vacantsea/vacantsea/get_list_vacantsea";
+		// // alert(data);
+		// var get_list = keyword == "" ? data:data+"/"+keyword;
+		// // alert(get_list);
+		// var page_list = "<?php echo base_url('vacantsea/vacantsea/search_vacantsea/"+keyword+"') ?>";
+		// alert(page_list);
+		// alert(page);
+		if(keyword == ""){
+			$.ajax({
+				type :"POST",
+				url:"<?php echo base_url("vacantsea/get_list_vacantsea") ?>",
+				data:"x=1",
+				success: function(data) {
+				
+					$("#list_vacantsea").html(data);
+				} /*end success*/
+			});
+		}
+		else
+		{
+			$.ajax({
+				type :"POST",
+				url:"<?php echo base_url("vacantsea/search_vacantsea") ?>",
+				data:"x=1,<?php echo $keyword ?>,<?php echo $department_id ?>,<?php echo $rank_id ?>,<?php echo $ship_type ?>,<?php echo $page ?>,<?php echo $coc_class ?>,<?php echo $sallary ?>",
+				// keyword:keyword,
+				success: function(data) {
+				//alert (data);
+					$("#list_vacantsea").html(data);
+				} /*end success*/
+			});
+		}
+	}
+
+function ajax_function(){
+//        alert("Hello");
+    $.ajax({
+        type: "POST",
+        url: "<?php echo base_url("vacantsea/cobacobasince")?>",
+//                context: document.body,
+        data: "z=2015-04-13 05:28:22",
+        success: function(result){
+            $('div#list_vacantsea').html(result);
+        }
+    });
+
+    function updatePanel() {
+        setInterval(function () {
+            ajax_function();
+        }, 1000 * 60);
+    }
+}
+	
+	$(document).ready(function(e) {
+		keyword = "<?php echo $page; ?>";
+		// alert(keyword+"testing");
+		get_list_vacantsea();
+        updatePanel();
+    });
+</script>

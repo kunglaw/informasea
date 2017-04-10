@@ -1,0 +1,36 @@
+<?php // list photo timeline , module photo ?>
+
+<?php
+$this->load->helper("text");
+if(!empty($photo))
+{
+	foreach($photo as $row){
+		
+		//print_r($row);
+		
+	$nama_gambar = explode(".",$row['photo']);
+?>
+<div class="subpic" style="margin-bottom:5px; margin-right:5px;"> 
+	<img src="<?php echo img_url("timeline/$row[username]/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1]); ?>" style="width:150px; height:150px; margin-bottom:5px;">
+    <?php
+			if($row['content'] == "")
+			{
+				$row['content'] = "Timeline Photo";	
+			}
+		?>
+     <div class='description'>
+                <!-- description content -->
+                <p class='description_content'><?php echo character_limiter($row['content'],10); ?></p>
+                <!-- end description content -->
+            
+     </div>
+</div>
+<?php
+	}
+}
+else
+{
+	echo "You have No Photo yet";
+}
+?>
+

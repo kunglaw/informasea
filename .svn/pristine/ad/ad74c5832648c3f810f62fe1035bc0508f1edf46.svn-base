@@ -1,0 +1,226 @@
+<?php
+	if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+	
+	// company , module company
+	
+	class Company extends MX_Controller
+	{
+		
+		function __construct()
+		{
+			parent::__construct();
+			//echo "test"; exit;
+
+			$this->load->model('company_model');
+			$this->load->model('vacantsea_model');
+			//$this->load->library('../../photo/controllers/photo');
+			//$this->load->model('ship_model');
+		}
+		
+		function index()
+		{
+			$data['keyword']="";
+
+			// 
+
+			// echo "Hallo";
+			$this->directGeneralPage($data);
+		}
+
+		function information()
+		{
+			//tidak perlu ditambahkan close access karena sudah ada di function directPageDetails()
+			$this->directPageDetails("information");
+		}
+
+		function company_photos()
+		{			
+			//tidak perlu ditambahkan close access karena sudah ada di function directPageDetails()
+			$type = $this->uri->segment(5);
+			$data = $this->photo->company_photos();
+			$this->directPageDetails("gallery_company/list_photo_company","",$data);
+		}
+
+		function get_detail_company()
+		{
+			//tidak perlu ditambahkan close access karena sudah ada di function directPageDetails()
+			$this->directPageDetails("company_detail");
+		}
+
+		function ships_list()
+		{
+			//tidak perlu ditambahkan close access karena sudah ada di function directPageDetails()
+			$id = $this->uri->segment(3);
+			
+			$data['ships'] = $this->ship_model->get_company_ships($id);
+			// $data['ships_type'] = $this->
+			$this->directPageDetails("ships/ships","",$data);
+		}
+
+		function ship_detail()
+		{
+			//tidak perlu ditambahkan close access karena sudah ada di function directPageDetails()
+			$id_kapal = $this->uri->segment(5);
+			// echo $id_kapal;
+			$data['ship'] = $this->ship_model->get_detail_ship($id_kapal);
+			$data['detail_ship'] = $this->ship_model->get_ships_type($data['ship']['id_ship_type']);
+			$template = "vacantsea/template_detail"; //memanggil template selain di dalam company
+			$new_page = "company/detail_company/ships/ships_detail"; //halaman detail yang baru jika tidak menggunakan template detail company
+			$this->directPageDetails("ships/ships_detail","",$data, $template, $new_page);
+		}
+
+		protected function directGeneralPage($data='')
+		{
+			$this->authentification_model->close_access();
+
+			# code...
+			$this->authentification_model->close_access();
+			// echo $this->session->userdata('id_user');
+			if($this->session->userdata("id_user") == NULL)
+			{
+				header("location: custom404");
+				// echo "testing";
+			}
+			$data['title'] = "company";
+			$data['template'] = "template";
+			$data['css'] = "";
+			$data['list'] = $this->company_model->get_company();
+			
+			$this->load->view('index',$data);
+		}
+
+	function search_company()
+	{
+		$this->authentification_model->close_access();
+
+		$dt = explode(',', $this->input->post('x'));
+		$x = $dt[0];
+		$keyword = $dt[1];
+		$ship_type = $dt[2];
+		$page = $dt[3];
+		// print_r($dt);
+		if(empty($keyword) && empty($ship_type))
+		{
+
+			$this->index();
+		}
+		else
+		{
+			echo "hello";
+			if($x != 1)
+			{
+				header("location:".base_url());
+			}
+			// echo "<br>test".$keyword;
+			$data['keyword'] 	= $keyword;
+			$data['department'] = $department;
+			$data['rank_id']	= $rank_id;
+			$data['ship_type']  = $ship_type;
+			$data['page']	   	= $page;
+			$data['coc_class']	= $coc_class;
+			$data['sallary']	= $sallary;
+
+			$data['company'] = $this->company_model->search_company($keyword,$ship_type);
+			// $data['company'] = $data['hasil'];
+			$this->load->view('company_list',$data);
+		}
+	}
+	
+	function search_company_plus()
+	{
+		$this->authentification_model->close_access();
+
+		//echo "search vacantsea plus ... "; exit;
+		$keyword = $this->input->post('keyword');
+		$ship_type = $this->input->post('ship_type');
+
+		$vacantsea_id = $this->input->post('vacantsea_id');
+		$jml_setting = $this->input->post('jml_setting');
+
+		// echo $keyword." - ".$vacantsea_id." = ".$jml_setting;
+
+		if($this->input->post('x') != 1)
+		{
+			header("location:".base_url());
+		}
+		// echo "Hallo";
+		$data['job_plus'] = $this->company_model->search_company_plus($keyword, $department,$rank_id,$ship_type,$sallary);
+		// print_r($data);
+		$data['uri'] = $this->input->post('uri');
+		
+		$data['keyword'] 	= $keyword;
+		$data['department'] = $department;
+		$data['rank_id']	= $rank_id;
+		$data['ship_type']  = $ship_type;
+		$data['page']	   = $page;
+		// print_r($data);
+		$this->load->view('list_vacantsea_plus',$data);
+		
+	}
+
+		protected function directPageDetails($page, $css = "", $data = "", $template = "", $new_page="")
+		{
+			$this->authentification_model->close_access();
+
+			$id = $this->uri->segment(3);
+			$nama_perusahaan = $this->uri->segment(4);
+			$data['company_name'] = str_replace('%20', '_', $nama_perusahaan);
+			$data['comp_id'] = $id;
+			$data['title'] = str_replace('%20', ' ', $nama_perusahaan);
+			$data['template'] = $template == "" ? "detail_company/template" : $template;
+			$data['halaman_detail'] = $new_page == "" ? "detail_company/".$page : $new_page;
+			$data['css'] = $css;	
+			$data['vacantsea'] = $this->vacantsea_model->get_company_vacantsea($id);
+			$data['company'] = $this->company_model->get_detail_company($id);
+			// echo $id."-".$id_kapal."-".$nama_perusahaan;
+			// print_r($data);
+			$this->load->view('index',$data);
+		}
+
+		function searching()
+		{
+			$data['keyword'] = $this->input->get("keyword", true);
+			$data['ship_type'] = $this->input->get("ship_type", true);
+			$data['page'] = $this->input->get("page", true);
+
+			$this->directGeneralPage($data);
+		}
+
+		function home()
+		{
+			$this->directPageDetails("home","detail_company/carousel");
+		}
+
+		function list_company_vacantsea()
+		{
+			$this->directPageDetails("list_company_vacantsea");
+		}
+		
+		function company_list()
+		{	
+		$this->authentification_model->close_access();
+			
+			if($this->input->post('x') != 1)
+			{
+				header("location:".base_url());
+			}
+			$data['company'] = $this->company_model->list_company_lim();	
+			$this->load->view('company_list',$data);
+			
+		}
+		
+		function get_company_list_plus()
+		{			
+			$this->authentification_model->close_access();
+
+			//echo "oooiii";
+			$data['company_plus'] = $this->company_model->list_company_lim_plus();
+			$data['uri'] = $this->input->post('uri'); 
+			
+			$this->load->view('company_list_plus',$data);
+			
+		}
+		
+		function __desturct(){}
+		
+	}

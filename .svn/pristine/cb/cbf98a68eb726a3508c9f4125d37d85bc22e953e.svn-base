@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* CSS Document */
+.pagination {
+	height: 36px;
+	margin: 18px 0;
+  }
+.pagination ul {
+	display: inline-block;
+  }
+.pagination li {
+	display: inline;
+  }
+.pagination a {
+	padding: 10px 14px;
+  }
+.pagination a:hover,
+.pagination .active a {
+	background-color: #f0f0f0;
+  }

@@ -1,0 +1,135 @@
+<?php // content center , menu experiences , module profile ?>
+
+<style>
+.subpic{
+	float:left; /* important */
+	position:relative; /* important(so we can absolutely position the description div */ 
+}
+div.description{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:black;
+	font-family: 'tahoma';
+	font-size:15px;
+	color:white;
+	opacity:0.6; /* transparency */
+	filter:alpha(opacity=60); /* IE transparency */
+}
+p.description_content{
+	padding:10px;
+	margin:0px;
+	font-weight:bold;
+	opacity:0.9;
+}
+
+.list-pic{
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	top:0px; /* position will be on bottom */ /* INGEET. UBAH INI NYA */
+	right:0px;
+}
+
+
+</style>
+<div class="tmp_modal">
+	  <?php // ini untuk ajax page looohh ?>                
+</div>
+<link href="<?php echo base_url("assets/css/jquery.dataTables.css") ?>" type="text/css" rel="stylesheet" />
+
+<div id="" class="col-md-12">
+        <div class="panel panel-default"> 
+            <div class="panel-body">
+				<h2 class=""> Experiences </h2>
+                
+                 <div id="data-table-experience" class="panel panel-default">
+    	<div class="panel-body">
+        
+        <br />
+         <?php //$this->load->view('form-add-experience')?>
+          <div class="" style="width:100%">
+          <br />
+            <table class="table table-bordered" style="font-size:12px">
+              <thead style="font-weight:bold; " class="bg-primary">
+              <tr>
+               
+                <td width="">Type of Vessel </td>
+                <td>Weight</td>
+                <td>Rank</td>
+                <td width="20%" >Periode</td>
+                <td width="5%"></td>
+              </tr>
+             </thead>
+             <tbody>
+              <?php
+                  $this->load->model("vessel_model");
+                  
+                  $vessel_model = $this->vessel_model;
+              
+                  foreach($experience as $row)
+                  {
+                      //$vessel_name = $vessel_model->get_ship_detail($row['ship_id']);
+                      $vessel_type = $vessel_model->get_ship_type_detail($row['ship_type_id']);
+                      $rank 		= $this->resume_model->get_rank_detail($row['rank_id']);
+                      
+                      $periode_from = date("M d, Y",strtotime($row['periode_from']));
+                      $periode_to = date("M d, Y",strtotime($row['periode_to']));
+					  $create_date = date("M d, Y",strtotime($row['datetime']));
+					  $last_update = date("M d, Y",strtotime($row['last_update']));
+                       
+              ?>
+              <tr>
+              	<td ><?php echo $vessel_type['ship_type'] ?> </td>
+                <td ><?php echo $row['weight']." / ".$row['satuan']  ?></td>
+                
+                <td><?php  echo $rank['rank'] ?> </td>
+                <td ><?php echo $periode_from ?> - <?php echo $periode_to; ?></td>
+                <td> 
+                  
+                  <button id="data-update" type="button" class="btn btn-default btn-xs" title="Data update" data-toggle="popover" 
+                  data-content="Create Date: <?php echo $create_date; ?> <br> Last Update : <?php echo $last_update; ?> " ><i class="glyphicon glyphicon-calendar"></i></button>  
+                </td>
+              </tr>
+             
+              </tr>
+              <?php
+                  }
+              ?>
+             </tbody>
+             
+            </table>
+          </div>
+        </div>
+    </div>
+                
+               <span class="clearfix" ></span>
+                
+              
+                
+            
+                
+        	</div>
+        </div>
+        
+</div><!-- col-md-8 -->
+<script src="<?php echo base_url("assets/js/jquery.dataTables.min.js"); ?>"></script>
+<script>
+	function show_table_experience()
+	{
+		$("#data-table-experience table").DataTable({
+			"paging":   true,
+			"ordering": false,
+			"info":     false,
+			"searching":true
+		
+		});
+			
+	}
+	
+	$(document).ready(function(e) {
+		
+		show_table_experience();		
+		
+	});    
+</script>

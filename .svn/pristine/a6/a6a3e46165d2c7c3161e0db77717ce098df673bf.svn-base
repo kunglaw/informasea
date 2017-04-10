@@ -1,0 +1,141 @@
+<?php // js under for informasea landing page ?>
+
+<script type="text/javascript" src="<?=asset_url("js/script.js")?>" ></script>
+<script type="text/javascript" src="<?=asset_url("plugin/plugins/slick/slick.min.js")?>" ></script>
+
+<!--  -->
+
+<script type="text/javascript">
+    var type = "POST";
+    function fillComboBox(){
+        $.ajax({
+            url:"<?php echo base_url("/vacantsea/list_department") ?>",
+            success: function(data) {
+                $("#form-department").html(data);
+            }
+        });
+
+        $.ajax({
+            url:"<?php echo base_url("/home/listVesselType") ?>",
+            success: function(data) {
+                $("#form-vesel").html(data);
+            }
+        });
+
+        $.ajax({
+            url:"<?php echo base_url("/home/listNationality") ?>",
+            success: function(data) {
+                $("#form-nationality").html(data);
+            }
+        });
+    }
+    fillComboBox();
+
+    $("#frm-search-dashboard").submit(function (e) {
+
+        var keyword = $("#keywordnya").val();
+        var department = $("#form-department").val();
+        var vessel_type = $("#form-vesel").val();
+        var nationality = $("#form-nationality").val();
+        var search_by = $("#form-vacantsea").val();
+        var url = "<?php echo base_url("home/search") ?>";
+     
+        var data = "keyword="+keyword+"&department="+department+"&nationality="+nationality+"&vessel_type="+vessel_type+"&nationality="+nationality+"&search_by="+search_by;
+        $.ajax({
+            type: type,
+            url:url,
+            data:data,
+            success: function (hasilnya) {
+                window.location = hasilnya;
+            }
+        });
+        e.preventDefault();
+    });
+
+    $(document).ready(function () {
+        var $vacantseaSlides = 3;
+        var $seatizenSlides = 2;
+        var $companySlides = 3;
+        var $testimonialSlides = 2;
+        $('.testimonial-responsive').slick({
+            autoplay: true,
+            arrows: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: $testimonialSlides,
+            slidesToScroll: $testimonialSlides,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+
+            ]
+        });
+        $('.company-responsive').slick({
+            autoplay: true,
+            arrows: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: $companySlides,
+            slidesToScroll: $companySlides,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+
+            ]
+        });
+        $('.seatizen-responsive').slick({
+            autoplay: true,
+            arrows: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: $seatizenSlides,
+            slidesToScroll: $seatizenSlides,
+            responsive: [
+                {
+                    breakpoint: 900,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+
+            ]
+        });
+        $('.vacantsea-responsive').slick({
+            autoplay: true,
+            arrows: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: $vacantseaSlides,
+            slidesToScroll: $vacantseaSlides,
+            responsive: [
+                {
+                    breakpoint: 1064,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+
+            ]
+        });
+    });
+</script>
+

@@ -1,0 +1,83 @@
+<?php
+$id_perusahaan      = $company[0]['id_perusahaan'];
+$nama_perusahaan    = $company[0]['nama_perusahaan'];
+$nationality        = $company[0]['nationality'];
+$description        = $company[0]['description'];
+$website            = $company[0]['website'];
+$no_telp            = $company[0]['no_telp'];
+$fax                = $company[0]['fax'];
+$email              = $company[0]['email'];
+$contact            = $company[0]['contact_person'];
+$address            = $company[0]['address'];
+
+?>
+<br />
+<div class="about" id="about">       
+    <?php
+    if ($this->session->userdata("username_company")!="") {
+    //login
+    ?>
+     <div class="media">
+        <a class="pull-left" href="#">
+        <img src="<?= $profil_pic ?>" alt="" id="img-profile-company" class="logo-container thumbnail block " style="border:1px solid #CCC" height="54" width="102" />
+        </a>
+        <div class="media-body">
+        <div class="pull-left">
+            <h4 class="media-heading"><span class="text-link"><?= $company[0]["nama_perusahaan"] ?></span></h4>
+            <p><span class="text-gray"><?=$company[0]["nationality"]?></span></p>
+        </div>
+        <span class="clearfix"></span>
+        </div>
+            
+    </div>
+        <h5 class="text-gray">Description</h5>
+        <p class="text-gray7"><?=$description;?></p>
+
+        <table class="text-gray6" width="75%">
+            <tr>
+                <td width="20%">No Telp</td>
+                <td width="5%">:</td>
+                <td><?=$no_telp;?></td></tr>
+            <tr>
+                <td>Fax</td>
+                <td>:</td>
+                <td><?=$fax?></td></tr>
+            <tr>
+                <td>Website</td>
+                <td>:</td>
+                <td><a href="<?='http://'.$website;?>" target="_blank"><?=$website;?></td></tr>
+            <tr>
+                <td>email</td>
+                <td>:</td>
+                <td><?=$email;?></td></tr>
+            <tr>
+                <td>Contact Person</td>
+                <td>:</td>
+                <td><?=$contact;?></td></tr>
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td><?=$address;?></td></tr>
+        </table>
+        
+
+    <?php } else { ?>
+     <div class="media">
+        <a class="pull-left" href="#">
+        <img src="<?= $profil_pic ?>" alt="" id="img-profile-company" class="logo-container thumbnail block " style="border:1px solid #CCC" height="54" width="102" />
+        </a>
+        <div class="media-body">
+        <div class="pull-left">
+            <h4 class="media-heading"><span class="text-link"><?= $company[0]["nama_perusahaan"] ?></span></h4>
+            <p><span class="text-gray"><?=$company[0]["nationality"]?></span><br /><i><b><?=$website;?></b></i></p>
+        </div>
+        <span class="clearfix"></span>
+        </div>
+            
+    </div>
+    <h5 class="text-gray">Description</h5>
+    <div style="width:87%"><p class="text-gray7"><?=$description;?></p></div>
+    <?php } ?>
+
+</div>
+<div id="result_update"></div>

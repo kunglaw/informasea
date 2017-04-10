@@ -1,0 +1,40 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed');
+
+class Profile_resume_model extends CI_Model{
+	
+	function last_profile_resume($id_pelaut = '')
+	{
+		$id_pelaut = $this->session->userdata('id_user');
+		
+		$str = "select * from profile_resume_tr where pelaut_id = '$id_pelaut' ORDER BY last_update DESC LIMIT 1 ";
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		
+		return $f;
+		
+	}
+	
+	function get_profile_resume($id_pelaut = '')
+	{
+		$str = "select * from profile_resume_tr where pelaut_id = '$id_pelaut' ";
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		
+		return $f;
+
+	}
+
+	function cek_lengkap_resume($id_pelaut = ''){
+		$str = "SELECT * FROM profile_resume_tr WHERE pelaut_id = '$id_pelaut' AND 
+		(height != '' and weight != '' AND clothes_size != '' and last_education != '' 
+		and shoes_size != '' and expected_sallary != 0 and exp_sallary_curr != '' and vessel_type != 0 
+		and department != 0 and sallary_range != '')";
+		//echo $str;
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		return $f;  
+	}
+	
+	
+	
+}

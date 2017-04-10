@@ -1,0 +1,148 @@
+<div class="modal fade modal-resume" id="modal-form-add-comp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog "><!-- large -->
+    <div class="modal-content"> 
+    	<div class="modal-header bg-primary" style="padding:-20px 0 -20px 0">
+        	<h4> Form Add COC and Endorsement <!-- Certificate of Competency --> <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></h4>
+            
+        </div>
+         
+    	<div class="modal-body">
+        	<div id="info">
+            	
+            
+            </div>
+        	<script>
+				function add_competency_process()
+				{
+					$.ajax({
+						
+						type:"POST",
+						url:"<?php echo base_url("seaman/resume_process/add_competency_process"); ?>",
+						data:$("#form-add-competency form").serialize(),
+						success: function(data){
+							
+							$("#info").html(data);
+							
+						}
+						
+						
+						
+					});	
+					
+				}
+				
+				$("#save-competency-btn").click(function(){
+					
+					add_competency_process();
+				})
+				
+			
+			</script>
+            
+            <div id="form-add-competency">
+            	<form role="form" class="" method="post">
+                	<div class="form-group">
+                    	<label for="" style="display:block">Certificate of Recognition </label>
+                        	
+
+                        <?php 
+							$this->load->model('nation_model');
+							$nationa = $this->nation_model->get_nationality_pelaut($this->session->userdata('id_user'));
+							$nation = $this->nation_model->get_nationality_except($nationa['kebangsaan']);
+						?>
+						<div class="form-group">
+							<label>
+								Country
+							</label>
+                        <select name="negara" id="negara" class="form-control" style="width:80%">
+                       		<option> Country </option>
+                        	<?php foreach($nation as $row){ 
+							$select_nation = "";
+							if($row['name'] == $profile_resume['profile']['nationality'])
+							{
+
+								$select_nation = "selected='selected'";
+							}
+							
+							?>
+                        	<option value="<?=$row['name']?>" <?=$select_nation?> ><?=$row['name']?></option>
+                        	<?php } ?>
+                        </select>
+
+                    </div>
+                         <input type="hidden" value="Certificate of Recognation" name="grade_license" id="grade_license" class="form-control" style="width:80%" readonly="readonly">
+                        <input type="hidden" value="cor" name="type"  />
+                    </div>
+                    <div class="form-group">
+                    	<label for="" style="display:block">No License </label>
+                        <input type="text" value="" name="no_license" id="no_license" class="form-control" style="width:80%">
+                    </div>
+                    <div class="form-group">
+                    	<label for="" style="display:block">Place Issue </label>
+                        <input type="text" value="" name="place_issue" id="place_issue" class="form-control" style="width:80%">
+                    </div>
+                    <div class="form-group">
+                    	<label for="" style="display:block"><?=$date_issued_lbl?> </label>
+                        <input type="text" value="" name="date_issue" id="date_issue" class="form-control" style="width:80%">
+                    </div>
+                    <div class="form-group">
+                    	<label for="" style="display:block"><?=$date_expired_lbl?> </label>
+                        <input type="text" value="" name="expired_date" id="expired_date" class="form-control" style="width:80%">
+                    </div>
+                   <!--  <div class="form-group">
+                    	<label for="" style="display:block">Country </label>
+                        <input type="text" value="" name="negara" id="negara" class="form-control" style="width:80%">
+                       
+                        
+                    </div> -->
+                     <button class="btn btn-success" id="save-competency-btn" type="button"> <span class="glyphicon glyphicon-floppy-disk"></span>&nbsp; Save </button>
+    <button class="btn btn-primary " data-dismiss="modal"> <span class="glyphicon glyphicon-remove-circle"></span>&nbsp; Cancel </button>
+            	</form>
+            </div>
+        
+
+        </div><!-- modal-body-->
+    </div><!-- modal-content -->
+  </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<script type="text/javascript">
+	$("#date_issue").datepicker({
+		dateFormat:"yy-mm-dd",
+		changeMonth:true,
+		changeYear:true,
+		yearRange: "<?=$date_issued?>",
+		maxDate:0
+		
+	});
+	
+	$("#expired_date").datepicker({
+		dateFormat:"yy-mm-dd",
+		changeMonth:true,
+		changeYear:true,
+		yearRange: "<?=$date_expired?>",
+		
+	});
+	
+	$(document).ready(function(e) {
+        $("#modal-form-add-comp").modal({
+			backdrop:"static",
+			show:true	
+		});
+    });
+	
+// Since confModal is essentially a nested modal it's enforceFocus method
+// must be no-op'd or the following error results 
+// "Uncaught RangeError: Maximum call stack size exceeded"
+// But then when the nested modal is hidden we reset modal.enforceFocus
+var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
+
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+
+$confModal.on('hidden', function() {
+    $.fn.modal.Constructor.prototype.enforceFocus = enforceModalFocusFn;
+});
+
+$confModal.modal({ backdrop : false });
+
+</script>

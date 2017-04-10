@@ -1,0 +1,349 @@
+<?php if(!defined('BASEPATH')) exit('no direct script access allowed ');
+
+class Resume extends MX_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();
+		
+		// yang boleh mengakses ini hanya user type :
+		// - Company 
+		// - Agent
+		// - Pelaut yang punya resume itu sendiri
+		//$this->authentification->close_access();
+		
+		$this->load->model('nation_model');
+		$this->load->model('resume_model');
+		$this->load->model('photo/photo_mdl');
+		
+		$this->load->helper('nonull');
+		
+		
+	}
+	
+	function index()
+	{
+		// http://localhost/informasea/seaman/resume
+
+		// untuk label 
+
+		if($this->session->userdata('id_user') == ''){
+			header('location:'.base_url());
+		}
+
+		$data['date_issued_lbl']  = "Issued date";
+		$data['date_expired_lbl'] = "Expiry date";
+		$data['sign_on_lbl']	  = "Sign On";
+		$data['sign_off_lbl']	 = "Sign Off";
+		
+		//jalankan beberapa model 
+		$this->load->model('vessel_model'); // vessel model
+		$this->load->model("rank_model");
+		$this->load->model('department_model');
+		$this->load->model("coc_model");
+		
+		//echo $this->session->userdata('id_pelaut'); 
+		//print_r($this->session->all_userdata());
+		
+		$data['title'] 	= "Resume";
+		$data['meta'] 	 = "resume/meta";
+		$data['css'] 	  = "resume/css";
+		$data['js_top']   = "resume/js_top";
+		$data['template'] = 'resume/template';
+		$data['js_under'] = "resume/js_under";
+ 		
+		$data['resume'] = $this->resume_model->get_resume();
+		
+		$this->load->view('index',$data);
+		
+	}	
+
+
+	function resume_upload()
+	{
+		$this->load->model('vessel_model'); // vessel model
+		$this->load->model("rank_model");
+		$this->load->model('department_model');
+		$this->load->model("coc_model");
+		
+		$id_pelaut = $this->session->userdata("id_user");
+
+		$data['template'] = 'resume-upload/template';
+		$data['title'] = "Resume Upload";
+		$data['meta'] = "resume-upload/meta";
+		$data['css']   = "resume-upload/resume-upload-css";
+		$data['js_top'] = "resume-upload/js_top";
+		$data['js_under'] = "resume-upload/js_under";
+
+		$data['header'] = "header";
+
+		$data['file_resume'] = $this->resume_model->list_upload_resume($id_pelaut); 
+
+
+		$this->load->view('index',$data);
+	}
+
+	function delete_resume_upload(){
+		$id = $this->input->post('id_update');
+
+		$str = "DELETE FROM resume_file WHERE id_resume_file = '$id'";
+		$q = $this->db->query($str);
+		echo "<script>alert('$str');</script>";
+
+		
+		if(!$q)
+		{
+			$this->db->_error_message();
+			
+		}
+		else
+		{
+			echo "<div class='alert alert-success'>This Resume has Successfully Deleted </div> ";
+			echo "<script> setTimeout(function() { location.reload(); }, 2000); </script>";
+		}
+	}
+
+
+	function download_resume($id_resume_file = ''){
+		$this->load->helper('download');
+		$this->load->helper('username_folder_helper');
+		//$id_resume_file = $this->input->post('id_resume_file');
+		$username =  $this->session->userdata('username');
+
+		$b = $this->resume_model->detail_upload_resume($id_resume_file);
+		$type = $b['file_type'];
+		$typenya = explode("/",$type);
+		$n = $typenya[1];
+		$nama_filenya = $b['file_name'];
+			$data = file_get_contents(pathup("document/$username/$n/$nama_filenya")); // Read the file's contents
+		$name = $nama_filenya;
+		
+
+		force_download($name, $data); 
+	}
+
+	function add_file_resume()
+	{
+		$this->load->library('upload');
+		$this->load->helper('username_folder_helper');
+		
+		$username = $this->session->userdata("username");
+		
+		//$type = explode("/",$_FILES['file_resume']['type']);
+		$new_file_name = strtolower(str_replace(" ","-",$_FILES['file_resume']['name']));
+		
+		$mime_types = array(
+
+            'txt' => 'text/plain',
+            'htm' => 'text/html',
+            'html' => 'text/html',
+         
+            'pdf' => 'application/pdf',
+           
+            'doc' => 'application/msword',
+            'rtf' => 'application/rtf',
+           
+            'odt' => 'application/vnd.oasis.opendocument.text'
+        );
+		
+		//cari nama file untuk nama folder 
+		$type = array_search($_FILES['file_resume']['type'],$mime_types);
+		
+		$configupload['upload_path'] = pathup("document/$username/$type"); // uplaod path itu gak usah pake nama filenya segala 
+		$configupload['file_name'] = $new_file_name;
+		$configupload['allowed_types'] = "pdf|doc|docx|html";
+		$configupload['max_size']	=  1024 * 1024 * 1024 * 100; // 10MB;
+		//echo $_FILES['picture']['size']; exit;
+		//$configupload['max_width']  = '1024';
+		//$configupload['max_height']  = '1024';
+		
+		
+		
+		//print $configupload['upload_path'];
+		$this->upload->initialize($configupload);
+		//print_r($configupload); exit;
+		$file_resume = 'file_resume'; // name dari form file
+		
+		// buat foldernya dahulu
+		// dari username_folder_helper
+		make_username_folder_doc($username,$type);
+		
+		/*check folder selesai */
+		
+		$this->upload->do_upload($file_resume);
+		$dt_resume = $this->upload->data();
+		
+		
+		//var_dump(is_dir("../infrasset/document/alhusna_99/"));
+		//echo "<hr>";
+		//print_r($_FILES['file_resume']);
+		//echo "<hr>";
+		//print_r($configupload);
+		//echo "<hr>";
+		//print_r($dataphoto);
+		echo $error_upload = $this->upload->display_errors('<p class="alert alert-danger"> Upload : ', '</p>');
+		
+		if(empty($error_upload))
+		{
+			$id_pelaut = $this->session->userdata("id_user");
+			$this->resume_model->add_file_resume($id_pelaut,$dt_resume);
+			//header("location:".base_url("seaman/resume/resume_upload"));
+			echo "<div class='alert alert-success'>Resume has successfully upload </div>";
+			echo "<script> setTimeout(function() { location.reload(); }, 3000); </script>";
+		}
+	}
+	
+	function cv_print(){
+
+		$data['date_issued'] = "Issued Date";
+		$data['date_expired'] = "Expiry Date";
+		// $data['title'] 	= "Resume";
+		// $data['meta'] 	 = "resume/meta";
+		// $data['css'] 	  = "resume/css";
+		// $data['js_top']   = "resume/js_top";
+		// $data['template'] = 'resume/template';
+		// $data['js_under'] = "resume/js_under";
+		$id_se = $this->session->userdata('id_user');
+		$this->load->model('seatizen/seatizen_model');
+		//$data['pelaut'] = $this->seatizen_model->get_detail_pelaut_by_id($id_se);
+		$this->load->model('vessel_model');
+		$this->load->model('department_model');
+		$this->load->model('rank_model');
+		$this->load->model('coc_model');
+		$data['resume'] = $this->resume_model->get_resume();
+
+
+		$this->load->view('resume/print_resume',$data);
+	}
+
+	function cv_preview(){
+
+		$this->load->view('resume/preview_resume',$data);
+	}
+	
+	
+	
+	function get_coc_class()
+	{
+		
+		$this->load->model("coc_model");
+		
+		$id 		   = $this->input->post("department_id");
+		$id_coc_class = $this->input->post("id_coc_class"); 
+		
+		$coc = $this->coc_model->get_coc_bydept($id);
+		
+		if(!empty($coc))
+		{
+		  foreach($coc as $row)
+		  {
+			  $scc = "";
+			  
+			  if($id_coc_class == $row['id_coc_class'])
+			  {
+				  $scc = "selected='selected'";	
+			  }
+			  
+			  echo "<option value='$row[id_coc_class]' $scc >$row[coc_class]</option>";
+		  }
+		}
+		else
+		{
+			echo "<option value='0' > none </option>";
+			
+		}
+	}
+	
+	function get_rank()
+	{
+		$this->load->model("rank_model");
+		
+		$id 	  = $this->input->post("department_id");
+		$id_rank = $this->input->post("id_rank"); 
+		
+		$rank = $this->rank_model->get_rank_bydept($id);
+
+		
+		if(!empty($rank))
+		{
+		  foreach($rank as $row)
+		  {
+			  $sr = "";
+			  if($row['rank_id'] == $id_rank ){
+				$sr = "selected='selected'";  
+			  }
+			  echo "<option value='$row[rank_id]' $sr >$row[rank]</option>";
+		  }
+		}
+		else
+		{
+			echo "<option value='0' >- Other -</option>";
+			
+		}
+	}
+	
+	function resume_data() // semua resume data dijalankan disini 
+	{
+		
+		$this->load->model("resume_data");
+		//print $this->resume_data->get_json_ship(); exit;		
+		
+		$function_post = $this->input->post("function");
+		$function_get = $this->input->get("function");
+		//print $this->resume_data->get_json_ship();
+		
+		$function = !empty($function_post) ? $function_post : $function_get;
+		
+		//$function = $this
+		
+		if($function == "ship_json")
+		{	
+			print $this->resume_data->get_json_ship();
+		}
+		else if($function == "ship_type_json")
+		{
+			print $this->resume_data->get_json_ship_type();	
+			
+		}
+		else if($function == "rank_json")
+		{
+			return $this->resume_data->get_json_rank();	
+		}	
+		
+		/* ===================================================== */
+		if($function == "get_ship_type")
+		{
+			return $this->resume_data->get_ship_type();
+		}
+		else if($function == "get_ship")
+		{
+			return $this->resume_data->get_ship();	
+		}
+		else if($function == "get_ship_bytype")
+		{
+			//$type_id = $this->input->post("type_id");
+			return $this->resume_data->get_ship_bytype();
+		}
+		else if($function == "get_ship_type_byvi")
+		{
+			return $this->resume_data->get_ship_type_byvi();	
+		}
+	}
+	
+	function load_data_profile()
+	{
+		$this->load->model('vessel_model'); // vessel model
+		$this->load->model("rank_model");
+		$this->load->model('department_model');
+		$this->load->model("coc_model");
+		$data['resume'] = $this->resume_model->get_resume();
+		$this->load->view('resume/ajax-data-profile',$data);	
+	}
+	
+	function __destruct()
+	{
+		//echo "<!-- end class -->";	
+	}
+	
+	
+}

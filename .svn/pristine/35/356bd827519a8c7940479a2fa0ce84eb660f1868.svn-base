@@ -1,0 +1,23 @@
+.m-t-1 {
+	margin-top: 1%;
+}
+
+.m-b-1 {
+	margin-bottom: 1%;
+}
+
+.mt-60 {
+    margin-top: 60px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.ml-8 {
+	margin-left: 8px;
+}

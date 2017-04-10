@@ -1,0 +1,147 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+// Controller informasea, module informasea
+
+class Home extends MX_Controller {
+	
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->model("vessel_model");
+		$this->load->model("department_model");
+		$this->load->model("nation_model");
+	}
+	
+	function index()
+	{
+		$data['head']	 = "head";
+		$data['title']	= "Home";	
+		//$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		//include
+		//$data['navbar']   = "";
+		$data['template'] = "template";
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$this->load->view('index',$data);
+	}
+
+   
+     function search()
+    {
+        $search_by = $this->input->post("search_by");
+        $department = $this->input->post("department");
+        $vessel_type = $this->input->post("vessel_type");
+        $nationality = $this->input->post("nationality");
+        $keyword = $this->input->post("keyword");
+        $dept2 = $this->department_model->get_detail_department($department);
+        $ship_type = $this->vessel_model->get_shiptype_byshipid($vessel_type);
+
+        if($department != "")
+        { 
+            $department = str_replace(' ', '-',$dept2['department'] ); 
+        }
+        if($vessel_type != "")
+        { 
+            $vessel_type = str_replace(' ','-',$ship_type['ship_type']); 
+        }
+        if($nationality != "")
+        {
+            $nationality = str_replace(' ','-',$this->nation_model->get_detail_nationality($nationality)['name']);
+            
+        }
+        $url = "$search_by/search_dashboard";
+
+        if($vessel_type != "" && $department != ""){
+            $url .= "/$vessel_type/$department";
+        }else if($vessel_type == "" && $department != ""){
+            $url .= "/$department";
+        }else if($vessel_tpe != "" && $department == ""){
+            $url .= "/$vessel_type";
+        }
+        if($keyword == "" AND $department == "" AND $vessel_type == "" AND $nationality != ""){
+            //hanya nationality
+            $url .= "?nationality=$nationality";
+        } else if($keyword == "" AND $department == "" AND $vessel_type != "" AND $nationality == ""){
+            //hanya vessel
+            $url .= "?vessel_type=$vessel_type";
+        } else if($keyword == "" AND $department != "" AND $vessel_type == "" AND $nationality == ""){
+            //hanya department
+            $url .= "?department=$department";
+        } else if($keyword == "" AND $department != "" AND $vessel_type != "" AND $nationality == ""){
+            //department vessel
+            $url .= "?vessel=$vessel_type&department=$department";
+        } else if($keyword == "" AND $department != "" AND $vessel_type == "" AND $nationality != ""){
+            //department nationality
+            $url .= "?department=$department&nationality=$nationality";
+        } else if($keyword == "" AND $department == "" AND $vessel_type != "" AND $nationality != ""){
+            //vessel nationality
+            $url .= "?vessel=$vessel_type&nationality=$nationality";
+        }else if($keyword == "" OR empty($keyword)){
+            //tanpa keyword
+            $url .= "?vessel_type=$vessel_type&department=$department&nationality=$nationality";
+        }  else if($keyword != "" AND $vessel_type != "" AND $department != "" AND $nationality == ""){
+            //keyword vessel department
+            $url .="/$keyword?vessel=$vessel_type&department=$department";
+        } else if($keyword != "" AND $vessel_type != "" AND $department != "" AND $nationality ==""){
+            
+            //keyword vessel nationality
+            $url .= "/$keyword?vessel=$vessel_type&department=$department";
+        } else if($keyword != "" AND $vessel_type != "" AND $department == "" AND $nationality != ""){
+            $url .= "/$keyword?vessel=$vessel_type&nationality=$nationality";
+        } else if($keyword != "" AND $vessel_type == "" AND $department != "" AND $nationality != ""){
+            $url .= "/$keyword?department=$department&nationality=$nationality";
+        } else if($keyword == "" AND $vessel_type == "" AND $department == "" AND $nationality == ""){
+            $url .= "";
+        } 
+        else{
+             $url .= "/$keyword/?vessel_type=$vessel_type&department=$department&nationality=$nationality";
+        }
+
+    
+
+
+
+
+        /* yang lamaa */
+        // if($department!="") $department = str_replace(' ','-', $this->department_model->get_detail_department($department)["department"]);
+        // if($vessel_type!="") $vessel_type = str_replace(' ','-', $this->vessel_model->get_shiptype_byshipid($vessel_type)["ship_type"]);
+        // if($nationality!="") $nationality= str_replace(' ','-', $this->nation_model->get_detail_nationality($nationality)["name"]);
+
+
+        // $url = "$search_by/search_dashboard";
+        // if ($vessel_type != "" && $department != "" && $nationality != "") $url .= "/$vessel_type/$department/$nationality";
+        // else if ($vessel_type != "" && $department != "" && $nationality == "") $url .= "/$vessel_type/$department";
+        // else if ($vessel_type != "" && $department == "" && $nationality != "") $url .= "/$vessel_type/$nationality";
+        // else if ($vessel_type == "" && $department != "" && $nationality != "") $url .= "/$department/$nationality";
+        // else if ($vessel_type == "" && $department == "" && $nationality != "") $url .= "/$nationality";
+        // else if ($vessel_type == "" && $department != "" && $nationality == "") $url .= "/$department";
+        // else if ($vessel_type != "" && $department == "" && $nationality == "") $url .= "/$vessel_type";
+
+      //  $url .= "/$keyword";
+         echo base_url($url);
+    
+    }
+   
+    function listVesselType(){
+        $data['list_vessel'] = $this->vessel_model->get_ship_type();
+        $this->load->view("vessel-list",$data);
+    }
+
+    function listNationality(){
+        $data['list_nationality'] = $this->nation_model->get_nationality();
+        $this->load->view("nationality-list",$data);
+    }
+	
+	function __destruct()
+	{
+		
+	}
+
+}
+
+/* End of file users.php */
+/* Location: ./application/modules/informasea/controllers/informasea.php */

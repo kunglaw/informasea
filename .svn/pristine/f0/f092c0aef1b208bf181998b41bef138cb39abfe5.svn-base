@@ -1,0 +1,24 @@
+<!-- <div role="tabpanel" class="tab-pane active box" id="home"> -->
+    <div class="about">  
+        
+    </div>
+    <table border="0" style="margin-top:20px">
+        <tr>
+            <td width="20%" class="tbl-bold">No Telp</td>
+            <td width="2%" class="tbl-bold">:</td>
+            <td class="tbl-bold"><?=$company[0]['no_telp'];?></td></tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+            <td class="tbl-bold">Website</td>
+            <td class="tbl-bold">:</td>
+            <td class="tbl-bold"><a href="#"><?=$company[0]['website'];?></a></td></tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+            <td class="tbl-bold">Description :</td>
+            <td class="tbl-bold"></td>
+            <td></td></tr>
+        <tr>
+            <td colspan="3" class="tbl-bold"><br /><?=$company[0]['description'];?></td></tr>
+    </table>
+
+<!-- </div> -->

@@ -1,0 +1,47 @@
+<?php // index.php , GENERAL, ALL MODULES ?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+<html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9 ]>
+<html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 10)|!(IE)]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+      <?php 
+            $css = !empty($css) ? $css : "css"; // tambahan css 
+      		$meta = !empty($meta) ? $meta : "meta"; // tambahan meta
+      		$js_top = !empty($js_top) ? $js_top : "js_top"; // tambahan js_top
+			
+            $dt_head['css']  	= @$css;
+            $dt_head['meta']   = @$meta;
+            $dt_head['js_top'] = @$js_top;
+            
+            $this->load->view('head',$dt_head);
+             
+     ?>
+  </head>
+  <body>
+      <div id="wrapper">
+          <header id="header">
+                <?php $this->load->view('include/navbar',@$dt_navbar); //include('include/navbar.php'); ?>            
+                <?php $this->load->view('include/navbar-mobile',@$dt_navbar_mobile); //include('include/navbar-mobile.php'); ?>
+          </header>
+      </div>
+  
+      <?php
+	  
+          $this->load->view(@$template,	@$dt_template);
+		  //if(!empty($footer)){ $footer = $footer; }else{$footer = "footer"; }
+		  $footer = !empty($footer) ? $footer : "footer";
+          $this->load->view(@$footer, @$dt_footer); 
+		  
+      ?>
+  </body>
+  <?php $js_under = !empty($js_under) ? $js_under : "js_under" ?>
+  <?php $this->load->view(@$js_under, @$dt_js_under);?>
+</html>
+	  

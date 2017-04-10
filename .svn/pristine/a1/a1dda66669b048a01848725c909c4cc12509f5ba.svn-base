@@ -1,0 +1,46 @@
+<nav class="nav bg-primary" style="margin:0 0 10px 0" id="menu_myjob">
+  <div class="">
+    <div class="navbar-header" style="">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="color:#FFF"><b>My Job </b></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse" style="color:#FFF">
+      <ul class="nav navbar-nav">
+      	<li><a href="#"> | </a></li>
+        <li class="active dropdown">
+        
+        	<a class="dropdown-toggle" data-toggle="dropdown" role="link" aria-expanded="false" onclick="javascript:location.href = '<?php echo base_url("seaman/resume"); ?>'" href="<?php echo base_url("seaman/resume"); ?>" >
+            Resume <i class="caret"></i>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="<?php echo base_url("seaman/resume/resume_upload"); ?>">Resume Upload</a></li>
+              
+            </ul>
+        
+        </li>
+         
+        <li><a href="<?php echo base_url("vacantsea/applied_job"); ?>">Applied Job</a></li>
+        <li><a href="#contact">Interview Invitation</a></li>
+        <li><a href="#contact">Resume Request</a></li>
+        <li><a href="#contact">Interview Schedule</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<style>
+	
+	#menu_myjob div#navbar ul li a{ color:#FFF; }
+	#menu_myjob div#navbar ul li a:hover{ color:#00F ; }
+	#menu_myjob div#navbar ul li.dropdown ul li a{color:#000}
+</style>
+<script>
+$('#menu_myjob .dropdown').hover(function() {
+     $(this).toggleClass('open');
+});
+
+</script>

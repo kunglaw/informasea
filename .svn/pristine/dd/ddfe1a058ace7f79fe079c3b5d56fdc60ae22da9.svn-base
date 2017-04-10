@@ -1,0 +1,44 @@
+<?php // template module agent ?>   
+<div class="col-md-12">
+<div class="row">
+        
+    <div class="col-md-8">
+    <div class="row">
+        
+        
+        <div class="col-md-12" >
+        <div class="row">
+            <?php 
+				//$this->load->view('seaman/detail_timeline/left_content');
+				
+				$this->load->view('seaman/detail_timeline/detail_timeline');
+				
+				//$this->load->view('seaman/detail_timeline/right_content');
+				
+				
+			?>
+            
+            
+        </div>    
+        </div>
+        
+        <?php
+	 	
+		//$this->load->view('seaman/detail_timeline/right_content');
+		
+	 
+	 ?>
+     
+     </div><!-- row -->
+     </div>
+    
+     <?php
+	 	
+		$this->load->view('seaman/detail_timeline/right_content');
+		
+	 
+	 ?>
+  
+</div><!-- row --> 
+</div><!-- col-md-14 -->
+<?php // end template ?>

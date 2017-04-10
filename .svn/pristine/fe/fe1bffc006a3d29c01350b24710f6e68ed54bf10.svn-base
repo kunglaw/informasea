@@ -1,0 +1,41 @@
+<?php // view navbar/menu , module seaman ?>
+
+<div class="navbar-collapse collapse " id="navbar-main">
+
+ <div class="col-md-2" id="notification-bar" >
+   <ul class="navbar-nav nav">
+      <li><a href="#"><i class="glyphicon glyphicon-comment"></i></a></li>
+      <li><a href="#"><i class="glyphicon glyphicon-globe"></i></a></li>
+  </ul>
+ </div> 
+ 
+ <div class="" id="right-menu" style="width:100% !important;">
+  <ul class="navbar-nav nav">
+      <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" id="nama_dropdown"><?php echo $nama = $this->session->userdata("nama") ?><span class="caret" style="margin-left:10px"></span></a>      
+      <!--</li>
+      <li >-->
+        <ul class="dropdown-menu" role="menu" aria-labelledby="nama_dropdown" 
+        style="width:100%; ">
+          
+          <li role="presentation">
+          	<a role="menuitem" tabindex="-1" href="<?php echo base_url("users/users/logout"); ?>">
+            <span class="glyphicon glyphicon-log-out"></span>
+            Logout</a>
+          </li>
+          <?php /*<li role="presentation">
+          	<a role="menuitem" tabindex="-1" href="#">Another action</a>
+          </li>
+          <li role="presentation">
+          	<a role="menuitem" tabindex="-1" href="#">Something else here</a>
+          </li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation">
+          	<a role="menuitem" tabindex="-1" href="#">Separated link</a>
+          </li>*/ ?>
+        </ul>
+      </li>
+          
+  </ul> 
+  </div>
+  
+</div>

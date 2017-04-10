@@ -1,0 +1,127 @@
+<script>
+	$(".load_data").click(function(){
+		var pelaut_id = $(this).attr("id");
+		var jml_setting = $("#setting").attr("class");
+		
+			
+		if(pelaut_id != 9999){
+		
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url("seatizen/get_seatizen_list_plus") ?>",
+				data: "pelaut_id="+ pelaut_id +"&jml_setting="+jml_setting + "&x=1",
+				beforeSend:  function() {
+					//alert(pelaut_id);
+					$('span.load_data').append('<img src="<?php echo base_url("assets/img/facebook_style_loader.gif"); ?>" />');
+				},
+				success: function(html){
+					//alert(pelaut_id);
+					$(".style_fb").remove();
+					$("div#list_seatizen .panel .panel-body").append(html); //ganti
+				}
+			});
+		}
+	return false;
+	});
+</script>
+<?php
+	
+	  $this->load->model('nation_model');
+	  $this->load->model('rank_model');
+	
+	foreach($seatizen as $row)
+	{
+		  $profile_pic = $this->user_model->get_profile_pic($row['pelaut_id']);
+		  
+		  
+		  
+		  if(empty($profile_pic))
+		  {
+			  
+			  $url = base_url("assets/user_img/noprofilepic_thumb.png");
+		  }
+		  else
+		  {
+			$nama_gambar = explode(".",$profile_pic);
+		    $url = base_url("assets/photo/$row[username]/profile_pic/$nama_gambar[0]"."_thumb."."$nama_gambar[1]");  
+		  }
+?>
+          <div>
+        	<a href="<?php echo base_url("profile/".$row['username'])?>">
+            <img src="<?php echo $url; ?>" class="img-profile-seatizen" style="float:left" alt="<?php echo $row['nama_depan']." ".$row['nama_belakang'] ?>"></a>
+            <div style="float:left" class="col-md-5">
+                <p class="mini-margin-6">
+                   <b><a href="<?php echo base_url("profile/".$row['username'])?>"> 
+                    <?php echo $row['nama_depan']." ".$row['nama_belakang'];  ?> </a>
+                  </b>
+                  </p>
+                  <?php					
+					$rank = $this->rank_model->get_rank_detail($row['rank']);
+                    
+                    if($row['kebangsaan'] != "")
+                    {
+                      $nation = $this->nation_model->get_detail_nationality($row['kebangsaan']);
+                      $new_nation = "<img style='margin-right:5px;' src='".base_url("assets/flags/$nation[flag]")."' />";
+                      $kebangsaan = $row['kebangsaan'];
+                      $string = $new_nation.strtoupper($kebangsaan);
+                    }
+                    else if($row['kebangsaan'] == "")
+                    {
+                      $new_nation = "";
+                      $kebangsaan = "";
+                      $string = ucfirst($row['gender']);
+                        
+                    }
+                  
+                  ?>
+                <div><?php echo $string; ?></div>
+                <div><?php echo "<i class='glyphicon glyphicon-star'></i> &nbsp;".$rank['rank'] ?></div>
+                
+                
+                <?php
+                    $this->load->model("seaman/friendship_model");
+                    $pelaut_id_login = $this->session->userdata("id_user");
+                    $check_friend = $this->friendship_model->check_friends($row['pelaut_id'],$this->session->userdata("id_user"));
+                    
+                    $button_add_friend = "<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;<span>Add as Friend</span></button>";
+                    $button_friend = "<button class='btn btn-default btn-sm'><span class='glyphicon glyphicon-ok'></span>&nbsp;<span>Friend</span></button>";
+                    
+                    if($pelaut_id_login != "" && $check_friend == TRUE)
+                    {
+                        $button = $button_friend;
+                        
+                    }
+                    else if($pelaut_id_login != "" && $check_friend == FALSE)
+                    {
+                        $button = $button_add_friend;
+                    }
+                ?>
+                
+                
+                <p><?php echo $button ?></p>
+          </div>
+          <div class="clearfix"></div>
+          <hr />
+<?php
+	}
+?>
+
+	<?php // paging
+	$v = $this->seatizen_model->check_sisa_list($row['pelaut_id']);
+	 //print_r($v);exit;
+	 if($v > 0){
+	 ?>
+     
+      <a id="<?php echo $row['pelaut_id']; ?>" href="#" class="load_data style_fb" > 
+          <span>Show More <img src="<?php echo base_url("assets/img/arrow1.png"); ?>" /> </span>
+          <input type="hidden" id="setting" class='3' value=""> <!-- ganti class="  " kalo mau ganti jumlah seatizen yg tampil-->
+      </a>
+     <?php
+	 }
+	 else
+	 {?>
+            <span>There is no data </span>
+       
+	 <?php 
+	 }
+     ?> 

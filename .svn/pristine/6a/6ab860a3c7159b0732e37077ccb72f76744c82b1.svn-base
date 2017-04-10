@@ -1,0 +1,266 @@
+<?php
+	/*
+		Author:  A.Dimas Y
+		Controller : Photo 
+	
+	*/
+?>
+
+<link rel="stylesheet" href="<?php echo base_url("assets/fonts/font-awesome.min.css"); ?>" >
+
+
+<script>
+  function get_list_comment(id_timeline)
+  {
+	  //alert(id_timeline);
+	  $.ajax({
+		  
+		  type : "POST",   		  //timeline/comment_tml/get_comment
+		  url : "<?php echo base_url("seaman/home/get_comment"); ?>",
+		  data:"id_timeline="+id_timeline+"&x=1",
+		  success : function(data)
+		  {
+			  //alert('<?php echo base_url("timeline/comment/get_comment"); ?>');
+			  //alert(data);
+			  $("#list_comment_timeline_"+id_timeline).html(data);	
+		  }
+
+	  });
+	  
+  }
+  
+  function rotate()
+  {
+	  $.ajax({ 
+	  	
+		  type : "POST", 
+		  url : "<?php echo base_url("photo/rotate"); ?>",
+		  data:"nama_gambar=<?php echo $detail_image ?>",
+		  success : function(data)
+		  {
+			  //alert(data);
+			  location.reload();
+		  }
+	  
+	  
+	  });
+  }
+</script>
+
+<?php // content detail, TIMELINE booo.. .
+
+	  // variable penting 
+	  $this->load->model('seaman/friendship_model');
+	  
+	  $username_login = $this->session->userdata('username');
+	  $username_page  = $detail_pelaut['username'];
+	  //$ctrl = $this->input->post('ctrl'); // menentukan view detail atau profile
+
+	  $profile_pic = $this->user_model->get_profile_pic($detail_pelaut['username']); // bisa diisi pakai username
+	  $nama_gambar = explode(".",$profile_pic);
+	  $url_profile = img_url("photo/$detail_pelaut[username]/profile_pic/$nama_gambar[0]"."_small."."$nama_gambar[1]");
+	  
+	  if(empty($profile_pic))
+	  {
+		  
+		  $url_profile = base_url("assets/user_img/noprofilepic_small.png");
+	  }
+
+?>
+<span class="modal-alert" ></span>
+<div class="panel panel-default col-md-8 row pull-left" id="photo-detail" >
+     
+      <div class="panel-body row">
+      <!-- batas panel -->
+          
+        <div class="clearfix"></div>
+          
+        <div class="content-photo">
+        <h4 style="font:'Times New Roman', Times, serif"> Photo Album <?php //echo $row['title'] ?> 
+          
+        <?php if(!empty($next)){ ?>  
+        <a href="<?php echo base_url("photo/detail/$next"); ?>" class="pull-right btn btn-default btn-sm" style="margin-left:20px;">Next</a>
+        <?php } ?>
+        <?php if(!empty($prev)){ ?>  
+        <a href="<?php echo base_url("photo/detail/$prev"); ?>" class="pull-right btn btn-default btn-sm">Previous</a>  
+        <?php } ?>
+        
+        </h4>
+       
+        <br class="clearfix" />
+        <p class="row" style="border:1px solid #CCC; background-color:#CCC" align="center" >
+        <?php
+		$nmgambar = $detail_image;
+		//$ss = explode(".",$nmgambar);
+		$str_path = "photo/$username_page/thumbnail/$nmgambar";
+		$url = pathup($str_path);
+		$img_url = img_url($str_path);
+		if(!is_file($url))
+		{
+			$str_path = "photo/$username_page/resume/$nmgambar";
+			$url = pathup($str_path);
+			$img_url = img_url($str_path);
+
+			if(!is_file($url))
+			{
+				
+				$str_path = "photo/$username_page/cover/$nmgambar";
+				$url = pathup($str_path);
+				$img_url = img_url($str_path);
+				if(!is_file($url))
+				{
+					$str_path = "photo/$username_page/profile_pic/$nmgambar";
+					$url = pathup($str_path);
+			        $img_url = img_url($str_path);
+				}
+			}
+		}
+		
+		?>
+        
+        <img src="<?php echo $img_url; ?>" class="col-md-8 col-md-offset-2"  /></p>
+          <div class="clearfix"></div>
+          <div id="sub-content-tml" class="col-md-10 row">
+
+          </div>
+        
+        <?php
+        
+          //$this->load->view('dummy/dummy_text')
+          
+        ?>
+        </div>
+
+        <div class="row-tml row">
+        	<div id="profile-pic" class="col-md-1 pull-left">
+            	<img src="<?php echo $url_profile; ?>" alt="" id="" class="img-rounded img-profile" style="border:1px solid #CCC;" />
+            </div>
+            <div class="pull-right">
+                      <button class="btn btn-default btn-sm" onclick="rotate()"><i></i>rotate</button>
+                  
+            </div>
+        	<div class="col-md-10 pull-left" id="title-tml">
+                
+            	<p class="mini-margin-6"><b><a href="<?php echo base_url("profile/$detail_pelaut[username]") ?>">
+				<?php echo $detail_pelaut['nama_depan']." ".$detail_pelaut['nama_belakang']; ?></a></b>
+
+                   
+                </p>
+                <p class="mini-margin-6"> <small><?php echo date_format_db($data_image['datetime']) ?>
+                <span class="caret"></span></small> </p> 
+          	</div>
+             
+        </div>
+        <div class="clearfix"></div>
+        
+        <?php //if($this->session->userdata("user") == "pelaut"){ ?>
+		<div class="" hidden="true" style="display:none">        
+         <a href="#" class="" ><img src="<?php echo base_url("assets/img/comment-icon.png"); ?>" name="" class="box-comment" /></a>
+         <a href="#" id="btn-sosmed" class="btn btn-facebook" title="share to facebook"><i class="fa fa-facebook"></i> | Share on Facebook </a>         
+         <a href="#" id="btn-sosmed" class="btn btn-twitter" title="share to twitter" ><i class="fa fa-twitter"></i> | Share on Twitter </a>
+         <a href="#" id="btn-sosmed" class="btn btn-google-plus" title="share to google+" ><i class="fa fa-google-plus"></i> | Share on Google+</a>
+        
+        </div>
+		
+		<?php //} ?>
+        
+        <div class="clearfix"></div>
+        
+        
+       
+      </div><!-- panel body --> 
+      <?php
+	$teman = $this->friendship_model->check_friends($detail_pelaut['username'], $username_login);
+	  
+	  ?> 
+      <div class="row">
+	  <?php //$this->load->view('timeline/post_comment_timeline'); ?>
+        
+      </div> 
+      <div id="list_comment_timeline_<?php echo $timeline['id_timeline']; ?>" style="border-top:1px solid #CCC" class="row">
+      
+        <!-- disini list comment -->
+        <?php //$this->load->view('dummy/dummy-text-new') ?>
+          
+      </div>
+      <?php
+	    
+											 // ubah expressi ini jika sudah ada fitur pertemanan
+	  if($this->session->userdata("user") == "pelaut" && $teman == TRUE){
+		$data['id_timeline'] = $timeline['id_timeline'];
+		$this->load->view('timeline/post_comment_timeline',$data);
+	  }
+	  ?>
+</div>
+    
+
+
+<!-- javascript disini -->
+<script>
+
+  get_list_comment(<?php echo $timeline['id_timeline']?>); // sakit jiwa script nya 
+  //alert(<?php //echo $row['id_timeline']?>);
+</script>
+
+<style>
+	
+	
+	#photo-detail{
+		
+		margin-left:15px;	
+		
+	}
+	
+	#title-tml
+	{
+		margin-left:-25px;	
+	}
+	
+	#btn-sosmed{ margin-top:5px; }
+	#btn-sosmed i{ margin:0 3px 0 -3px;}
+	
+	.box-comment{
+		
+		margin-top:5px; 
+		width: 30px;
+		height: 30xp; 
+		/*background-image:url(../../../../../assets/img/comment-icon.png)*/
+		border:1px solid black;
+		
+			
+	}
+	/*
+	ol.row {
+		list-style:none
+	}
+
+	ol.row li {
+		position:relative;
+		border-bottom:1px solid #EEEEEE;
+		padding:8px;
+	}
+	
+	ol.row li:hover {
+		background-color:#F7F7F7;
+	}
+	
+	ol.row li:first-child {
+	
+	}
+
+	#container {
+		margin-left:60px;
+		width:580px
+	}
+
+	img {
+		border : none ;
+	}*/
+
+	#setting {
+		float: right;
+	}
+
+
+</style>
+

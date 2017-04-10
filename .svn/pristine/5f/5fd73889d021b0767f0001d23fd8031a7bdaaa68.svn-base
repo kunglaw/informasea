@@ -1,0 +1,10 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{margin-left:0px; margin-right:0px}
+
+ul{ list-style-type:none; margin:10px;  }
+ul li { float:left; margin-left:10px;  } 
+ul li a{ }
+
+.clear{ clear:both; } 

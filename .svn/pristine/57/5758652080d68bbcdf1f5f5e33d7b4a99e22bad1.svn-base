@@ -1,0 +1,57 @@
+<?php $this->load->helper("text");
+	
+	if(empty($photo))
+	{
+		echo "You have no Photo yet";
+	}
+	
+	foreach($photo as $row){
+	
+	$username = $row['username'];
+	$nama_gambar = explode(".",$row['nama_gambar']);
+?>
+<?php
+		if($row['id_album'] == 0)
+		{
+			$row['album'] = "My Photo";	
+		}
+		
+		
+		$str_path = "photo/$username/thumbnail/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+		$url = pathup($str_path);
+		$img_url = img_url($str_path);
+		if(!is_file($url))
+		{
+			$str_path = "photo/$username/resume/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+			$url = pathup($str_path);
+			$img_url = img_url($str_path);
+
+			if(!is_file($url))
+			{
+				
+				$str_path = "photo/$username/cover/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+				$url = pathup($str_path);
+				$img_url = img_url($str_path);
+				if(!is_file($url))
+				{
+					$str_path = "photo/$username/profile_pic/$nama_gambar[0]"."_thumb.".$nama_gambar[1];
+					$url = pathup($str_path);
+			        $img_url = img_url($str_path);
+				}
+			}
+		}
+	?>
+	 <div class="subpic" id="subpic" style="margin-bottom:5px; margin-right:5px;">
+    <a href="<?php echo base_url("photo/detail/$nama_gambar[0]"); ?>">
+		<img src="<?php echo $img_url; ?>" style="width:150px; height:150px; margin-bottom:5px;">
+    </a>
+      <div class='description'>
+          <!-- description content -->
+          <p class='description_content'><?php echo character_limiter($row['album'],10); ?></p>
+          <!-- end description content -->
+      </div>
+      </div>	
+<?php
+	}
+
+?>

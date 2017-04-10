@@ -1,0 +1,18 @@
+<?php
+foreach(){
+?>
+<p class="row">
+<img src="<?php echo base_url("assets/img/dummy_ship-3.jpg")?>" name="" id="" style="width:100%">
+<p>
+<div id="title" style="font-weight:bold" class="row"><a href=""> Lorem ipsum sit dolor amet </a> </div>
+<div id="website-ad" class="row"><a href="#">www.loremipsum.com</a> </div>
+</p>
+<p class="row">Lorem ipsum sit dolor amet Lorem ipsum sit dolor ametLorem ipsum sit dolor ametLorem ipsum sit dolor amet </p>
+</p>
+
+<hr class="row" />
+
+<?php
+}
+?>
+

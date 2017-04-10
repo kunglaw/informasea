@@ -1,0 +1,11 @@
+<?php // template resume, controller resume, module seaman ?>
+
+<div class="container-fluid">
+    <div class="row">        
+        <?php $this->load->view("resume/content",$dt_content); ?>
+        
+        <?php //$this->load->view("resume/right_content");?>
+    </div>
+</div>
+
+

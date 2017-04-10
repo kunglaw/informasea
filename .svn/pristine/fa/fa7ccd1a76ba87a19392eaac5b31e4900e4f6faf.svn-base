@@ -1,0 +1,39 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+
+class Search_model extends CI_Model{
+	
+	function search()
+	{
+		$keyword = $this->uri->segment(2);
+		
+		$str_nation = "select * from nationality where name LIKE '%$keyword%' ";
+		$q_nation = $this->db->query($str_nation);
+		$f_nation = $q_nation->row_array();
+		
+		
+		$str  = "SELECT vacantsea, description, id_nationality, 'vacantsea' AS category FROM vacantsea WHERE vacantsea LIKE '%$keyword%' OR description LIKE '%$keyword%' OR id_nationality = '$f_nation[id]' OR category = '$keyword' "; // vacantsea 
+		$str .= "union ";
+		$str .= "SELECT CONCAT(first_name,' ',last_name) AS name, alamat, kebangsaan, 'seaman' AS category FROM pelaut_ms WHERE name LIKE '%$keyword%' OR alamat LIKE '%$keyword%' OR kebangsaan LIKE '%$keyword%' OR category = '$keyword' ";
+		$str .= "union ";
+		$str .= "SELECT nama_perusahaan,description,nationality,'company' AS category FROM company where nama_perusahaan LIKE '%$keyword%' OR description LIKE '%$keyword%' OR nationality LIKE '%$keyword%' OR category = '$keyword' ";
+
+		$q = $this->db->query();
+		$f = $q->result_array();
+		
+		return $f;
+	}
+	
+	function insert_keyword()
+	{
+
+		$keyword = $this->input->post("keyword");
+		$page    = $this->input->post("page");
+		
+		
+		
+		
+		
+			
+		
+	}
+}

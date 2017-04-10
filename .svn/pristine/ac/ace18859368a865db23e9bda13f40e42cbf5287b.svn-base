@@ -1,0 +1,47 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed ');
+
+class Contact extends MX_Controller{
+	
+	function index()
+	{
+		
+		// halaman utama untuk melakukan testing
+		
+		$data['title'] = "Contact";
+		$data['header'] = "Contact Us";
+		$data['template'] = "template";
+		$data['css'] = "";
+		$data['halaman_detail'] = "view-contact";
+		$this->load->view('index',$data);
+		
+		
+	}
+	
+	function send_mail()
+	{
+		$nama = $this->input->post("nama",true);
+		$email = $this->input->post("email",true);
+		$phone = $this->input->post("phone",true);
+		$subject = $this->input->post("subject",true);
+		$message = $this->input->post("message",true);
+		
+		
+		$this->load->library('email');
+
+		$this->email->from($email, $nama);
+		$this->email->to('admin@informasea.com'); 
+		//$this->email->cc('another@another-example.com'); 
+		//$this->email->bcc('them@their-example.com'); 
+		
+		$this->email->subject($subject);
+		$this->email->message($message);	
+		
+		$this->email->send();
+		
+		echo $this->email->print_debugger();
+			
+	}
+	
+	
+}
+	

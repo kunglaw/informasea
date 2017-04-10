@@ -1,0 +1,64 @@
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+
+	class Report_process extends MX_Controller{
+
+		function __construct(){
+			parent::__construct();
+
+		}
+
+		function add_report_process(){
+
+			//$this->load->library('pagination');
+			$sess =  $this->session->userdata('userame');
+			$id_user = $this->input->post('id_user');
+			$message = $this->input->post('report');
+				
+			$page = $this->input->post('page');
+			$url = $this->input->post('url');
+				if($page != "friends" OR $page != "resume"){
+					$urlbaru = base_url().$page;
+					echo "<script>alert('aku pertama')</script>";
+				} else if($page == "resume"){
+					$urlbaru = base_url().$sess."/resume";
+					echo "<script>alert('aku kedua')</script>";
+			} else{
+				$urlbaru = $url;
+				echo "<script>alert('aku ketiga')</script>";
+			}
+			//$gambar = $this->input->post('picture');
+
+			$ip_address=  $_SERVER['REMOTE_ADDR'];
+
+			$this->load->library('upload');
+				    		    $config['upload_path'] = './assets/problem/'; //path folder
+      							  $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp'; //type yang dapat diakses bisa anda sesuaikan
+       							 $config['max_size'] = '2048'; //maksimum besar file 2M
+      							 $config['max_width']  = '1288'; //lebar maksimum 1288 px
+      							  $config['max_height']  = '768'; //tinggi maksimu 768 px
+      							 	
+       					 $this->upload->initialize($config);
+			if ($this->upload->do_upload('filefoto'))
+            {
+                $gbr = $this->upload->data();
+                $nama_gmbr = $gbr['file_name'];
+                // $data = array(
+                //   'nm_gbr' =>$gbr['file_name'],
+                //   'tipe_gbr' =>$gbr['file_type'],
+                //   'ket_gbr' =>$this->input->post('textket')
+                  
+                // );
+               } 	
+        
+			$a = $this->db->query("INSERT INTO report_problem (id_user,pesan,url_halaman,gambar_report,kategori,time,ip_address) 
+				VALUES ('$id_user','$message','$urlbaru','$nama_gmbr','$page',now(),'$ip_address')");
+			
+			if($a){
+				echo "<div class='alert alert-success'> Thanks for your report... </div>";
+                echo "";
+			}
+
+		}
+
+
+	}

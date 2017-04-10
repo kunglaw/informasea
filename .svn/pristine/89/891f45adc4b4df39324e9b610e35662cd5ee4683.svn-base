@@ -1,0 +1,567 @@
+<?php if(!defined('BASEPATH')) exit ('No Direct Script Access Allowed '); 
+	
+	// class controller Profile , Module seaman, 
+	
+	class Profile extends MX_Controller
+	{
+		
+		function __construct()
+		{
+			parent::__construct();
+			
+			$this->load->model('seatizen/seatizen_model');
+			$this->load->model('timeline_model');
+			$this->load->model('users/user_model');
+			$this->load->model('friendship_model');
+			$this->load->model('photo/photo_mdl');
+			
+		}
+		
+		private function template($page)
+		{
+			
+			if($page == "index" || $page == "profile")
+			{
+				$arr['ctrl']     = "profile";
+				$arr['title'] 	= "Profile";
+				$arr['meta']	 = "profile/meta";
+				$arr['css'] 	  = "profile/css";
+				$arr['js_top']   = "profile/js_top"; 
+				
+				$arr['header']   = "header";
+				$arr['template'] = "seaman/profile/template";
+				//$data['footer'] = "";
+				$data['js_under'] = "profile/js_under";
+			}
+			else if($page == "seatizen")
+			{
+				$arr['ctrl']			= "seatizen";
+				$arr['title'] 		   = "Seatizen";
+				$arr['meta'] 	 		= "seatizen/meta";
+				$arr['css'] 	  		 = "seatizen/css";
+				$arr['js_top']   		  = "seatizen/js_top";
+				
+				$arr['header']   		  = "seatizen/header";
+				$reserve = $this->authentification->reserve();
+				if($reserve==true)
+				{
+					$arr['navbar_profile']  = "navbar-profile";
+				}
+				else
+				{
+					$arr['navbar_profile']  = "navbar-profile-free";
+				}
+				$arr['template'] 		= 'seatizen/template';
+				$arr['js_under'] 		= "seatizen/js_under";
+			}
+			else if($page == "resume")
+			{
+				$arr['ctrl']			= "resume";
+				$arr['title'] 		   = "Resume";
+				$arr['meta'] 	 		= "seatizen/meta-resume";
+				$arr['css'] 	  		 = "seatizen/css";
+				$arr['js_top']   		  = "seatizen/js_top";
+				
+				$arr['header']   		  = "seatizen/header";
+				$reserve = $this->authentification->reserve();
+				if($reserve==true)
+				{
+					$arr['navbar_profile']  = "navbar-profile";
+				}
+				else
+				{
+					$arr['navbar_profile']  = "navbar-profile-free";
+				}
+				$arr['template'] 		= 'seatizen/template';
+				$arr['js_under'] 		= "seatizen/js_under";	
+			}
+			else if($page == "friends")
+			{
+				$arr['ctrl']			= "friends";
+				$arr['title'] 		   = "Friends";
+				$arr['meta'] 	 		= "friends/meta";
+				$arr['css'] 	  		 = "friends/css";
+				$arr['js_top']   		  = "friends/js_top";
+				
+				$arr['header']   		  = "seatizen/header";
+				$reserve = $this->authentification->reserve();
+				if($reserve==true)
+				{
+					$arr['navbar_profile']  = "navbar-profile";
+				}
+				else
+				{
+					$arr['navbar_profile']  = "navbar-profile-free";
+				}
+				$arr['template'] 		= 'friends/template';
+				$arr['js_under'] 		= "friends/js_under";
+			}
+			else if($page == "account")
+			{
+				$arr['ctrl']			= "account";
+				
+				$arr['title'] 		   = "account";
+				$arr['meta'] 	 		= "account/meta";
+				$arr['css'] 	  		 = "account/css";
+				$arr['js_top']   		  = "account/js_top";
+				
+				$arr['header']   		  = "seatizen/header";
+				$reserve = $this->authentification->reserve();
+				if($reserve==true)
+				{
+					$arr['navbar_profile']  = "navbar-profile";
+				}
+				else
+				{
+					$arr['navbar_profile']  = "navbar-profile-free";
+				}
+				$arr['template'] 		= 'account/template';
+				$arr['js_under'] 		= "account/js_under";
+				
+			}
+			else if($page == "experience")
+			{
+				$arr['ctrl']			= "experience";				
+				$arr['title'] 		   = "experience";
+				$arr['meta'] 	 		= "experience/meta";
+				$arr['css'] 	  		 = "experience/css";
+				$arr['js_top']   		  = "experience/js_top";
+				
+				$arr['header']   		  = "experience/header";
+				
+				$reserve = $this->authentification->reserve();
+				if($reserve==true)
+				{
+					$arr['navbar_profile']  = "navbar-profile";
+				}
+				else
+				{
+					$arr['navbar_profile']  = "navbar-profile-free";
+				}
+				$arr['template'] 		= 'experience/template';
+				$arr['js_under'] 		= "experience/js_under";
+			}
+			
+			return $arr;
+		}
+		
+		// public 
+		public function index()
+		{
+			$username = $this->uri->segment(2);//username yang ada di url
+			
+			$data = $this->template("profile");
+			
+			$data['username'] = !empty($username) ? $username : $this->session->userdata("username");
+			//$data['timeline'] = $this->timeline_model->get_self_tml(); // jangan diapus
+
+			run_tracker("Profile of $data[username]");
+			$this->load->view('index',$data);
+			
+		}
+		
+		public function detail()
+		{
+			//exit('asasas');
+			if($this->uri->segment(3) == "post")
+			{
+				$this->post();
+				return false;
+			}
+			
+			$username = $this->uri->segment(2);//username yang ada di url 
+			$username_login = $this->session->userdata("username");
+			
+			$nama = $this->session->userdata("nama");
+			
+			// artinya ini adalah person dimana dia bukan yang login 
+			if($username != $username_login)
+			{
+				//echo "tidak sama"; exit;
+				$check_username = $this->seatizen_model->check_seatizen($username);
+				
+				if(empty($check_username))
+				{
+					//echo"asdasd";
+					/*$this->load->model("users/user_model"); // dari module users
+					$data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+					
+					$data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					$data['css'] = "seaman/detail/head";
+					$data['template'] = "seaman/detail/template";
+					$data['ctrl'] = "detail";
+					$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); 
+					$data['username_url'] = !empty($username) ? $username : $this->uri->segment(2);*/
+					
+					
+				}
+				else
+				{
+					$data = $this->template("seatizen");
+					
+					$this->load->model("users/user_model"); // dari module users
+					$data['detail_pelaut'] = $this->user_model->get_detail_pelaut($username);
+					$data['username'] 	  = !empty($username) ? $username : $this->session->userdata("username"); 
+					//$data['username'] = $username_url;
+			 		$data['nama']  		  = $data['title'];
+					
+					run_tracker("Profile of $data[username]");
+					// menugaskan list timeline untuk mengambil datanya dari controller profile/detail
+				    $this->load->view('index',$data);	
+					
+				}
+			}
+			else
+			{
+				
+				$data['title']    = $nama;
+				$data['css']      = "profile/css";
+				$data['header']   = "header";
+				$data['js_top']   = "profile/js_top";
+				$data['js_under'] = "profile/js_under";
+				$data['template'] = "profile/template";
+				$data['ctrl']     = "profile";
+				$data['username'] = $username_login;
+				
+				run_tracker("Profile of $data[username]");
+				// menugaskan list timeline untuk mengambil datanya dari controller profile/detail
+				$this->load->view('index',$data);	
+				
+			}
+			
+		}
+		
+		/* routes = profile/$username/experiences 
+		public */
+		public function experience()
+		{
+			$this->load->model('vessel_model'); // vessel model
+			$this->load->model("rank_model");
+			$this->load->model('department_model');
+			$this->load->model("coc_model");
+			$this->load->model('seaman/resume_model');
+			$this->load->model('experience_model');
+			// experience controller profile
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			if($check_username)
+			{
+			  
+			  // cek jika username login sama username url sama atau tidak 
+			    $reserve = $this->authentification->reserve();		
+				if($reserve == true)
+				{
+				  $data = $this->template("experience");	
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $data['experience'] = $this->experience_model->get_experience_pelaut($username_login);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  
+				 
+				}
+				else
+				{
+				  $this->load->model("users/user_model"); // dari module users
+				  
+				  $data = $this->template("experience");
+				  
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $data['experience'] = $this->experience_model->get_experience_pelaut($username_url);
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					
+				}
+				
+				run_tracker("Experience of $username_url");
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			  
+			  
+			}
+			else
+			{
+			  show_404();
+			}
+			//echo "jalan";	
+		}
+		
+		// untuk resume. company
+		public function resume()
+		{
+			// http://localhost/informasea/profile/username/resume
+			
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$company_username = $this->authentification->company_loggedin();
+			
+			if($company_username == false)
+			{
+				header("location:".base_url("profile/$username_url/experience"));
+			}
+			
+			$this->load->model('resume_model');
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			//print_r($check_username); exit;
+			
+			if($check_username)
+			{
+				// untuk label 
+				$data['date_issued_lbl']  = "Date of Issue";
+				$data['date_expired_lbl'] = "Date of Expiry";
+				$data['sign_on_lbl']	  = "Sign On";
+				$data['sign_off_lbl']	 = "Sign Off";
+				
+				//jalankan beberapa model 
+				$this->load->model('vessel_model'); // vessel model
+				$this->load->model("rank_model");
+				$this->load->model('department_model');
+				$this->load->model("coc_model");
+				
+				//echo $this->session->userdata('id_pelaut'); 
+				//print_r($this->session->all_userdata());
+				
+				$data				    = $this->template("resume");
+				
+				$data['username'] 		= !empty($username) ? $username : $this->session->userdata("username");
+				$data['resume']   		  = $this->resume_model->get_resume($check_username['username']);
+				
+				run_tracker("Resume of $data[username]");
+				$this->load->view('index',$data);
+			}
+			else
+			{
+				show_404();	
+			}
+			
+			
+		}
+		
+		/* routes = profile/$username/friends 
+		public */
+		public function friends()
+		{
+			
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			//print_r($check_username); exit;
+			
+			if($check_username)
+			{
+				
+				// cek jika username login sama username url sama atau tidak 		
+				if($username_url == $username_login)
+				{
+				  $data = $this->template("friends");
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  $data['nama'] = $nama;
+				  //exit("friends ... ");
+				}
+				else
+				{
+				  $data = $this->template("friends");
+				  $this->load->model("users/user_model"); // dari module users
+				  $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  //$data['username'] = $username_url;
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					
+				}
+				
+				run_tracker("Friends of $username_url");
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			}
+			else
+			{
+			  show_404();
+			}
+		}
+		
+		public function account()
+        {
+			
+			$username_url = $this->uri->segment(2); // username dari url
+            $username_login = $this->session->userdata("username");
+//			echo $username_login." == ".$username_url;
+            $check_username = $this->seatizen_model->check_seatizen($username_url);
+            //print_r($check_username); exit;
+//            echo "Hello";
+			
+			$reserve = $this->authentification->reserve();
+			if(!$reserve)
+			{
+				header("location:".base_url("profile/$username_url"));
+			}
+	
+            if($check_username)
+            {
+                // cek jika username login sama username url sama atau tidak
+                if($username_url == $username_login)
+                {
+					$data = $this->template("account");
+                    $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+                    $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+                    $data['username'] = $username_url;
+                    $data['nama'] = $nama;
+//                    print_r($data['detail_pelaut']);
+                }
+                else
+                {
+					$this->load->model("users/user_model"); // dari module users
+					$data = $this->template("account");
+                    $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+                    $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username");
+                    //$data['username'] = $username_url;
+                    $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+                }
+				
+				run_tracker("Account of $data[username]");
+                //print_r($data); exit;
+                $this->load->view("index",$data);
+            }
+            else
+            {
+                show_404();
+            }
+        }
+		
+		/* routes = profile/$username/about 
+		public */
+		public function about()
+		{
+			$username_url = $this->uri->segment(2); // username dari url
+			$username_login = $this->session->userdata("username");
+			
+			$check_username = $this->seatizen_model->check_seatizen($username_url);
+			//print_r($check_username); exit;
+			if($check_username)
+			{
+				
+				// cek jika username login sama username url sama atau tidak 		
+				if($username_url == $username_login)
+				{		
+				  $data['detail_pelaut'] = $this->seatizen_model->detail_seatizen($username_url);
+				  $nama = $data['detail_pelaut']['nama_depan']." ".$data['detail_pelaut']['nama_belakang'];
+				  $data["title"] = "About Me";
+				  $data["template"] = "about/template";
+				  $data['header']   = "header"; //luar
+				  $data['username'] = $username_url;
+				  $data['nama'] = $nama;
+				}
+				else
+				{
+				  $this->load->model("users/user_model"); // dari module users
+				  $data['detail_pelaut'] = $this->user_model->get_detail_pelaut();
+				  
+				  $data['title'] = "About ".$check_username['nama_depan']." ".$check_username["nama_belakang"];
+				  //$data['css'] = "seaman/detail/head";
+				  $data['header']   = "about/header"; //dalam folder about
+				  $data['template'] = "seaman/about/template";
+				  $data['ctrl'] = "detail";
+				  $data['username'] = !empty($username_url) ? $username_url : $this->session->userdata("username"); 
+				  //$data['username'] = $username_url;
+				  $data['nama'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+					
+				}
+				
+				run_tracker("About of $username_url");
+				//print_r($data); exit;
+				$this->load->view("index",$data);
+			}
+			else
+			{
+			  show_404();
+			}
+		}
+		
+		function post()
+		{
+			// detail posting timeline
+			
+			$id_timeline = $this->uri->segment(4);	
+			
+			$username = $this->uri->segment(2);//username yang ada di url
+			$check_username = $this->seatizen_model->check_seatizen($username);
+			
+			
+			$data['title'] = $check_username['nama_depan']." ".$check_username["nama_belakang"];
+			//$data['css'] = "seaman/detail/head";
+			$data['template'] = "seaman/detail_timeline/template";
+			//$data['ctrl'] = "detail";
+			//$data['username'] = !empty($username) ? $username : $this->session->userdata("username"); 
+			$data['row'] = $this->timeline_model->detail_timeline($id_timeline);
+			//print_r($data['timeline']);
+			//$data['username_url'] = !empty($username) ? $username : $this->uri->segment(2); 
+		
+			$this->load->view('index',$data);
+			
+
+		}
+		
+		public function photo()
+		{
+			
+			$username_url = $this->uri->segment(2);
+			run_tracker("Photo of $username_url");
+			// CARA BENAR
+			$obj = modules::load("photo/photo_ajax");
+			$obj->content_photo_person();
+			
+			/* // CARA BENAR 
+			modules::load("photo/photo")->test();
+			
+			// CARA BENAR
+			$this->load->module("photo/photo");
+			$this->photo->test();
+			
+			// CARA BENAR , TAPI GAK BISA
+			//modules::run("photo/photo/test"); */
+			
+		}
+		
+		function processUpdate()
+        {
+            $this->authentification->ajax_access();
+			
+            $id_pelaut = $this->input->post("id_pelaut",true);
+            $username = $this->input->post("username",true);
+            $old_pass = $this->input->post("old_pass",true);
+
+
+            $valid = $this->user_model->checkPassword($username, $old_pass);
+            $data['query'] = $valid[1];
+            if($valid[0] > 0)
+            {
+                $password = $this->input->post("password",true);
+                $email = $this->input->post("email",true);
+                $repass = $this->input->post("repass",true);
+
+                if(empty($password) || empty($repass)) $data['hasil'] = "kosong";
+                else {
+                    if ($password == $repass) {
+                        $update = $this->user_model->changePassword($id_pelaut, $username, $email, $password);
+                        $data['hasil'] = "berhasil update";
+                    }
+                    else $data['hasil'] = "password tidak match";
+                }
+            }
+            else $data['hasil'] = "password lama salah";
+
+            $this->load->view("seaman/account/message-alert",$data);
+        }
+		
+		function __destruct()
+		{
+			
+			
+		}
+		
+		
+	}
+	

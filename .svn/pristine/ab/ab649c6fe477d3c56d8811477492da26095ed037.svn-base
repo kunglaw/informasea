@@ -1,0 +1,118 @@
+<div class="tmp_modal">
+<?php //modal ajax ?>
+</div>
+
+<?php //experience, page friends, profile, module user ?>
+<div class="box">
+  <div class="box-header">
+      <h3 class="box-heading header-text">Friends</h3>
+      
+      <span class="clearfix"></span>
+  </div>
+  
+  <div class="box-content">
+    <div class="jajamama"></div>
+    
+    	<?php
+		
+    	$friends = $detail_pelaut['array_teman'];
+    	if($friends == ''){
+    		echo " Start Adding Friend ";
+    	}else{
+	
+		$friends = explode("|",$detail_pelaut['array_teman']);    		
+    	}
+
+	if(!empty($friends)){ 
+		foreach($friends as $row){ 
+			
+
+			$a = $this->user_model->get_detail_pelaut_byid($row);
+			$c = $this->resume_model->get_profile_resume($row);
+
+			$s = $this->rank_model->get_rank_detail($c['rank']);
+	
+			$b = $this->photo_mdl->get_photo_pp($a['username']);
+		   
+			//$url_gambar = asset_url("img/user.jpg");
+			$url_gambar = asset_url("img/ic_landing_seaman_blue.svg");
+			
+			if(!empty($b))
+			{
+			  $ss = explode(".",$b['nama_gambar']);
+			  if(is_file(pathup("photo/$a[username]/profile_pic/$ss[0]"."_thumb.".$ss[1])))
+			  {
+				  
+				  $url_gambar = img_url("photo/$a[username]/profile_pic/$ss[0]"."_thumb.".$ss[1]);
+			  }
+			}
+			
+			$info_tambahan = isset($s['rank']) ? $s['rank'] : "";
+			if($a['rank'] == 0)
+			{
+			  $info_tambahan = $a['city']." , ".$a['kebangsaan']; 
+			  
+			  if($a['kebangsaan'] == "" && $a['city'] == "")
+			  {
+				  
+				 $info_tambahan = $a['gender'];  
+			  }
+			  
+			  else if($a['city'] == "")
+			  {
+				  
+				  $info_tambahan = $a['kebangsaan'];	
+			  }
+			  
+			}
+		
+		?>
+        <div class="col-md-4 seatizen-item-container" >
+            <div class="media  <?php echo ($col == 1) ? 'box' : 'seatizen-item'; ?>" style="min-height:210px;">
+                <div class="pull-left medium-img-container" href="#">
+                    <img class="media-object img-responsive" src='<?php echo $url_gambar; ?>' alt="user-image">
+                </div>
+                <div class="media-body">
+                    
+                    
+					<?php if(!empty($s['rank'])){ ?> 
+                    <div class="subtitle text-link seatizen-role">
+                    	<i class="fa fa-certificate"></i>
+						<?php echo $s['rank']?>
+                    </div>
+                    <?php } ?>
+                    
+                    <div class="">
+                    	<a href="<?=base_url("profile/$a[username]/resume")?>" class="text-link">
+							<?php echo "".$a['nama_depan']." ".$a['nama_belakang'].""; ?> 
+                        </a>
+                    </div>
+                    <div class="subtitle text-gray seatizen-years"><?php echo ucfirst($info_tambahan)  ?></div>
+                    
+                    <div class="btn-group dropup">
+                    <button href="#" class="btn btn-2x btn-danger pull-left btn-custom-font dropdown-toggle" data-toggle="dropdown" id="btndelfriend_<?php echo $a['pelaut_id']; ?>">  Friend </button>
+                  <ul class="dropdown-menu" role="menu">
+                      <li><a onclick="javascript:bedadeletefriend(<?php echo $a['pelaut_id']; ?>)" > <i class="fa fa-minus"> </i> UnFriend </a> </li>
+                  </ul>
+              </div>
+                   <!-- <?php if($isRatingEnabled) { ?>
+                        <div class="star-rating pull-right" style="display: inline-block">
+                            <span class="fa fa-star" data-rating="1"></span>
+                            <span class="fa fa-star" data-rating="2"></span>
+                            <span class="fa fa-star" data-rating="3"></span>
+                            <input type="hidden" name="whatever" class="rating-value" value="3">
+                        </div>
+                    <?php } ?> -->
+                    
+                    <div class="clearfix">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+		}
+	}
+		?>
+        <span class="clearfix"></span>
+	</div>
+</div>

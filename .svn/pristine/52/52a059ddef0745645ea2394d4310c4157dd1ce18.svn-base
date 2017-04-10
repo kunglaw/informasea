@@ -1,0 +1,81 @@
+<?php //photo panel, profile, module seaman ?>
+<?php
+	$this->load->model("photo/photo_mdl");
+	$username = $this->uri->segment(2);
+	if(empty($username))
+	{
+		$username = $this->session->userdata("username");
+	}
+	
+	// ASAL DATA
+	$photo = $this->photo_mdl->photo_panel($username);
+
+?>
+
+<?php
+if(!empty($photo)){
+?>
+<div class="widget-box">
+    <div class="widget-box-header">
+        <div class="text-gray widget-box-title">Photos</div>
+        <a href="<?php echo base_url("profile/".$username."/photo") ?>" class="text-link widget-box-seemore">See All</a>
+        <div style="clear: both"></div>
+    </div>
+    
+    <div class="image-grid-3" style="height:100px; background-image:url(<?=check_cover_seaman($username)?>); background-size:cover">
+    	
+    </div>
+   	
+    <br />
+
+    <ul class="image-grid image-grid-3">
+    <?php
+	
+	//print_r($photo);
+	
+	foreach($photo as $row){
+		
+		//photo
+		if($row['resume'] == 0 && $row['profile_pic'] == 0 && $row['cover'] == 0)
+		{
+			$nama_gambar = $row['nama_gambar'];
+			$img_url = check_photo_thumbnail($nama_gambar);
+		}
+		
+		// resume
+		if($row['resume'] == 1 && $row['profile_pic'] == 0 && $row['cover'] == 0)
+		{
+			$img_url = check_img_resume($username);
+		}
+		
+		//profile_pic
+		else if($row['resume'] == 0 && $row['profile_pic'] == 1 && $row['cover'] == 0)
+		{
+			$img_url = check_profile_seaman($username);
+		}
+		
+		//cover
+		else if($row['resume'] == 0 && $row['profile_pic'] == 0 && $row['cover'] == 1)
+		{
+			
+			// skip brroh
+			continue;
+			
+		}
+		
+	?>
+       <li>
+       	<a href="<?php echo base_url("photo/detail/".strtolower($ss[0]).""); ?>">
+			<img src="<?php echo $img_url; ?>" alt='' width="115" height="115">
+            
+        </a>
+       </li>
+    <?php
+	}
+	?>
+
+    </ul>
+</div>
+<?php
+}
+?>

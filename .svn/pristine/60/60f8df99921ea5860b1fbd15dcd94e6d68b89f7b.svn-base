@@ -1,0 +1,53 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mohamad
+ * Date: 5/5/2015
+ * Time: 1:11 PM
+ */
+?>
+
+<?php
+	$this->load->model("vacantsea/vacantsea_model");
+	$this->load->model("company/company_model");
+	$this->load->helper("text_helper");
+	
+	$vacant = $this->vacantsea_model->get_vacantsea_panel();
+	
+	
+
+?>
+
+<div class="widget-box">
+    <div class="text-gray widget-box-title">New Vacantsea</div>
+    <a href="" class="text-link widget-box-seemore">See All</a>
+    <div style="clear: both"></div>
+    <?php
+	foreach($vacant as $row)
+	{
+		
+		$company = $this->company_model->get_logoimage($row['id_perusahaan']);
+		$detail_comp = $this->company_model->get_detail_company($row['id_perusahaan']);
+
+		$url_gambar = base_url("assets/ulogo/$company");
+		
+		if($company == "" || !is_file("assets/ulogo/$company"))
+		{
+			 $url_gambar = base_url("assets/user_img/noprofilepic_small.png");	
+		}
+	?>
+    <div class="media" title="<?php echo ucfirst($row['perusahaan'])." - ".$row['vacantsea']  ?>">
+        <a class="pull-left small-img-container" href="<?php echo base_url() ?>">
+            <img class="media-object img-responsive" src='<?php echo $url_gambar ?>' alt="user-image">
+        </a>
+        <div class="media-body">
+            <div class="text-link"><a href="<?php echo base_url("company/".$detail_comp['username']."/home");?>"><?php echo ucfirst($row['perusahaan']); ?></a></div>
+            <div class="subtitle">
+            	<a href="<?php echo base_url("vacantsea/detail/".$row['vacantsea_id']); ?>"> 
+            	<?php echo word_limiter($row['vacantsea'],3); ?> </a></div>
+        </div>
+    </div>
+     <?php
+	}
+	?>
+</div>

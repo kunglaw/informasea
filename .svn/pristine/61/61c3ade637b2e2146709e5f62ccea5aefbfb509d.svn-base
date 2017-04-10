@@ -1,0 +1,237 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+// Controller users, module users
+
+class Users extends MX_Controller {
+
+	function __construct()
+	{
+		
+		parent::__construct();
+		
+		//authentification
+		$this->authentification->open_access();
+		
+		
+		$this->load->model('user_model');
+		$this->load->model("company_model");
+		$this->load->model('nation_model');
+			
+	}
+	
+	public function login()
+	{
+		
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$data['head']	 = "head";
+		$data['title']	= "Login as Seaman";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "login/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "login/login.php";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$data["remember_me"] = isset($session_set_value['remember_me']) ? $session_set_value['remember_me'] : 0;
+		
+		$this->load->view('register',$data);
+	}
+	
+	function login_univ() // is this necessary ? 
+	{
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$data['head']	 = "head";
+		$data['title']	= "Login";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "login-universal/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "login-universal/login.php";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$data["remember_me"] = isset($session_set_value['remember_me']) ? $session_set_value['remember_me'] : 0;
+		
+		$this->load->view('register',$data);
+		
+	}
+	
+	function login_company()
+	{
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$data['head']	 = "head";
+		$data['title']	= "Login as Company";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "login-company/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "login-company/login.php";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$data["remember_me"] = isset($session_set_value['remember_me']) ? $session_set_value['remember_me'] : 0;
+		
+		$this->load->view('register',$data);
+	}
+	
+	function formactivation_agent()
+	{
+		$user = $this->uri->segment(3);
+		
+		$data['head']	 = "head";
+		$data['title']	= "Form Activation ";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "formactivation/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "formactivation/formactivation-agentsea";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$this->load->view('register',$data);	
+	}
+	
+	function formactivation()
+	{
+		$user = $this->uri->segment(3);
+		
+		$data['head']	 = "head";
+		$data['title']	= "Form Activation Seaman";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "formactivation/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "formactivation/formactivation";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		$this->load->view('register',$data);
+			
+	}
+	
+	public function forgotpass()
+	{
+		$user = $this->uri->segment(3);
+		
+		$data['head']	 = "head";
+		$data['title']	= "Forgot Password";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "forgotpass/meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		$data['navbar']   = "navbar-login";
+		$data['template'] = "forgotpass/forgotpass_bak";
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under";
+		
+		//exit(print_r($data));
+		
+		$this->load->view('register',$data);
+	}
+	
+	function verified_page()
+	{
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$data['head']	 = "head";
+		$data['title']	= "Verified page";
+		$data['css']	  = "users/css"; //css tambahan, di head
+		$data['meta']	 = "users/meta"; // meta tambahan, di head
+		$data['js_top']   = "users/js_top"; // js tambahan, di head
+		$data['js_under'] = "users/js_under"; // js tambahan, di head
+		$data['template'] = "users/verified-page";
+		
+		$this->load->view('users/register',$data);	
+		
+	}
+
+	public function index()
+	{
+		
+		$session_set_value = $this->session->all_userdata();
+		
+		if($session_set_value['remember_me'] == 1){
+            header("location:".base_url("dashboard"));
+        }
+		
+		$user = $this->uri->segment(3);
+		
+		$data['head']	 = "head";
+		$data['title']	= "Register as Seaman";	
+		$data['css']	  = "css"; //css tambahan, di head
+		$data['meta']	 = "meta"; // meta tambahan, di head
+		$data['js_top']   = "js_top"; // js tambahan, di head
+		
+		//include
+		//$data['navbar']   = "";		
+		$data['rwnation'] = $this->nation_model->get_nationality();
+		$data['rwuser'] = $this->user_model->get_pelaut();
+		
+		//$check = $this->check_username();
+		//$data['info'] = $check['info'];
+		
+		if($user == "agentsea")
+		{
+			$data['title']	= "Register as Agentsea";
+			$data['template'] = "register-agentsea";
+		}
+		else
+		{
+			$data['template'] = "template";
+		}
+		
+		$data['footer']   = "footer";
+		$data['js_under'] = "js_under"; 
+		
+		
+		$this->load->view('register',$data);
+		
+	}
+	
+	public function register()
+	{
+		$this->index();	
+	}
+	
+	
+	
+	function __destruct()
+	{
+		
+		
+	}
+}
+
+/* End of file users.php */
+/* Location: ./application/modules/users/controllers/users.php */

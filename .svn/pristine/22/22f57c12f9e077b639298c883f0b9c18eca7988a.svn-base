@@ -1,0 +1,72 @@
+<?php if(!defined("BASEPATH")) exit ('no direct script access allowed');
+
+// controller home, module general / seaman / guest
+
+class Home extends CI_Controller{
+	
+	function __construct()
+	{
+		parent::__construct();
+		
+		//echo "ini construct..";
+		//$this->authentification_model->close_access();
+		
+		$this->load->library('image_lib');
+		$this->load->model('timeline_model');	
+		
+		
+	}
+	
+	function index()
+	{
+		$this->authentification_model->close_access();
+		
+		$data['title'] = "Home";
+		$data['template'] = "template";
+		
+		
+		//print_r($data); exit;
+		
+		
+		$this->load->view('index',$data);
+		
+		
+	}	
+	
+	
+	function test_home()
+	{
+		
+		
+		$timeline = $this->timeline_model->get_tml();
+		
+		foreach($timeline as $row){
+			
+			
+			echo $username = $row['username'];
+			
+			$name = $this->timeline_model->get_realname($username);
+			
+			echo $name." <br> ";
+		}
+	}
+	
+	function menu()
+	{
+		
+		$this->load->view('menu');	
+	}
+	
+	function __destruct()
+	{
+		
+		
+	}
+	
+	
+	
+}
+
+	
+	
+	

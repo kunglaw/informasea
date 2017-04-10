@@ -1,0 +1,48 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Welcome extends CI_Controller {
+	
+	public function __construct()
+	{
+		
+		parent::__construct();
+		$this->authentification_model->close_access();
+	}
+
+	public function index()
+	{
+		// hanya bisa disini 
+		$this->load->view('test/test');
+		
+		//$this->load->view('test/test',$data);
+	}
+
+	
+	public function send_email()
+	{
+		
+		$this->load->library('email');
+
+		$this->email->from('admin@informasea.com', 'informasea.com');
+		$this->email->to('alhusna901@gmail.com');
+		$this->email->cc('alhusna_99@yahoo.co.id');
+		//$this->email->bcc('them@their-example.com');
+		
+		
+		
+		$this->email->subject('Email Test');
+		$this->email->message('<a href="#"></a> <p>Testing the email class.</p>');
+		
+		$this->email->send();
+		
+		echo $this->email->print_debugger();	
+		
+		
+	}
+	
+	function __destruct()
+	{
+		
+		echo "<!-- end -->";	
+	}
+}

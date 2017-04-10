@@ -1,0 +1,324 @@
+<?php // model seatizen, module seatizen;
+	
+	if(!defined('BASEPATH')) exit ('No Direct Script Access allowed');
+	
+	class Seatizen_model extends CI_Model
+	{
+		
+		
+		public function seatizen_list()
+		{
+			$username = $this->session->userdata("username");
+			
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id desc";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id desc ";
+			}
+			$q = $this->db->query($str);
+			$f = $q->result_array();			
+			return $f;				
+		}
+		
+		function record_seatizen(){
+			$str = "select * from pelaut_ms where activation = 'ACTIVE'";
+			$q = $this->db->query($str);
+			$f = $q->num_rows();
+			return $f;
+		}
+		
+		function list_seatizen($count = false, $offset = 0){
+			$username = $this->session->userdata("username");
+			
+				$str = "select * from pelaut_ms ";
+			
+			if($username == ""){
+				$str .= "where activation = 'ACTIVE' order by pelaut_id desc";
+			} else {
+				$str .= "where activation = 'ACTIVE'  and username <> '$username' order by pelaut_id desc";	
+			}
+			if(!$count) $str .= " LIMIT $offset,10";
+			$q = $this->db->query($str);
+			$f = $q->result_array();
+			return $f;
+		}
+		
+		// untuk panel
+		function list_seatizen_notfriend($username = "")
+		{
+			$hasil = array();
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id DESC LIMIT 5";
+				$q = $this->db->query($str);
+				$f = $q->result_array();
+				
+				$hasil = $f;
+				
+			}	
+			
+			
+			else
+			{
+				$str2 = "select * from pelaut_ms where activation = 'ACTIVE' and username = '$username' ";
+				$q2 = $this->db->query($str2);
+				$f2 = $q2->row_array();
+				$fs = explode("|",$f2['array_teman']);
+				//print_r($fs);
+				
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id DESC LIMIT 5";
+				$q = $this->db->query($str);
+				$f = $q->result_array();
+				//print_r($fs);
+				
+				$i = 0;
+				foreach($f as $row)
+				{
+					
+					if(!in_array($row['pelaut_id'],$fs))
+					{
+						$hasil[] = $row;
+					}
+					
+					if($i == 4)
+					{
+						break;	
+					}
+				}
+				
+			}
+			
+			return $hasil;
+			
+		}
+		
+		function check_seatizen($username) // untuk cek saat registrasi 
+		{
+			
+			$str = "select * from pelaut_ms where username = '$username' and activation = 'ACTIVE' ";
+			$q   = $this->db->query($str);
+			$f   = $q->row_array();
+			
+			return $f; 	
+			
+		}
+
+		function jumlah_teman($username){
+			$str = "SELECT count(array_teman) FROM pelaut_ms WHERE username = '$username' and activation ='Active'";
+			$q = $this->db->query($str);
+			return $q;
+		}
+		
+	
+		function detail_seatizen($username)
+		{
+			
+			$str = "select * from pelaut_ms where username = '$username' and activation = 'ACTIVE' ";
+			$q   = $this->db->query($str);
+			$f   = $q->row_array();
+			
+			return $f; 	
+			
+		}
+		
+		function list_seatizen_lim()
+		{
+			$username = $this->session->userdata("username");
+			
+			$pelaut_id = $this->input->post('pelaut_id');	
+			//echo $pelaut_id; exit;	
+			
+			$jml_setting = $this->input->post('jml_setting');
+			
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id desc limit 5";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id desc limit 5";
+			}
+			
+			$q = $this->db->query($str);
+			$f = $q->result_array();			
+			return $f;				
+		}
+		
+		function list_seatizen_lim_plus()
+		{   
+		    $username = $this->session->userdata("username");
+			
+			$pelaut_id = $this->input->post('pelaut_id');	
+			//echo $pelaut_id; exit;	
+			
+			$jml_setting = $this->input->post('jml_setting');
+			
+			if($username == "")
+			{
+				
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id'  order by pelaut_id desc limit 5";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id' and username <> '$username'  order by pelaut_id desc limit 5";	
+			}
+			//harusnya ada order by createdate
+			$q = $this->db->query($str);
+			return $f = $q->result_array();
+			
+			
+		}
+		
+		function check_sisa_list($pelaut_id){
+			
+			$username = $this->session->userdata("username");
+			$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id' and username <> '$username'  order by pelaut_id desc";
+			$q = $this->db->query($str);
+			$f = $q->num_rows();
+			
+			return $f;
+			
+		}
+
+		function searchSeatizen($search,$count = false,$limit = 0){
+			$username = $this->session->userdata("username");
+
+			$str = "SELECT * FROM pelaut_ms JOIN profile_resume_tr ON pelaut_ms.pelaut_id = profile_resume_tr.pelaut_id 
+			LEFT JOIN department ON profile_resume_tr.department = department.department_id LEFT JOIN rank ON rank.rank_id = profile_resume_tr.rank 
+			LEFT JOIN coc_class ON profile_resume_tr.coc_class = coc_class.id_coc_class LEFT JOIN ship_type ON profile_resume_tr.vessel_type = ship_type.type_id 
+			WHERE pelaut_ms.activation = 'Active' ";
+
+			if(!empty($search)) $str .= " AND (";
+
+				if(!empty($search)) $str .= " pelaut_ms.nama_depan LIKE '%$search%' OR 
+					pelaut_ms.nama_belakang LIKE '%$search%' OR pelaut_ms.username LIKE '%$search%' OR
+					pelaut_ms.kebangsaan LIKE '%$search%' OR ship_type.ship_type LIKE '%$search%'
+					OR department.department LIKE '%$search%' OR rank.rank LIKE '%$search%'
+					OR coc_class.coc_class LIKE '%$search%')";
+
+				if(!empty($username))
+							$str .= " AND pelaut_ms.username <> '$username'";
+					
+
+
+					if (!$count) $str .= " LIMIT $limit,10";
+			    	//echo $str;
+			        $q = $this->db->query($str);
+			        $f = $q->result_array();
+			        return $f;
+
+		}
+		
+		
+		// function searchSeatizen($search,$nationality ='',$ship_id = 0, $dept_id = 0,$rank_id = 0, $coc_id = 0,$count = false , $limit = 0){
+		// 	$username = $this->session->userdata("username");
+		// 	  $str = " select * from pelaut_ms JOIN profile_resume_tr ON pelaut_ms.pelaut_id = profile_resume_tr.pelaut_id WHERE activation ='Active' ";
+		// 	  if(!empty($search) || !empty($nationality) || $ship_id != 0 || $dept_id != 0 || $rank_id != 0 || $coc_id != 0) $str .= " AND (";
+
+		// 	 /*keyword */
+		// 	 if(!empty($search)) $str.="(pelaut_ms.nama_depan LIKE '%$search%' or pelaut_ms.nama_belakang LIKE '%$search%')";
+
+		// 	/* nationality */
+
+		// 	if(!empty($nationality) && empty($search)) $str.= " pelaut_ms.kebangsaan =  '$nationality'";  	
+		// 	else if(!empty($nationality) && !empty($search)) $str .= " AND pelaut_ms.kebangsaan = '$nationality'";
+
+		// 	/* ship type */
+		// 	if($ship_id !=0 && empty($searchh) && !empty($nationality)) $str .= " AND profile_resume_tr.vessel_type = '$ship_id'";
+		// 	else if($ship_id != 0 && empty($search) && empty($nationality)) $str .= "  profile_resume_tr.vessel_type = '$ship_id'";
+		// 	else if($ship_id != 0 && !empty($search) AND !empty($nationality)) $str .= " AND profile_resume_tr.vessel_type = '$ship_id'";
+
+		// 	/* department */
+		// 	if($dept_id !=0 && empty($search) && $ship_id == '' && empty($nationality)) $str .= " profile_resume_tr.department = '$dept_id'";
+		// 	else if($dept_id != 0 && empty($search) && $ship_id != '' AND !empty($nationality)) $str .= " AND profile_resume_tr.department = '$dept_id'";
+		// 	else if($dept_id != 0 && !empty($search) && $ship_id == '') $str .= " AND profile_resume_tr.department = '$dept_id'";
+
+		// 	/* rank */
+		// 	if($rank_id != 0 && empty($search) && $ship_id != '' && $dept_id != '') $str .= " AND profile_resume_tr.rank = '$rank_id'";
+		// 	else if ($rank_id != 0 && !empty($search)) $str .= " AND profile_resume_tr.rank = '$rank_id'";
+
+		// 	//coc
+		// 	if($coc_id != 0 && empty($search) && $ship_id != '' && $dept_id != '' && $rank_id != '') $str .= "AND profile_resume_tr.coc_class = '$coc_id'";
+		// 	else if($coc_id != 0 && !empty($search)) $str .= " AND profile_resume_tr.coc_class = '$coc_id'";
+
+		// 	if(!empty($nationality) || !empty($search) || $coc_id != 0 || $rank_id != 0 || $dept_id != 0 AND !empty($username))
+		// 			$str .= " AND username <> '$username'";
+		// 		else if(empty($nationality) && empty($search) && $coc_id ==0 && $rank_id ==0 && $dept_id ==0 && !empty($username))
+		// 			$str .= " AND username <> '$username'";
+
+		// 	        if (!empty($nationality) || !empty($search) || $coc_id != 0 || $rank_id != 0 || $dept_id != 0 || $ship_id != 0) $str .= ")";
+			
+
+
+		// 			if (!$count) $str .= " LIMIT $limit,10";
+			    
+		// 	        $q = $this->db->query($str);
+		// 	        $f = $q->result_array();
+		// 	        return $f;
+      	
+		// }
+
+
+		function getSearchSeatizenDashboard($keyword, $vessel_id=0, $dept_id=0, $nationality_id = '', $count=false, $limit=0)
+    {
+    	$username = $this->session->userdata('username');
+        $str = " select * from pelaut_ms JOIN profile_resume_tr ON pelaut_ms.pelaut_id = profile_resume_tr.pelaut_id WHERE activation = 'Active' ";
+
+       	if(!empty($keyword) || !empty($nationality_id) || $vessel_id != 0 || $dept_id != 0) $str .= " AND (";
+  
+        /* Keyword */
+        if (!empty($keyword)) $str .= "(pelaut_ms.nama_depan like '%$keyword%' or pelaut_ms.nama_belakang like '%$keyword%')";
+   		
+        /* Vessel Type */
+        if ($vessel_id != 0 && empty($keyword)) $str .= " profile_resume_tr.vessel_type = '$vessel_id'";
+        else if ($vessel_id != 0 && !empty($keyword)) $str .= " and profile_resume_tr.vessel_type = '$vessel_id'";
+
+        /* Department */
+        if ($dept_id != 0 && empty($keyword)) $str .= " profile_resume_tr.department = '$dept_id'";
+        else if ($dept_id != 0 && !empty($keyword)) $str .= " and profile_resume_tr.department = '$dept_id'";
+
+        /* Nationality */
+        if ($nationality_id != 0 && empty($keyword)) $str .= " pelaut_ms.kebangsaan = '$nationality_id'";
+        else if ($nationality_id != 0 && !empty($keyword)) $str .= " and pelaut_ms.kebangsaan = '$nationality_id'";
+
+        if(!empty($nationality_id) || !empty($keyword) || $dept_id != 0 || $vessel_id !=0 AND !empty($username)){
+        	$str .= "AND  username <> '$username'";
+        }
+        else if(empty($nationality_id) && empty($keyword) && $dept_id == 0 && $vessel_id == 0 AND !empty($username)){
+        	$str .= "and username <> '$username'";
+        }
+        	
+
+        if (!empty($nationality_id) || !empty($keyword) || $dept_id != 0 || $vessel_id != 0) $str .= ") ";
+
+
+	
+        $str .= " order by pelaut_ms.pelaut_id desc";
+        if (!$count) $str .= " LIMIT $limit,10";
+        echo $str;
+        $q = $this->db->query($str);
+        $f = $q->result_array();
+        return $f;
+    }
+		
+		function get_detail_pelaut_by_id($id){
+			$str = "SELECT * FROM pelaut_ms WHERE pelaut_id = '$id' AND activation='Active'";
+			$q = $this->db->query($str);
+			$r = $q->row_array();
+			return $r;
+		}
+			
+		
+		function __destruct()
+		{
+			
+		}
+		
+		
+	}
+
+
+?>

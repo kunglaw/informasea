@@ -1,0 +1,81 @@
+<script>
+	$(".load_data").click(function(){
+		var id_perusahaan = $(this).attr("id");
+		var jml_setting = $("#setting").attr("class");
+		
+			
+		if(id_perusahaan != 9999){
+		
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url("company/get_company_list_plus") ?>",
+				data: "id_perusahaan="+ id_perusahaan +"&jml_setting="+jml_setting + "&x=1",
+				beforeSend:  function() {
+					//alert(pelaut_id);
+					$('span.load_data').append('<img src="<?php echo base_url("assets/img/facebook_style_loader.gif"); ?>" />');
+				},
+				success: function(html){
+					//alert(pelaut_id);
+					$(".style_fb").remove();
+					$("div#list_company .panel .panel-body").append(html); //ganti
+				}
+			});
+		}
+	return false;
+	});
+</script>
+
+ <?php
+   foreach($company as $row){
+   
+   ?>   
+      <div>
+         <div class="row-tml">
+         
+        	<div id="profile-pic" class="col-md-4 col-sm-4">
+            	<img src="<?php echo base_url("assets/ulogo/".$row['logo_image']) ?>" alt="" id="img-profile-company" class="img-rounded" />
+            </div>
+            
+        	<div class="col-md-8 col-sm-8" id="title-tml">
+            	<p class="mini-margin-6"><b> <a href="<?php echo base_url("company/get_detail_company/".$row['id_perusahaan']."/".$row['nama_perusahaan']); ?>" style="line-height:15px !important;"><?php echo $row["nama_perusahaan"]  ?></a></b></p>
+            </div>
+            
+       	  </div>
+          
+          <div class="clearfix"></div>
+          
+          <div id="content-tml" class="" style="padding-top:10px !important;">
+              <p><?php 	echo $row['description'];   ?></p>
+              <div class="clearfix"></div>
+          </div>
+        <!--<div>-->
+        
+        
+        </div>
+      </div>
+      <hr />
+    <?php
+   }
+	
+	?>
+
+	<?php // paging
+	 $v = $this->company_model->check_sisa_list($row['id_perusahaan']);
+	 //print_r($v);exit;
+	 if($v >= 3){
+	 ?>
+     
+      <a id="<?php echo $row['id_perusahaan']; ?>" href="#" class="load_data style_fb" >
+    
+        <span>Show More <img src="<?php echo base_url("assets/img/arrow1.png"); ?>" /> </span>
+        <input type="hidden" id="setting" class='3'> <!-- ganti class="  " kalo mau ganti jumlah seatizen yg tampil-->
+      </a>
+     <?php
+	 }
+	 else
+	 {?>
+     
+          <span>There is no data </span>
+	 <?php 
+	 }
+     ?> 

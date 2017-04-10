@@ -1,0 +1,67 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed');
+
+if(!function_exists('img_url'))
+{
+	function img_url($path)
+	{
+		$CI =& get_instance();
+		return $CI->config->img_url($path);
+			
+		
+	}
+}
+
+if(!function_exists('asset_url'))
+{
+	function asset_url($path)
+	{
+		$CI =& get_instance();
+		return $CI->config->asset_url($path);
+			
+		
+	}
+}
+
+if(!function_exists('file_url'))
+{
+	function file_url($path)
+	{
+		$CI =& get_instance();
+		return $CI->config->file_url($path);
+			
+		
+	}
+}
+
+if(!function_exists('pathup'))
+{
+	function pathup($path)
+	{
+		// keluar satu folder
+		/*
+			ubah $str_path jika terjadi perubahan pada letak folder 
+		
+		*/
+		$str_path = "../infrasset/"; 
+		return $str_path.$path;
+			
+		
+	}
+}
+
+if(!function_exists('oldpath'))
+{
+	function oldpath($path)
+	{
+		// keluar satu folder
+		/*
+			ubah $str_path jika terjadi perubahan pada letak folder 
+		
+		*/
+		$str_path = "assets/"; 
+		return $str_path.$path;
+			
+		
+	}
+}
+

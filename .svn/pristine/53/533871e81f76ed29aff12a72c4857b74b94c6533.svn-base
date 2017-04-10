@@ -1,0 +1,160 @@
+<?php 
+$notification_content = [
+	'5 new member today',
+	'<a href=""><b>Sea Andreas</b></a> wants to be your friend',
+	'<a href=""><b>Miami Heat</b></a> and 2 other friends have their birthday today',
+	'<a href=""><b>Miami Heat</b></a> commented to your post',
+	'<a href=""><b>Miami Heat</b></a> and 3 other friends like your post',
+	'<a href=""><b>Miami Heat</b></a> and 3 other friends like your photo',
+	'<a href=""><b>Popeye and 3 other friends share your post</b></a>',
+	'You have uncompleted resume, please complete it soon!',
+	'Your certificate was expired, please update it soon!',
+	'You\'ve got invitation interview from <a href=""><b>Maersk Line</b></a>'
+];
+
+$notification_image = [
+	'ic_notif_newmember.png',
+	'ic_notif_friendrequest.png',
+	'ic_notif_birthday.png',
+	'ic_notif_comment.png',
+	'ic_notif_like.png',
+	'ic_notif_photo.png',
+	'ic_notif_share.png',
+	'ic_notif_uncomplete.png',
+	'ic_notif_uncomplete.png',
+	'ic_notif_interview.png'
+]; ?>
+
+<style>
+
+html, body {
+  height: 100%;
+}
+
+.force-parent-scrollbar {
+  height: 85%;
+}
+
+.child {
+  position: relative;
+  //max-width: 25em;
+  height: 300px; 
+  overflow: auto;
+}
+
+.scrollable-content {
+  height: 120%;
+  padding-top: .5em;
+}
+
+[class*="fa-"] {
+  font-style: normal;
+  font-family: FontAwesome;
+}
+
+</style>
+
+
+<div class="notification-header">Notifications</div>
+<div class="notification-body scrollable-content">
+
+<div class="trapScroll child">
+<?php
+foreach($notification_content as $index => $content) {
+echo '<li class="notification-item ">
+	<div class="media">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="' . 'assets/img/' . $notification_image[$index] . '" alt="Image">
+		</a>
+		<div class="media-body">
+			<p>'. $content .'</p>
+			<span class="subtitle">A few minutes ago</span>
+		</div>
+	</div>
+</li>';
+} ?>
+</div>
+<?php if(! (isset($page) && $page == 'notifications')) { ?>
+</div>
+<div class="force-parent-scrollbar"></div>
+<div class="notification-footer"><a href="#">See all notifications</a></div>
+
+<?php } ?>
+
+<script>
+	var trapScroll;
+
+(function($){  
+  
+  trapScroll = function(opt){
+    
+    var trapElement;
+    var scrollableDist;
+    var trapClassName = 'trapScroll-enabled';
+    var trapSelector = '.trapScroll';
+    
+    var trapWheel = function(e){
+      
+      if (!$('body').hasClass(trapClassName)) {
+        
+        return;
+        
+      } else {  
+        
+        var curScrollPos = trapElement.scrollTop();
+        var wheelEvent = e.originalEvent;
+        var dY = wheelEvent.deltaY;
+
+        // only trap events once we've scrolled to the end
+        // or beginning
+        if ((dY>0 && curScrollPos >= scrollableDist) ||
+            (dY<0 && curScrollPos <= 0)) {
+
+          opt.onScrollEnd();
+          return false;
+          
+        }
+        
+      }
+      
+    }
+    
+    $(document)
+      .on('wheel', trapWheel)
+      .on('mouseleave', trapSelector, function(){
+        
+        $('body').removeClass(trapClassName);
+      
+      })
+      .on('mouseenter', trapSelector, function(){   
+      
+        trapElement = $(this);
+        var containerHeight = trapElement.outerHeight();
+        var contentHeight = trapElement[0].scrollHeight; // height of scrollable content
+        scrollableDist = contentHeight - containerHeight;
+        
+        if (contentHeight>containerHeight)
+          $('body').addClass(trapClassName); 
+      
+      });       
+  } 
+  
+})($);
+
+var preventedCount = 0;
+var showEventPreventedMsg = function(){  
+  $('#mousewheel-prevented').stop().animate({opacity: 1}, 'fast');
+}
+var hideEventPreventedMsg = function(){
+  $('#mousewheel-prevented').stop().animate({opacity: 0}, 'fast');
+}
+var addPreventedCount = function(){
+  $('#prevented-count').html('prevented <small>x</small>' + preventedCount++);
+}
+
+trapScroll({ onScrollEnd: addPreventedCount });
+$('.trapScroll')
+  .on('mouseenter', showEventPreventedMsg)
+  .on('mouseleave', hideEventPreventedMsg);      
+$('[id*="parent"]').scrollTop(100);
+</script>

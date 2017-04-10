@@ -1,0 +1,58 @@
+<div class="tab-pane" id="company-form" role="tabpanel"> 
+          <form role="form" action="">
+              <div class="form-group"> 
+                  <label for="">Company Name: </label>
+                  <input type="text" class="form-control" id="company_name" name="company_name" placeholder="" required="required">
+              
+              </div>
+              
+              <div class="form-group"> 
+                  <label for="">Nationality: </label>
+                  
+                  <select name="nationality" class="form-control" >
+                  	<option value=""> negara </option>
+                  <?php
+				  foreach($rwnation as $nationality){
+					  
+					echo "<option value='$nationality[alpha_2]' >$nationality[name]</option> ";
+					
+				  }
+				  	
+				  ?>
+                  </select>
+              
+              </div>
+              
+              <div class="form-group"> 
+                  <label for="">Email: </label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="" required="required">
+              
+              </div>
+              
+              <div class="form-group"> 
+                  <label for="">Re-Enter Email: </label>
+                  <input type="text" class="form-control" id="re_email" name="re_email" placeholder="">
+              
+              </div>
+              
+              <div class="form-group"> 
+                  <label for="">Password: </label>
+                  <input type="text" class="form-control" id="password" name="password" placeholder="">
+              
+              </div>
+              
+              <div class="form-group"> 
+                  <label for="">Re-Enter Password: </label>
+                  <input type="text" class="form-control" id="re_password" name="re_password" placeholder="">
+              
+              </div>
+              
+              <div class="form-group">
+              
+                  <input type="submit" value="Register" name="" class="btn btn-primary">
+                  
+              </div>
+              
+          
+          </form>
+      </div>

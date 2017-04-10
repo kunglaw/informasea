@@ -1,0 +1,102 @@
+<?php // template login ?>
+
+<?php
+	
+	// HARUSS REDIRECTTT !!! 
+	$cookie = $_COOKIE;
+	$u_cookie = $cookie['username'];
+	$n_cookie = $cookie['name'];
+	$p_cookie = $cookie['photo'];
+	$c_cookie = $cookie['cover'];
+	$s_cookie = $cookie['success'];
+
+?>
+
+<section class="content container-fluid">
+    <div class="row">
+        <div class="col-md-6 text-white hidden-sm hidden-xs m-t-1">
+            <h1><span class="text-link">Welcome to</span> Informasea.com </h1>
+            
+            <div class="media">
+               
+                <div class="media-body">
+                    
+                    <h4> Manage and Find your qulified crew. </h4>
+                </div>
+            </div>
+            
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_search.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Search Crew</h4></div>
+                    <p>
+                        Find your qualified crew and candidate
+                    </p>
+                </div>
+            </div>
+            <div class="media">
+                <div class="pull-left">
+                    
+                         
+                         <img class="large-icon" src='<?= asset_url("img/ic_register_managing.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Managing and Scheduling crew by just one click</h4></div>
+                    <p>
+                        on your schedule menu 
+                    </p>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="pull-left">
+                    <img class="large-icon" src='<?= asset_url("img/ic_register_social.svg") ?>'
+                         alt="company logo">
+                </div>
+                <div class="media-body">
+                    <div class="media-heading"><h4>Posting Jobs and Share </h4></div>
+
+                    <p>
+                        automatically on <b> Informasea </b> Social Network
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-white m-t-1">
+            <div class="block">
+                <h2>Login as
+                    <button class="btn btn-transparent" onClick="javascript:location.href = '<?=base_url("users/login/seaman")?>' ">
+                    	SEAMAN</button>
+                    <button class="btn btn-transparent" onClick="javascript:location.href = '<?=base_url("users/login/agentsea")?>' ">
+                    AGENTSEA</button>
+                </h2>
+            </div>
+           	
+            <?php
+				if($s_ccokie != "")
+				{
+					echo $s_cookie;
+				}
+				
+				if($this->session->flashdata("success") != "")
+				{
+					echo $this->session->flashdata('success');	
+				}
+			?>
+            
+            <div class="alert alert-success">
+              <h2> Please wait a Moment </h2>
+              
+              <h4> You'll be able login soon after the data have been verified and your account has been activated. </h4>
+              
+              <h4> We'll send activation code to your email </h4>
+            </div>
+            
+        </div>
+    </div>
+</section>
+

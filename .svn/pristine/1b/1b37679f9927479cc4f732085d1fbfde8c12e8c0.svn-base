@@ -1,0 +1,8 @@
+<?php // right content.php module: default ?>
+
+ <div id="right-bar-user" class="panel panel-default col-md-5">
+  
+    <?php $this->load->view('register')?>
+    
+ 
+</div>

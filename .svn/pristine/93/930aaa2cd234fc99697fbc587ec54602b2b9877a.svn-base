@@ -1,0 +1,76 @@
+<?php // register , module user ?>
+<?php
+/*$content = isset($_GET['page']) ? $_GET['page'] : "";
+
+$seaman_active = "";
+$company_active = "";
+$agent_active = "";
+
+if($content == "")
+{
+	$agent_active = "active";
+}
+else if($content == "company")
+{
+	$company_active = "active";
+}
+else
+{
+	$seaman_active = "active";	
+}
+*/
+?>
+
+  <div class="panel-header"> <h3 > Register </h3></div>
+  <div class="panel-body">
+  
+      <ul class="nav nav-tabs" role="tablist" id="tab-menu">
+        <li class="active" id="seamanBtn">
+        	<a role="presentation" data-toggle="tab" aria-controls="seaman-form" href="#seaman-form" >Seaman</a>
+        </li>
+        <!-- <li class="" id="agentBtn">
+        	<a role="presentation" data-toggle="tab" aria-controls="seaman-form" href="#agent-form" >Agent</a>
+        </li> -->
+        <li class="" id="companyBtn">
+        	<a role="presentation" data-toggle="tab" href="#company-form" >Company</a>   
+        </li>
+      </ul><!-- nav nav-tabs -->
+      
+      <div style="margin:0px 0 0px 0">
+        <?php //$ve = validation_errors(); ?>
+        <?php if(!empty($ve) || !empty($info['email']) || !empty($info['username']) ){ ?>
+          <span class="clearfix"></span>
+          <div class="">
+                <?php 
+                //echo $this->session->flashdata("error");
+				//validation_errors();
+				
+                ?>
+          </div>
+          <span class="clearfix"><hr /></span>
+          <div class="">
+             <?php 
+               
+             ?>
+          </div>
+        <?php } ?>
+        
+        <!-- success start -->
+        
+        <!-- success end -->
+        
+       </div>
+         
+         
+      <div class="tab-content"> 
+      <?php
+	  	$data['info'] = $info;
+	  	
+	  	$this->load->view("register-company",$data);
+		//$this->load->view("register-agent");	
+		$this->load->view("register-seaman",$data);
+      ?>
+      </div><!-- tab content -->
+      
+  </div><!-- panel-body -->
+

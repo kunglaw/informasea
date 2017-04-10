@@ -1,0 +1,78 @@
+<?php if(!defined('BASEPATH')) exit ("No Direct Script Access Allowed ");
+
+class authentification_model extends CI_Model{
+	
+	function close_access()
+	{
+		//echo $this->session->userdata("user"); exit;
+		
+		if($this->session->userdata("user") == "pelaut")
+		{
+			if($this->uri->segment(1) == "")
+			{
+				header("location:".base_url("home"));	
+			}
+			
+			else
+			{
+				$uri = $this->uri->segment(1);
+				
+				//var_dump($uri == "users");
+				//var_dump($this->session->userdata("user") != "");
+				
+				//print_r($this->session->all_userdata());	
+				
+				if($uri == "users" && $this->session->userdata("user") != "" )
+				{
+					//header("location:".base_url("home"),true);
+					echo "<script>location.href= '".base_url("home")."'</script>";
+				}
+			}
+		}
+		else if($this->uri->segment(1) != "" && $this->session->userdata("user") == "")
+		{
+			header("location:".base_url("users"));
+		}
+	
+	}
+	
+	function company_access()
+	{
+		
+			
+	}
+	
+	// INGAAA .. INGAA ini untuk memfilter progress ajax
+	function ajax_access()
+	{
+		$x = $this->input->post("x");
+		if($x != 1)
+		{
+			show_404();
+		}
+	}
+
+	function cek_logo_company($username_company=""){
+		$sql 	= "select * from photo_perusahaan_tr where username='$username_company' AND profile_pic='1' AND cover='0'";	
+		$query 	= $this->db->query($sql);
+
+		if ($query->num_rows() > 0 ) { // jika $sql bernilai benar
+			foreach ($query->result_array() as $row) {
+				$nama_gambar 	= $row['nama_gambar'];
+				$path_exists  	= is_file("../infrasset/company/photo/$username_company/profil_pic/$nama_gambar");
+
+				if ($path_exists == "1") { // jika file fisik photo ada di dalam polder.
+					$logo_company 	= img_url("company/photo/$username_company/profil_pic/$nama_gambar");		
+				}else{
+					$logo_company  	= img_url("company/default/ic_landing_company.svg");
+				}
+			}
+		}else{
+			$logo_company  	 = img_url("company/default/ic_landing_company_blue.svg");
+		}
+
+		return $logo_company;
+	}
+	
+}
+

@@ -1,0 +1,375 @@
+<?php
+$this->load->model('friendship_model');
+
+?>
+
+<span class="tml-modal-alert">
+
+</span>
+
+<script>
+    function get_list_comment(id_timeline)
+    {
+        $.ajax({
+
+            type : "POST",
+            url : "<?php echo base_url("comment_tml/get_comment"); ?>", // nanti diganti
+            data:"id_timeline="+id_timeline+"&x=1",
+            success : function(data)
+            {
+                $("#list_comment_timeline_"+id_timeline).html(data);
+            }
+        });
+
+    }
+
+
+
+    function del_tml(id_tml,dturl,url)
+    {
+        $.ajax({
+            type:"POST",
+            data:dturl+"&id_tml="+id_tml,
+            url:url,
+            success: function(data){
+                //alert(data);
+                $(".tml-modal-alert").html(data);
+            }
+        });
+    }
+
+    function update_timeline(id_timeline)
+    {
+        $.ajax({
+
+            type:"POST",
+            url:"<?php echo base_url("timeline/timeline_update");?>",
+            data:"username=<?php echo $this->session->userdata("username"); ?>&id_timeline="+id_timeline+"&x=1",
+            success:function()
+            {
+                //$("form").reset();
+                alert("success update ");
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+
+    function responsive_img(nw,nh,id_timeline)
+    {
+        var nw_width = nw
+        var nw_height = nh;
+
+        var sub_content_tml_width = $("#sub-content-tml").width();
+        var sub_content_tml_height = $("#sub-content-tml").height();
+
+        //alert(sub_content_tml_width+" and "+sub_content_tml_height);
+
+        p_width = Math.round(( nw_width / sub_content_tml_width ) * 100);
+        p_height = Math.round(( nw_height / sub_content_tml_width ) * 100);
+
+        if(p_width > 100)
+        {
+            p_width = 100;
+        }
+
+        $(".img-"+id_timeline).attr("width",p_width+"%");
+        $(".img-"+id_timeline).attr("height",p_height+"%");
+
+    }
+</script>
+
+<script type="text/javascript">
+    $('.load_data').click(function() {
+
+        var id_timeline = $(this).attr("id");
+        var jml_setting = $("#setting").attr("class");
+
+        <?php
+
+        // variable penting
+        $username_url = $this->input->post('username');
+        $username_login = $this->session->userdata('username');
+        $pelaut_id_login = $this->session->userdata("id_user");
+        $ctrl = $this->input->post('ctrl'); // menentukan view detail atau profile
+
+        $cf = $this->friendship_model->show_friend($pelaut_id_login);
+         ?>
+
+
+
+        var nn = "<?php echo $ctrl; ?>";
+        var username_url = "<?php echo $username_url; ?>";
+        var username_login = "<?php echo $username_login; ?>";
+
+        if(nn == "profile" && (username_url == username_login))
+        {
+            url_address = '<?php echo base_url('seaman/home/get_self_timeline_plus')?>';
+        }
+        else if(nn == "detail" && (username_url != username_login))
+        {
+            url_address = '<?php echo base_url('seaman/home/get_self_timeline_plus')?>';
+        }
+        else
+        {
+            url_address = '<?php echo base_url('seaman/home/get_list_timeline_plus')?>';
+        }
+        //alert("id_timeline="+ id_timeline +"&jml_setting="+jml_setting+"&x=1&ctrl="+nn+"&HALAMAN = list_timeline ");
+
+        if(id_timeline != 9999){
+
+            $.ajax({
+                type: "POST",
+                url: url_address,
+                data: "id_timeline="+ id_timeline +"&jml_setting="+jml_setting+"&x=1&ctrl="+nn+"&username="+username_url,
+                beforeSend:  function() {
+                    $('span.load_data').append('<img src="<?php echo base_url("assets/img/facebook_style_loader.gif"); ?>" />');
+                },
+                success: function(html){
+                    $(".style_fb").remove();
+                    $("div#list_timeline").append(html); //ganti
+                },
+                error:function()
+                {
+                    alert("terjadi kesalahan");
+                }
+            });
+        }
+        return false;
+    });
+
+</script>
+
+<!--Contoh Jeditable-->
+<!--
+<?php //for($i = 0;$i<5;$i++){ ?>
+<div class="edit" id="id<?= $i ?>">Editable text</div>
+<a href="#" class="edit_trigger">Edit me!!</a>
+
+    <script>
+    /* Bind Jeditable instances to "edit" event. */
+$(".edit").editable("http://www.example.com/save.php", {
+event     : "editmine<?= $i ?>",
+    indicator: 'saving...',
+
+    name: "mytml",
+                                tooltip: 'Double click to edit',
+    width: 300,
+//                            data : "<?//= $row['content'] ?>////",
+    id: "timeline_id",
+    submit: "OK", cancel: "Cancel"
+});
+/* Find and trigger "edit" event on correct Jeditable instance. */
+$(".edit_trigger").bind("click", function() {
+$(this).prev().trigger("editmine"+<?= $i ?>);
+});
+</script>-->
+
+<?php //} ?>
+<?php
+//print "uri dari get_list_timeline : ".$uri; print "<br>";
+//print "ctrl: ".$this->input->post('ctrl'); print "<br>";
+//print "session username : ".$this->session->userdata("username");print "<br>";
+//print "username dari uri : ".$this->input->post("username");print "<br>";
+//print "uri : ".$this->uri->segment(2);print "<br>";
+//echo "list_timeline module seaman";
+
+
+foreach($timeline as $row){
+
+    $profile_pic = $this->user_model->get_profile_pic($row['username']); // bisa diisi pakai username
+    $nama_gambar = explode(".",$profile_pic);
+    $url = img_url("photo/$row[username]/profile_pic/$nama_gambar[0]"."_small.".$nama_gambar[1]);
+
+    $cf = $this->friendship_model->check_friends($row['pelaut_id'],$pelaut_id_login); // cek pertemanan kalau ingin comment
+
+    if(empty($profile_pic))
+    {
+        $url = base_url("assets/user_img/noprofilepic_small.png");
+    }
+
+    ?>
+
+    <div class="panel panel-default timeline-content-<?php echo $row['id_timeline'] ?>" id="timeline-content">
+        <div class="panel-heading">
+            <div id="profile-pic-mini" class="" style="margin-left:-2px">
+                <img src="<?php  echo $url; ?>" alt="" id="" class="img-profile" />
+            </div>
+
+            <div class="col-md-10" id="title-tml" >
+                <p class="mini-margin-6"><b><?php echo $this->friendship_model->username_variation($row['id_timeline']); ?></b>
+                    <?php echo $row['title']; ?> </p>
+                <p class="mini-margin-6"> <small><?php $dfb = date_format_db($row['datetime']); echo since($row['datetime']); ?>
+                        <span class="caret"></span></small> </p>
+            </div>
+
+            <?php // edited menu timeline
+            if((($username_login == $row['username']) || ($username_login == $row['to'])) && !empty($username_login))
+            {
+                $ddtl['id_timeline'] = $row['id_timeline'];
+                ?>
+                <?php $this->load->view('timeline/dropdown_timeline',$ddtl);
+            }
+
+            ?>
+
+            <span class="clearfix"></span>
+        </div>
+        <div class="panel-body tc-<?php echo $row['id_timeline'] ?>" id="tc-<?php echo $row['id_timeline'] ?>">
+            <div id="content-tml" class="">
+
+                <div id="<?php if((($username_login == $row['username']) || ($username_login == $row['to'])) && !empty($username_login)) echo $row['id_timeline']; else echo ''; ?>" class="" style="margin-top: 5px">
+                    <?php echo !empty($row['content']) ? trim($row['content']) : "";  ?>
+                </div>
+                <script>
+                    //                  $(document).ready(function(){
+                    $(document).ready(function() {
+//                        alert('test');
+                        $('#<?= $row["id_timeline"] ?>').editable("<?php echo base_url("timeline/update") ?>", {
+                            indicator: 'saving...',
+                            event: 'editmytml<?= $row['id_timeline'] ?>',
+                            name: "mytml",
+                            width: 300,
+                            id: "timeline_id",
+                            submit: "OK", cancel: "Cancel"
+                        });
+                    });
+
+//                    function triggerUpdate(id){
+                    $('.editTml').bind('click', function() {
+                        event_name = "editmytml" + <?= $row['id_timeline'] ?>;
+//                        alert(event_name);
+                        $(this).prev().trigger(event_name);
+//                    }
+                        //                  });
+                    });
+                </script>
+                <br>
+                <div id="sub-content-tml" class="col-md-10 row">
+                    <?php
+                    $this->load->module("timeline");
+                    if($row['photo'] != "" ){
+                        $ss = explode(".",$row['photo']);
+                        if($row['type'] == "status")
+                        {
+                            $dimension = getimagesize(pathup("timeline/$row[username]/big/$row[photo]"));
+                            $new_dimension = $this->timeline->resize_dimension($dimension[0],$dimension[1]);
+                            $url_photo = img_url("timeline/$row[username]/big/$row[photo]");
+                            $respon_type = "responsive_img($new_dimension[width],$new_dimension[height],$row[id_timeline]);";
+                        }
+                        else if($row['type'] == "Photo")
+                        {
+                            $dimension_pt = getimagesize(pathup("photo/$row[username]/big/$row[photo]"));
+                            $new_dimension_pt = $this->timeline->resize_dimension($dimension_pt[0],$dimension_pt[1]);
+                            $url_photo = img_url("photo/$row[username]/big/$row[photo]");
+                            $respon_type = "responsive_img($new_dimension_pt[width],$new_dimension_pt[height],$row[id_timeline]);";
+                        }
+                        else if($row['type'] == "Resume")
+                        {
+                            $dimension_pt = getimagesize(pathup("photo/$row[username]/resume/$ss[0]"."_thumb.".$ss[1]));
+                            $new_dimension_pt = $this->timeline->resize_dimension($dimension_pt[0],$dimension_pt[1]);
+                            $url_photo = img_url("photo/$row[username]/resume/$ss[0]"."_thumb.".$ss[1]);
+                            $respon_type = "responsive_img($new_dimension_pt[width],$new_dimension_pt[height],$row[id_timeline]);";
+                        }
+                        else if($row['type'] == "profile_pic")
+                        {
+
+                            $dimension_pt = getimagesize(pathup("photo/$row[username]/profile_pic/$ss[0]"."_thumb.".$ss[1]));
+                            $new_dimension_pt = $this->timeline->resize_dimension($dimension_pt[0],$dimension_pt[1]);
+                            $url_photo = img_url("photo/$row[username]/profile_pic/$ss[0]"."_thumb.".$ss[1]);
+                            $respon_type = "responsive_img($new_dimension_pt[width],$new_dimension_pt[height],$row[id_timeline]);";
+                        }
+                        else if($row['type'] == "cover")
+                        {
+                            $dimension_pt = getimagesize(pathup("photo/$row[username]/cover/$ss[0]"."_thumb.".$ss[1]));
+                            $new_dimension_pt = $this->timeline->resize_dimension($dimension_pt[0],$dimension_pt[1]);
+                            $url_photo = img_url("photo/$row[username]/cover/$ss[0]"."_thumb.".$ss[1]);
+                            $respon_type = "responsive_img($new_dimension_pt[width],$new_dimension_pt[height],$row[id_timeline]);";
+                        }
+                        ?>
+
+                        <img src="<?php echo $url_photo ?>" width=""
+                             height="" alt="" id="img-tml" class="img-<?php echo $row['id_timeline']?>" style="border:1px solid #CCC" />
+
+
+                        <script>
+                            <?php echo $respon_type; ?>
+                        </script>
+
+                    <?php
+                    }
+                    ?>
+                </div>
+
+                <p><a href="<?php print base_url("profile/$row[username]/post/$row[id_timeline]")?>">detail</a>
+                    <?php if($this->session->userdata("user") == "pelaut"){ ?>
+
+                        <a href="#">comment</a> <?php } ?></p>
+
+            </div>
+        </div><!-- panel body -->
+        <div id="list_comment_timeline_<?php echo $row['id_timeline']; ?>" style="border-top:1px solid #CCC">
+
+            <!-- disini list comment -->
+        </div>
+        <?php
+        //print_r($cf);												 // ubah expressi ini jika sudah ada fitur pertemanan
+        if(($this->session->userdata("user") == "pelaut" && $cf == TRUE) || $pelaut_id_login == $row['pelaut_id']){
+            $data['id_timeline'] = $row['id_timeline'];
+            $this->load->view('post-comment-timeline',$data);
+        }
+
+        ?>
+        <!-- javascript disini -->
+        <script>
+
+            get_list_comment(<?php echo $row['id_timeline']?>); // sakit jiwa script nya
+            //alert(<?php //echo $row['id_timeline']?>);
+        </script>
+
+    </div><!-- panel -->
+
+
+
+<?php
+
+} // end foreach
+// ======================================================================================================== //
+?>
+
+<?php // paging 				// rule ini harus sama dengan yang diatas
+if($jml_data_angka >= 0){
+    //echo "jml_data_angka = ".$jml_data_angka."<br> id_timeline = ".$row['id_timeline'];
+    ?>
+    <a id="<?php echo $row['id_timeline']; ?>" href="#" class="load_data" >
+        <div class="panel panel-default style_fb">
+            <div class="panel-body" id="style_fb">
+                <span>Show More <img src="<?php echo base_url("assets/img/arrow1.png"); ?>" /> </span>
+                <input type="hidden" id="setting" class='5'>
+            </div>
+        </div>
+    </a>
+<?php
+}
+else
+{ //echo "jml_data_angka = ".$jml_data_angka."<br> id_timeline = ".$row['id_timeline'];
+    ?>
+
+    <div class="panel panel-default style_fb">
+        <div class="panel-body" id="style_fb">
+            <span>There is no data </span>
+        </div>
+    </div>
+
+
+<?php
+}
+//Modules::run("timeline");
+
+//echo "lalala";*/
+?>
+
+
+<!--  -->
+

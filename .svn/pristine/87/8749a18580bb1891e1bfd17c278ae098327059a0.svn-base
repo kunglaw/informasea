@@ -1,0 +1,160 @@
+<?php // model seatizen, module seatizen;
+	
+	if(!defined('BASEPATH')) exit ('No Direct Script Access allowed');
+	
+	class Seatizen_model extends CI_Model
+	{
+		
+		
+		public function seatizen_list()
+		{
+			$username = $this->session->userdata("username");
+			
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id desc";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id desc";
+			}
+			$q = $this->db->query($str);
+			$f = $q->result_array();			
+			return $f;				
+		}
+		
+		// untuk panel
+		function list_seatizen_notfriend($username = "")
+		{
+			$hasil = array();
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id DESC LIMIT 5";
+				$q = $this->db->query($str);
+				$f = $q->result_array();
+				
+				$hasil = $f;
+				
+				
+			}
+			else
+			{
+				$str2 = "select * from pelaut_ms where activation = 'ACTIVE' and username = '$username' ";
+				$q2 = $this->db->query($str2);
+				$f2 = $q2->row_array();
+				$fs = explode("|",$f2['array_teman']);
+				//print_r($fs);
+				
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id DESC LIMIT 5";
+				$q = $this->db->query($str);
+				$f = $q->result_array();
+				//print_r($fs);
+				
+				$i = 0;
+				foreach($f as $row)
+				{
+					
+					if(!in_array($row['pelaut_id'],$fs))
+					{
+						$hasil[] = $row;
+					}
+					
+					if($i == 4)
+					{
+						break;	
+					}
+				}
+				
+			}
+			
+			return $hasil;
+			
+		}
+		
+		function check_seatizen($username) // untuk cek saat registrasi 
+		{
+			
+			$str = "select * from pelaut_ms where username = '$username' and activation = 'ACTIVE' ";
+			$q   = $this->db->query($str);
+			$f   = $q->row_array();
+			
+			return $f; 	
+			
+		}
+		
+		function detail_seatizen($username)
+		{
+			
+			$str = "select * from pelaut_ms where username = '$username' and activation = 'ACTIVE' ";
+			$q   = $this->db->query($str);
+			$f   = $q->row_array();
+			
+			return $f; 	
+			
+		}
+		
+		function list_seatizen_lim()
+		{
+			$username = $this->session->userdata("username");
+			
+			$pelaut_id = $this->input->post('pelaut_id');	
+			//echo $pelaut_id; exit;	
+			
+			$jml_setting = $this->input->post('jml_setting');
+			
+			if($username == "")
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' order by pelaut_id desc limit 5";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and username <> '$username' order by pelaut_id desc limit 5";
+			}
+			
+			$q = $this->db->query($str);
+			$f = $q->result_array();			
+			return $f;				
+		}
+		
+		function list_seatizen_lim_plus()
+		{   
+		    $username = $this->session->userdata("username");
+			
+			$pelaut_id = $this->input->post('pelaut_id');	
+			//echo $pelaut_id; exit;	
+			
+			$jml_setting = $this->input->post('jml_setting');
+			
+			if($username == "")
+			{
+				
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id'  order by pelaut_id desc limit 5";
+			}
+			else
+			{
+				$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id' and username <> '$username'  order by pelaut_id desc limit 5";	
+			}
+			//harusnya ada order by createdate
+			$q = $this->db->query($str);
+			return $f = $q->result_array();
+			
+			
+		}
+		
+		function check_sisa_list($pelaut_id){
+			
+			$username = $this->session->userdata("username");
+			$str = "select * from pelaut_ms where activation = 'ACTIVE' and pelaut_id < '$pelaut_id' and username <> '$username'  order by pelaut_id desc";
+			$q = $this->db->query($str);
+			$f = $q->num_rows();
+			
+			return $f;
+			
+			
+		}
+		
+		
+	}
+
+
+?>

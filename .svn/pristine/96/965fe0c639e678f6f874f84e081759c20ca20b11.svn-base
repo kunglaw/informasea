@@ -1,0 +1,210 @@
+<?php
+$username_comp      = $company["username"]; // username company
+$username_seaman    = $this->session->userdata("username"); // username seaman
+$vacantsea_title = $title;
+$id = $this->uri->segment(3);
+$sess_data = $this->session->all_userdata();
+$sallary = !empty($sess_data['username']) ? $vacantsea['sallary_curr']." ".number_format($vacantsea["annual_sallary"]) : "Please Login to view the Salary";
+$id_user = $this->session->userdata("id_user");
+$class_text = !empty($id_user) ? "text-success" : "text-danger";
+
+$create = date_create($vacantsea['create_date']);
+$expired = date_create($vacantsea['expired_date']);
+
+$create = date_format($create, 'F d, Y');
+$expired = date_format($expired, 'F d, Y');
+
+//cek status vacantsea : process, reject, approve
+$vacantsea_id       = $this->uri->segment(3);
+$q_applicant        = $this->company_model->getapplicant("where id_vacantsea='$vacantsea_id' and username='$username_seaman' ")->row_array();
+$status_applicant   = $q_applicant['status'];
+
+
+//get logo company
+$logo_company           = $this->authentification_model->cek_logo_company($username_comp);
+
+?>
+
+<div class="col-md-9">
+    <div class="box">
+        <div class="media">
+            <a class="pull-left" href="<?=base_url('agentsea/'.$username_comp.'/home');?>">
+                <img src="<?= $logo_company ?>" id="img-profile-company" class="thumbnail block " style="border:1px solid #CCC" height="80" width="90" />
+            </a>
+
+            <div class="media-body">
+                <div class="pull-left">
+                    <h4 class="media-heading"><span class="text-link"><a href="<?=base_url('agentsea/'.$username_comp.'/home');?>">
+                        <?= $company["nama_perusahaan"] ?> </a> </span></h4>
+
+                    <p><span class="text-gray"><?=$nationality["name"]?></span><br>
+                        <b title="Rank : <?=$rank['rank'];?>"><?=$rank["rank"]?></b></p>
+                </div>
+                <!--                            <div class="pull-right">-->
+                <!--                                <button type="button" class="btn btn-outline">Save Job</button>-->
+                <!--                                <button type="button" class="btn btn-filled">Apply</button>-->
+                <!--                            </div>-->
+                <span class="clearfix"></span>
+            </div>
+        </div>
+        <div class="information">
+            <!-- <h5 class="text-gray">
+                About company:
+            </h5>
+
+            <p class="text-gray7"><?=$company["description"]?></p> -->
+            <table class="text-gray7">
+                <tr>
+                    <td>Web</td>
+                    <td>:</td>
+                    <td><a href="#" class="text-link"><?=$company["website"]?> </a></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>:</td>
+                    <td><?=$company["email"]?></td>
+                </tr>
+                <tr>
+                    <td>Phone number</td>
+                    <td>:</td>
+                    <td><?=$company["no_telp"]?></td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div class="information">
+            <h5 class="text-gray">Annual Salary</h5>
+
+            <h3 class="<?php echo $class_text ?> small-margin-top"><?= $sallary ?></h3>
+
+            <h5 class="text-gray">Title</h5>
+
+            <h3 class="text-link small-margin-top"><?=$vacantsea["vacantsea"]?></h3>
+
+            <h5 class="text-gray">Description:</h5>
+            <p class="text-gray7"><?=$vacantsea["description"]?></p>
+            <?php
+            $qualification = [
+                'Department',
+                'Rank',
+                'Ship Type',
+                'Navigation Area',
+                'Salary',
+                'Contract Type',
+                'Contract Dynamic',
+                'Benefits',
+                'Vessel Name',
+                'Requested Certificates',
+                'Required Certificates of Competency',
+                'Seaman Nationality'
+            ];
+            $qlt_value = [
+                $department["department"],
+                $rank["rank"],
+                $ship_type["ship_type"],
+                $vacantsea['navigation_area'],
+                $vacantsea["annual_allary"],
+                $vacantsea['contract_type'],
+                $vacantsea['contract_dynamic'],
+                $vacantsea['benefits'],
+                $ship['ship_name'],
+                $vacantsea['requested_certificates'],
+                $vacantsea['requested_coc'],
+                $nationality["name"]
+            ]; ?>
+            <div class="row text-gray7">
+                <div class="col-md-6">
+                    <table>
+
+                        <?php
+                        for ($i = 0; $i < 7; $i++) {
+                            echo '<tr>
+										<td>' . $qualification[$i] . '</td>
+										<td>:</td>
+										<td>';
+                                        if(!empty($qlt_value[$i])){
+                                            echo $qlt_value[$i];
+                                        }else{
+                                            echo "-";
+                                        } 
+                                        echo '</td>
+									</tr>';
+                        }
+                        ?>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table>
+                        <?php
+                        for ($i = 7; $i < 12; $i++) {
+                            echo '<tr>
+										<td>' . $qualification[$i] . '</td>
+										<td>:</td>
+										<td>';
+                                        if(!empty($qlt_value[$i])){
+                                            echo $qlt_value[$i];
+                                        }else{
+                                            echo "-";
+                                        }
+                                        echo '</td>
+									</tr>';
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+            <br>
+
+            <div>
+                <div class="pull-left">
+                    <p class="text-gray7"><span class="text-link">Posted</span>: <?php echo $create ?> &nbsp;
+                        &nbsp; <span
+                            class="text-link">End</span>: <?= $expired ?></p>
+                </div>
+                <div class="pull-right">
+                    <?php 
+                        if($status_applicant == "Processed"){ 
+                            echo "<div class='text-success applicants ft-12'><small>You've already applied for this vacant</small></div>";
+
+                        }elseif ($status_applicant == "Approved") {
+                            echo "<div class='text-success applicants ft-12'><small>Approved</small></div>";
+
+                        }elseif ($status_applicant == "Rejected") {
+                            echo "<div class='text-danger applicants ft-12'><small>Rejected</small></div>";
+
+                        }elseif ($status_applicant == "Canceled") {
+                            echo "<div class='text-warning applicants ft-12'><small>Canceled</small></div>";
+
+                        }elseif ($status_applicant == "Hire") {
+                            echo "<div class='text-success applicants ft-12'><small>Hire</small></div>";
+
+                        }else{
+                            echo "<input type='hidden' value='".$id."&".$vacantsea['vacantsea']."' id='url-data'>";
+                            $now            = date('Y-m-d');
+                            $id_perusahaan  = $this->session->userdata('id_perusahaan');
+                            $username_agent = $this->session->userdata('username_agent');
+                            $type_user      = $this->session->userdata("user");
+
+
+                            if ($type_user == "pelaut") {
+                                if ($now > $vacantsea['expired_date']) {
+                                    echo "<button type='button' class='btn btn-full' data-container='body' data-toggle='popover' data-placement='top' data-content='Sorry, Vacantsea Expired'>Expired</button> ";
+                                }else{
+                                    echo "<a href='#'' id='' class='btn btn-filled apply-vacant-button'>Apply</a>";
+                                }
+                            }
+                        }
+                    ?>
+
+
+                   
+                </div>
+                <span class="clearfix"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-login">
+    <!--Ajax-->
+</div>

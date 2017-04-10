@@ -1,0 +1,37 @@
+<?php // left profile , module seaman, view , folder detail  
+// Nilai - nilai variabel disini berasal dari model friendship_model, function: detail_friend.
+//$this->load->model("application/modules/users/models/user_model");
+
+$id_user = $detail_pelaut['pelaut_id'];
+$nama = $detail_pelaut['nama_depan']." ".$detail_pelaut['nama_belakang'];
+$user = $this->session->userdata("user");
+
+$username_url = $this->uri->segment(3);
+
+if(empty($user) && $username_url == "")
+{
+	
+	$nama = "Guest";
+	$url = "assets/user_img/noprofilepic.png";
+	
+}
+else{
+	
+  $profile_pic = $this->user_model->get_profile_pic($id_user);
+  $url = "user_img/$profile_pic";
+  
+  if(empty($profile_pic))
+  {
+	  
+	  $url = "assets/user_img/noprofilepic.png";
+  }
+}
+
+//print_r($this->session->all_userdata());
+
+?>
+<p><img src="<?php echo img_url($url); ?>"  class="img-thumbnail hidden-xs hidden-sm" style="width:100%;"></p>
+<p align="center"> <b> <a href='#' id="nama_profile"> <?php echo $nama ?> </a> </b> </p>
+
+
+

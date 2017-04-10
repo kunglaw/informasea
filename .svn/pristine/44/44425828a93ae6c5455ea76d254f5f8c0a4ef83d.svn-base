@@ -1,0 +1,95 @@
+<?php if(!defined('BASEPATH')) exit ('No direct script access allowed');
+
+class Profile_resume_model extends CI_Model{
+	
+	function last_profile_resume($id_pelaut = '')
+	{
+		$id_pelaut = $this->session->userdata('id_user');
+		
+		$str = "select * from profile_resume_tr where pelaut_id = '$id_pelaut' ORDER BY last_update DESC LIMIT 1 ";
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		
+		return $f;
+		
+	}
+	
+	function get_profile_pelaut($id_pelaut)
+	{
+		$str  = "SELECT * FROM pelaut_ms a, profile_resume_tr b WHERE 				    ";
+		$str .= "( a.pelaut_id = b.pelaut_id			   							   )";	
+		$str .= "AND a.pelaut_id = '$id_pelaut' OR username = '$id_pelaut'			    ";
+		
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		
+		return $f;
+	}
+	
+	function get_profile_resume($id_pelaut = '')
+	{
+		$str = "select * from profile_resume_tr where pelaut_id = '$id_pelaut' ";
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		
+		return $f;
+
+	}
+
+	function cek_lengkap_resume($id_pelaut = ''){
+		$str = "SELECT * FROM profile_resume_tr WHERE pelaut_id = '$id_pelaut' AND 
+		(height != '' and weight != '' AND clothes_size != '' and last_education != '' 
+		and shoes_size != '' and expected_sallary != 0 and exp_sallary_curr != '' and vessel_type != 0 
+		and department != 0 and sallary_range != '')";
+		//echo $str;
+		$q = $this->db->query($str);
+		$f = $q->row_array();
+		return $f;  
+	}
+
+	function expired_certificate($id_pelaut = ''){
+
+		$str1 = "select * from document_tr WHERE pelaut_id = '$id_pelaut'";
+		$q = $this->db->query($str1);
+		$f = $q->result_array();
+
+		$now = date('Y-m-d');
+		$expired = 0;
+		foreach($f as $r){
+			if($r['date_expired'] <= $now){
+				$expired = $expired + 1;
+			}
+		}
+
+		$str2 = "SELECT * FROM competency_tr WHERE pelaut_id = '$id_pelaut'";
+		$q = $this->db->query($str2);
+		$ff = $q->result_array();
+
+			foreach($ff as $x){
+				if($x['expired_date'] <= $now){
+					$expired = $expired + 1;
+				}
+			}
+
+			$str3 = "SELECT * FROM proficiency_tr WHERE pelaut_id = '$id_pelaut'";
+			$qq = $this->db->query($str3);
+			$fff = $qq->result_array();
+
+			foreach($fff as $zz){
+				if($zz['expired_date'] <= $now){
+					$expired = $expired + 1;
+				}
+
+			}
+
+			return $expired;
+
+			
+
+
+	}
+
+	
+	
+	
+}

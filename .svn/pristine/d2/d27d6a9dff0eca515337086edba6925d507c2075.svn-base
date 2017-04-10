@@ -1,0 +1,178 @@
+<!-- lightbox -->
+<script type="text/javascript" src="<?=asset_url("plugin/lightbox/ekko-lightbox.js");?>"></script>
+
+<script type="text/javascript">
+    // $(document).ready(function ($) {
+    //     // delegate calls to data-toggle="lightbox"
+    //     $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+    //         event.preventDefault();
+    //         return $(this).ekkoLightbox({
+    //             onShown: function() {
+    //                 if (window.console) {
+    //                     return console.log('Checking our the events huh?');
+    //                 }
+    //             },
+    //             onNavigate: function(direction, itemIndex) {
+    //                 if (window.console) {
+    //                     return console.log('Navigating '+direction+'. Current item: '+itemIndex);
+    //                 }
+    //             }
+    //         });
+    //     });
+
+		/* lightbox.option({
+		  'resizeDuration': 200,
+		  'wrapAround': true,
+		}) */ 
+
+		// lightbox.option({
+		//   'resizeDuration': 200,
+		//   'wrapAround': true,
+		// })
+
+
+        // Programatically call
+        // $('#open-image').click(function (e) {
+        //     e.preventDefault();
+        //     $(this).ekkoLightbox();
+        // });
+        // $('#open-youtube').click(function (e) {
+        //     e.preventDefault();
+        //     $(this).ekkoLightbox();
+        // });
+
+        // // navigateTo
+        // $(document).delegate('*[data-gallery="navigateTo"]', 'click', function(event) {
+        //     event.preventDefault();
+        //     return $(this).ekkoLightbox({
+        //         onShown: function() {
+
+        //             var a = this.modal_content.find('.modal-footer a');
+        //             if(a.length > 0) {
+
+        //                 a.click(function(e) {
+
+        //                     e.preventDefault();
+        //                     this.navigateTo(2);
+
+        //                 }.bind(this));
+
+        //             }
+
+        //         }
+        //     });
+        // });
+
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    
+        function getAllNation(){
+            $.ajax({
+                url:"<?php echo base_url("company/list_nation") ?>",
+                type:"POST",
+                success:function(data){
+                    $("#list-nationality").html(data);
+                }
+            })
+        }
+
+    $(document).ready(function(){ 
+        
+            getAllNation();
+
+
+     $("#frm-search-agentsea").submit(function(e){
+       // alert('tes');
+                    e.preventDefault();
+
+        var keyword = $("#list-keyword").val();
+        var nationality = $("#list-nationality").val();
+        var url  = "<?php echo base_url('company/search');?>";
+        if(keyword != ""){
+            url+="/"+keyword+"/";
+        }
+
+        if(nationality != "" && nationality != 0){
+            url+="?nationality="+nationality;
+        }
+            
+        window.location = url;
+
+
+
+    });
+
+
+ })
+
+</script>
+<!-- form search + add url  -->
+<script>
+// $('.demo4_top,.demo4_under').bootpag({
+//     total: <?php echo ceil($totaldata/5) ?>,
+//     page: <?php echo $page ?>,
+//     maxVisible: 5,
+//     leaps: false,
+//     firstLastUse: true,
+//     first: '←',
+//     last: '→',
+//     wrapClass: 'pagination',
+//     activeClass: 'active',
+//     disabledClass: 'disabled',
+//     nextClass: 'next',
+//     prevClass: 'prev',
+//     lastClass: 'last',
+//     firstClass: 'first'
+// }).on("page", function(event, num){
+//     window.location = '<?php echo $dest_page ?>'+num;
+    // $.ajax({
+    //     url:"<?php echo $dest_page ?>",
+    //     data:"x="+num+"<?php echo $param_search ?>",
+    //     type:"POST",
+    //     success:function(hasil){
+    //         $("#<?php echo $divpaginationid; ?>").html(hasil);
+    //      }
+    // });
+    //$(".content4").html("Page " + num); // or some ajax content loading...
+//}); 
+
+// $("#frm-search-agent").submit(function(e) {
+// //     e.preventDefault();
+    
+// //     var keyword     = $("#list-keyword").val();
+// //     var nationality = $("#list-nationality").val();
+// //     var url         = "<?=base_url('agentsea/search');?>";
+       
+// //     if (keyword != ""  || nationality !="") {
+// //         $.ajax({
+// //             url     : "<?=base_url('company/getData')?>",
+// //             type    : "POST",
+// //             data    : "keyword=" + keyword + "&id_nationality= " + nationality,
+// //             success: function(data){
+// //                 // $("#container").html(data);
+// //                 var hasil   = (data);
+// //                 hasil       = hasil.split("&");
+// //                 hasil[0]    = hasil[0].replace(/ /g,"-"); //keyword->nationality
+// //                 hasil[1]    = hasil[1].replace(/ /g,"-"); //nationality
+// //                 if (hasil[0] != "" && hasil[1] != ""){
+// //                     url +="/"+hasil[0]+"/"+hasil[1];
+// //                 }else if(hasil[0] == "" && hasil[1] != ""){
+// //                     url +="/"+hasil[1];
+// //                 }else if (hasil[0] != "" && hasil[1] == "") {
+// //                     url +="/"+hasil[0];
+// //                 }else{
+// //                     url +="/"+(keyword != undefined ? keyword: "");
+// //                 }
+// //                 alert(url);
+// //                 // window.location = url;
+
+// //             }
+// //         });
+// //     }
+    
+// // });
+</script>

@@ -1,0 +1,32 @@
+<?php // content detail, untuk timeline detail.
+
+?>
+
+<div id="" class="col-md-9 pull-left">
+   
+    <div class="panel panel-default"> 
+     
+      <div class="panel-body">
+      <h2><?php echo $header ?></h2>
+      <hr />
+       <?php
+	   if(!empty($halaman_detail))
+	   { 
+	   	 $this->load->view($halaman_detail);
+	   }
+	   else if(is_array($description))
+	   {
+		   print_r($description);
+	   }
+	   else
+	   {
+		 echo $description; // isi data berupa string   
+	   }
+				
+		?>
+      </div>
+    </div>
+    
+  
+</div>
+
