@@ -1,4 +1,6 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+// test commit
+if (!defined('BASEPATH')) exit('No direct script access allowed');
  
 include_once '../informasea_assets/plugin/mpdf/mpdf.php';
  
